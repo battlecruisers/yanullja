@@ -1,3 +1,8 @@
+### secrets ###
+!application.properties
+*.properties
+.env*
+
 HELP.md
 .gradle
 build/
