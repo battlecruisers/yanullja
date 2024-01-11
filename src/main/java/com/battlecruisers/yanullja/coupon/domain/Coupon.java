@@ -1,8 +1,11 @@
 package com.battlecruisers.yanullja.coupon.domain;
 
+import com.battlecruisers.yanullja.member.domain.Member;
 import com.battlecruisers.yanullja.room.domain.Room;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,9 +15,8 @@ import jakarta.persistence.ManyToOne;
 public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "couponId")
+
     private Long id;
-    @Column(name = "couponName")
     private String name;
     // 최소주문금액
     private int minimumPrice;
@@ -27,17 +29,19 @@ public class Coupon {
     // 설명
     private String description;
     // 사용지역
-    @Column(name = "useRegion")
+    @Column
     private String region;
     // 숙박형태
-    @Column(name = "accomType")
+    @Column
     private String type;
 
     // 상태
-    private Short status;
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
 
     // 회원 아이디
-//    private String user_id;
+//    @ManyToOne
+//    private Member member;
 
     // 숙소 아이디
     @ManyToOne
