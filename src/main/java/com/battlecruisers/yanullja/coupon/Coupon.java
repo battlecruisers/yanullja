@@ -14,25 +14,25 @@ import java.util.Date;
 public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "coupon_id")
+    @Column(name = "couponId")
     private Long id;
-    @Column(name = "coupon_name")
+    @Column(name = "couponName")
     private String name;
     // 최소주문금액
-    private int minimum_price;
+    private int minimumPrice;
     // 할인금액
-    private int discount_price;
+    private int discountPrice;
     // 할인률
-    private int discount_rate;
+    private int discountRate;
     // 할인한도
-    private int discount_limit;
+    private int discountLimit;
     // 설명
     private String description;
     // 사용지역
-    @Column(name = "use_region")
+    @Column(name = "useRegion")
     private String region;
     // 숙박형태
-    @Column(name = "accom_type")
+    @Column(name = "accomType")
     private String type;
 
     // 상태
