@@ -1,5 +1,6 @@
 package com.battlecruisers.yanullja.place.domain;
 
+import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.subregion.domain.SubRegion;
 import jakarta.persistence.Entity;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Place {
+public class Place extends BaseDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.battlecruisers.yanullja.room.domain;
 
+import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.place.domain.Place;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Room {
+public class Room extends BaseDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package com.battlecruisers.yanullja.mainregion.domain;
 
+import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.subregion.domain.SubRegion;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class MainRegion {
+public class MainRegion extends BaseDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
