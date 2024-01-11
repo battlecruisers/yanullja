@@ -1,7 +1,7 @@
-package com.battlecruisers.yanullja.place;
+package com.battlecruisers.yanullja.place.domain;
 
-import com.battlecruisers.yanullja.room.Room;
-import com.battlecruisers.yanullja.subregion.SubRegion;
+import com.battlecruisers.yanullja.room.domain.Room;
+import com.battlecruisers.yanullja.subregion.domain.SubRegion;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

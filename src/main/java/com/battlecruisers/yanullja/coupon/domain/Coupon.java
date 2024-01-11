@@ -1,14 +1,12 @@
-package com.battlecruisers.yanullja.coupon;
+package com.battlecruisers.yanullja.coupon.domain;
 
-import com.battlecruisers.yanullja.room.Room;
+import com.battlecruisers.yanullja.room.domain.Room;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-
-import java.util.Date;
 
 @Entity
 public class Coupon {

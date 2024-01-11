@@ -1,7 +1,7 @@
-package com.battlecruisers.yanullja.subregion;
+package com.battlecruisers.yanullja.subregion.domain;
 
-import com.battlecruisers.yanullja.mainregion.MainRegion;
-import com.battlecruisers.yanullja.place.Place;
+import com.battlecruisers.yanullja.mainregion.domain.MainRegion;
+import com.battlecruisers.yanullja.place.domain.Place;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
