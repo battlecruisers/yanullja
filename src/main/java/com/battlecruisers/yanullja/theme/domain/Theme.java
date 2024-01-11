@@ -14,6 +14,7 @@ public class Theme {
     @Id @GeneratedValue
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private ThemeType type;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
