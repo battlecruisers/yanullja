@@ -39,7 +39,7 @@ public class Coupon {
     private Short status;
 
     // 회원 아이디
-    private String user_id;
+//    private String user_id;
 
     // 숙소 아이디
     @ManyToOne
