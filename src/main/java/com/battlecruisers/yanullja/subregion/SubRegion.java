@@ -1,7 +1,7 @@
-package com.battlecruisers.yanullja.place;
+package com.battlecruisers.yanullja.subregion;
 
-import com.battlecruisers.yanullja.room.Room;
-import com.battlecruisers.yanullja.subregion.SubRegion;
+import com.battlecruisers.yanullja.mainregion.MainRegion;
+import com.battlecruisers.yanullja.place.Place;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Place {
+public class SubRegion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,14 +20,9 @@ public class Place {
 
     private String name;
 
-    private String category;
-
-    private String event;
-    private String policy;
-
     @ManyToOne
-    private SubRegion subRegion;
+    private MainRegion mainRegion;
 
-  @OneToMany(mappedBy = "place")
-  private List<Room> roomList = new ArrayList<>();
+  @OneToMany(mappedBy = "subRegion")
+  private List<Place> placeList = new ArrayList<>();
 }
