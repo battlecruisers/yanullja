@@ -66,4 +66,5 @@ jobs:
           script: |
             cd ~/yanullja
             git pull
-            ./gradlew bootRun
+            lsof -i tcp:8080 | awk 'NR!=1 {print $2}' | xargs kill -9
+            nohup ./gradlew bootRun > application.log 2>&1 &
