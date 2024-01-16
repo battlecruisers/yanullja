@@ -53,9 +53,7 @@ jobs:
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build --stacktrace
-          working-directory: ./server
+        run: ./server/gradlew build --stack-trace
   deploy:
     needs: build
     runs-on: ubuntu-latest
