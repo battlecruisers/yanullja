@@ -54,7 +54,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
       - name: Run build with Gradle Wrapper
-        run: ./server/gradlew build --stack-trace
+        run: cd ./server && ./gradlew build --stacktrace
   deploy:
     needs: build
     runs-on: ubuntu-latest
