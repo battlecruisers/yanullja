@@ -42,6 +42,7 @@ jobs:
 
       - name: Create an env.properties file
         run: |
+          cd ./server
           echo "${{secrets.ENV_PROPERTIES}}" > ./src/main/resources/env.properties
 
       - name: Set up JDK 17
