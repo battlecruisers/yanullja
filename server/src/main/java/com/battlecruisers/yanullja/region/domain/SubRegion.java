@@ -20,14 +20,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SubRegion extends BaseDate {
 
-    @OneToMany(mappedBy = "subRegion")
-    private final List<Place> placeList = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
     @ManyToOne
     private MainRegion mainRegion;
+
+    @OneToMany(mappedBy = "subRegion")
+    private final List<Place> placeList = new ArrayList<>();
 
     public SubRegion(String name, MainRegion mainRegion) {
         this.name = name;

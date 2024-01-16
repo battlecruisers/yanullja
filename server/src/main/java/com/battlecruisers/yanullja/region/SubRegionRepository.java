@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SubRegionRepository extends JpaRepository<SubRegion, Long> {
 
-    List<SubRegion> findAllByMainRegion_Id(Long mainRegionId);
+    List<SubRegion> findAllByMainRegionId(Long mainRegionId);
 }

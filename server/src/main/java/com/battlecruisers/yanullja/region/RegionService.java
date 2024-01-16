@@ -30,7 +30,7 @@ public class RegionService {
             throw new NotFoundException("존재하지 않는 아이디 입니다.");
         });
 
-        return subRegionRepository.findAllByMainRegion_Id(mainRegionId).stream()
+        return subRegionRepository.findAllByMainRegionId(mainRegionId).stream()
             .map(RegionQueryDto::new)
             .collect(Collectors.toList());
     }
