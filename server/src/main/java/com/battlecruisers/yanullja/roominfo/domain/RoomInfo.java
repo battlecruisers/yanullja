@@ -25,6 +25,9 @@ public class RoomInfo extends BaseDate {
     private Integer price;
 
     @Enumerated(EnumType.STRING)
+    private RentalType rentalType;
+
+    @Enumerated(EnumType.STRING)
     private UsageDayType usageDayType;
 
     @ManyToOne private Room room;

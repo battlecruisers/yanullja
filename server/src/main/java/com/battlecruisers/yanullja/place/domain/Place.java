@@ -1,8 +1,8 @@
 package com.battlecruisers.yanullja.place.domain;
 
 import com.battlecruisers.yanullja.base.BaseDate;
+import com.battlecruisers.yanullja.region.domain.SubRegion;
 import com.battlecruisers.yanullja.room.domain.Room;
-import com.battlecruisers.yanullja.subregion.domain.SubRegion;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,6 +29,6 @@ public class Place extends BaseDate {
     @ManyToOne
     private SubRegion subRegion;
 
-  @OneToMany(mappedBy = "place")
-  private List<Room> roomList = new ArrayList<>();
+    @OneToMany(mappedBy = "place")
+    private List<Room> roomList = new ArrayList<>();
 }

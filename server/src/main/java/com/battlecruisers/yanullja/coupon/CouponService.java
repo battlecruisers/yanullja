@@ -20,10 +20,11 @@ public class CouponService {
     }
 
     // 하나의 쿠폰 정보 조회
+
     public Coupon getCoupon(Long couponId){
         Optional<Coupon> tempCoupon = couponRepository.findById(couponId);
 //        if(tempCoupon.isPresent())
             return tempCoupon.get();
-    }
 
+ }
 }

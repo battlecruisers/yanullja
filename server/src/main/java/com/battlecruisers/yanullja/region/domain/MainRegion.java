@@ -1,19 +1,22 @@
-package com.battlecruisers.yanullja.subregion.domain;
+package com.battlecruisers.yanullja.region.domain;
 
 import com.battlecruisers.yanullja.base.BaseDate;
-import com.battlecruisers.yanullja.mainregion.domain.MainRegion;
-import com.battlecruisers.yanullja.place.domain.Place;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-public class SubRegion extends BaseDate {
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class MainRegion extends BaseDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +24,10 @@ public class SubRegion extends BaseDate {
 
     private String name;
 
-    @ManyToOne
-    private MainRegion mainRegion;
+    @OneToMany(mappedBy = "mainRegion")
+    private final List<SubRegion> subRegionList = new ArrayList<>();
 
-  @OneToMany(mappedBy = "subRegion")
-  private List<Place> placeList = new ArrayList<>();
+    public MainRegion(String name) {
+        this.name = name;
+    }
 }

@@ -30,8 +30,9 @@ public class CouponController {
 
     @GetMapping("/{couponId}")
     // 하나의 쿠폰 조회
-    public ResponseEntity<Coupon> coupon(@PathVariable Long couponId){
-        Coupon testCoupon = couponService.getCoupon(couponId);
+
+    public ResponseEntity<Coupon> coupon(@PathVariable(name="couponId") Long id){
+        Coupon testCoupon = couponService.getCoupon(id);
         log.info("testCoupon={}", testCoupon.toString());
         return new ResponseEntity<>(testCoupon, HttpStatus.OK);
     }
