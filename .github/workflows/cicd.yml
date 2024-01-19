@@ -66,6 +66,11 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             cd ~/yanullja
+            git checkout main
             git pull
+            cd ~/yanullja/client
+            lsof -i tcp:3000 | awk 'NR!=1 {print $2}' | xargs kill -9
+            nohup npm run dev > client.log 2>&1 &
+            cd ~/yanullja/server
             lsof -i tcp:8080 | awk 'NR!=1 {print $2}' | xargs kill -9
             nohup ./gradlew bootRun > application.log 2>&1 &
