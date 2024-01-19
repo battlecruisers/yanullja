@@ -39,7 +39,6 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
                 .join(review.room, room).fetchJoin()
                 .leftJoin(reviewImage)
                 .on(review.id.eq(reviewImage.review.id))
-                .groupBy(reviewImage.review.id)
                 .where(
                         review.place.id.eq(cond.getPlaceId()),
                         roomIdEq(cond.getRoomId()),
@@ -59,11 +58,11 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
                         roomIdEq(cond.getRoomId())
                 );
 
-
         List<ReviewDetailDto> content = reviews.stream()
-                .map(review -> ReviewDetailDto.createNewReviewDetail(review))
+                .map(ReviewDetailDto::createNewReviewDetail)
                 .collect(Collectors.toList());
-        return PageableExecutionUtils.getPage(content, pageable, () -> countQuery.fetchOne());
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
 
     }
 
@@ -76,16 +75,14 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
     }
 
 
-    private OrderSpecifier reviewSort(ReviewSearchCond cond) {
-        switch (cond.getOrderProperty()) {
-            case "totalRate":
-                if (cond.getDirection().equals(Order.ASC))
-                    return review.totalRate.asc();
-                else
-                    return review.totalRate.desc();
-            default:
-                return new OrderSpecifier(cond.getDirection(), review.createdDate);
+    private OrderSpecifier<?> reviewSort(ReviewSearchCond cond) {
+        if (cond.getOrderProperty().equals("totalRate")) {
+            if (cond.getDirection().equals(Order.ASC))
+                return review.totalRate.asc();
+            else
+                return review.totalRate.desc();
         }
+        return review.createdDate.desc();
     }
 
 
