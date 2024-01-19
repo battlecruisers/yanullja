@@ -1,7 +1,6 @@
-package com.battlecruisers.yanullja.room.domain;
+package com.battlecruisers.yanullja.room;
 
 
-import com.battlecruisers.yanullja.room.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +16,9 @@ public class RoomController {
 
 
     @GetMapping("/{roomId}")
-    public ResponseEntity<Object> roomDetail(){
+    public ResponseEntity<Object> roomDetail() {
 
-        return ResponseEntity
-                .ok()
-                .build();
+        return ResponseEntity.ok().build();
     }
 
 }
