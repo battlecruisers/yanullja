@@ -1,12 +1,13 @@
 package com.battlecruisers.yanullja.region;
 
 import com.battlecruisers.yanullja.region.dto.RegionQueryDto;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +19,9 @@ public class RegionService {
     @Transactional(readOnly = true)
     public List<RegionQueryDto> queryMainRegions() {
         return mainRegionRepository.findAll().stream()
-            .map(RegionQueryDto::new)
-            .collect(Collectors.toList());
+                .map(RegionQueryDto::new)
+                .collect(Collectors.toList());
+
     }
 
 
@@ -31,7 +33,7 @@ public class RegionService {
         });
 
         return subRegionRepository.findAllByMainRegionId(mainRegionId).stream()
-            .map(RegionQueryDto::new)
-            .collect(Collectors.toList());
+                .map(RegionQueryDto::new)
+                .collect(Collectors.toList());
     }
 }

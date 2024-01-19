@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,6 +18,14 @@ import lombok.ToString;
 @Setter
 @Entity
 @ToString
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "prevent duplication of membercoupon",
+                        columnNames = {"member_id", "coupon_id"}
+                )
+        }
+)
 public class MemberCoupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
