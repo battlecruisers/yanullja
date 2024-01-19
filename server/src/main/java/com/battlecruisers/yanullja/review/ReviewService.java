@@ -2,6 +2,7 @@ package com.battlecruisers.yanullja.review;
 
 
 import com.battlecruisers.yanullja.review.dto.ReviewDetailDto;
+import com.battlecruisers.yanullja.review.dto.ReviewInfo;
 import com.battlecruisers.yanullja.review.dto.ReviewSearchCond;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,10 @@ public class ReviewService {
 
     public Slice<ReviewDetailDto> getReviewDetails(ReviewSearchCond cond, Pageable pageable) {
         return reviewRepository.findReviews(cond, pageable);
+    }
+
+    public ReviewInfo getReviewInfo(Long placeId, Long roomId) {
+        return reviewRepository.findReviewInfo(placeId, roomId);
     }
 
 }
