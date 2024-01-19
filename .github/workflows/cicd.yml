@@ -70,6 +70,7 @@ jobs:
             git pull
             cd ~/yanullja/client
             lsof -i tcp:3000 | awk 'NR!=1 {print $2}' | xargs kill -9
+            npm install
             nohup npm run dev > client.log 2>&1 &
             cd ~/yanullja/server
             lsof -i tcp:8080 | awk 'NR!=1 {print $2}' | xargs kill -9
