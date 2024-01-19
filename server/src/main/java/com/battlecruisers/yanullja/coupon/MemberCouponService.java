@@ -28,7 +28,6 @@ public class MemberCouponService {
 
         createMemberCoupon(code, id);
 
-
     }
 
 
@@ -39,19 +38,6 @@ public class MemberCouponService {
         // var member = memberRepository.findById(memberId).orElseThrow()
         var coupon = couponRepository.findById(code).orElseThrow();
         var member = memberRepository.findById(Long.valueOf(1L)).orElseThrow();
-
-
-        // 회원이 쿠폰을 등록한 적이 있는지 확인
-//        long check = memberCouponRepository
-//                .countByCouponAndMember(coupon, member)
-//                .orElseThrow();
-//        System.out.println("check:" + check);
-//        log.info("check:" + check);
-//
-//
-//        if (check == 1)
-//            throw new AlreadyRegistredException("이미 등록된 쿠폰입니다.");
-
 
         // 회원쿠폰 정보 세팅(임시)
         memberCoupon.setCoupon(coupon);
