@@ -11,13 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
-    @Transactional(readOnly = true)
+    
     public Member getMember(Long memberId) {
-        return memberRepository.findById(memberId)
+        var member = memberRepository.findById(memberId)
                 .orElseThrow(
                         () -> new MemberNotFoundException(memberId)
                 );
+        return member;
     }
 
     @Transactional
