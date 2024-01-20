@@ -17,7 +17,7 @@ import java.util.List;
 public class Review extends BaseDate {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String content;

@@ -11,8 +11,13 @@ import org.hibernate.annotations.OnDeleteAction;
 public class RoomImage {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 
     private String imageUrl;
 
