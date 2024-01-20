@@ -1,13 +1,21 @@
 package com.battlecruisers.yanullja.member.domain;
 
+import com.battlecruisers.yanullja.coupon.domain.MemberCoupon;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @Entity
 @Getter
+@Setter
+@Slf4j
 public class Member {
 
     @Id
@@ -20,6 +28,9 @@ public class Member {
     private String nickName;
     private String phoneNumber;
 
-    private Boolean promotionalConsent;
 
+    @OneToMany(mappedBy = "member")
+    private List<MemberCoupon> memberCoupons;
+
+    private Boolean promotionalConsent;
 }

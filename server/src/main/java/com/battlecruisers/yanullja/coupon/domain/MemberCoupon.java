@@ -1,20 +1,31 @@
 package com.battlecruisers.yanullja.coupon.domain;
 
 import com.battlecruisers.yanullja.member.domain.Member;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
-import org.hibernate.mapping.ToOne;
+import lombok.Setter;
+import lombok.ToString;
 
-@Entity
 @Getter
+@Setter
+@Entity
+@ToString
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "prevent duplication of membercoupon",
+                        columnNames = {"member_id", "coupon_id"}
+                )
+        }
+)
 public class MemberCoupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,17 +33,15 @@ public class MemberCoupon {
     private Long id;
 
     // 회원 아이디
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     // 쿠폰 아이디
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
     // 상태
-    @Enumerated(EnumType.ORDINAL)
-    private Status status;
-
-
-
+    private boolean isUsed;
 }
