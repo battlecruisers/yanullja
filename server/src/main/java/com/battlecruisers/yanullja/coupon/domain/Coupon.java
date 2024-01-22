@@ -18,7 +18,7 @@ import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,12 +38,12 @@ public class Coupon extends BaseDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String name;
     // 최소주문금액
-    private BigInteger minimumPrice;
+    private BigDecimal minimumPrice;
     // 할인금액
-    private BigInteger discountPrice;
+    private BigDecimal discountPrice;
     // 할인률
     private Double discountRate;
     // 할인한도
