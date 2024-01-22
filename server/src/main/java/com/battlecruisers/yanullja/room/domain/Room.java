@@ -2,6 +2,7 @@ package com.battlecruisers.yanullja.room.domain;
 
 import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.place.domain.Place;
+import com.battlecruisers.yanullja.reservation.domain.Reservation;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.OnDelete;
@@ -56,6 +57,9 @@ public class Room extends BaseDate {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
+    private List<Reservation> reservations = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<RoomImage> roomImages = new ArrayList<>();
