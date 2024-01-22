@@ -5,13 +5,13 @@ import com.battlecruisers.yanullja.member.domain.Member;
 import com.battlecruisers.yanullja.room.domain.Room;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter
 public class Reservation extends BaseDate {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // 회원 Member
