@@ -3,10 +3,9 @@ package com.battlecruisers.yanullja.room.dto;
 
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.room.domain.RoomImage;
-import lombok.Data;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Data;
 
 @Data
 public class RoomDto {
@@ -45,14 +44,18 @@ public class RoomDto {
 
     private Integer weekendRentPrice;
 
-    private Integer weekendSentPrice;
+    private Integer weekendStayPrice;
 
     private List<String> urls;
 
-    public RoomDto(Long id, String name, String category, Integer capacity, Integer weekdayRentTime, Integer weekdayRentStartTime,
-                   Integer weekdayRentEndTime, Integer weekdayCheckInTime, Integer weekdayCheckOutTime, Integer weekdayRentPrice,
-                   Integer weekdayStayPrice, Integer weekendRentTime, Integer weekendRentStartTime, Integer weekendRentEndTime,
-                   Integer weekendCheckInTime, Integer weekendCheckOutTime, Integer weekendRentPrice, Integer weekendSentPrice, List<String> urls) {
+    public RoomDto(Long id, String name, String category, Integer capacity, Integer weekdayRentTime,
+        Integer weekdayRentStartTime,
+        Integer weekdayRentEndTime, Integer weekdayCheckInTime, Integer weekdayCheckOutTime,
+        Integer weekdayRentPrice,
+        Integer weekdayStayPrice, Integer weekendRentTime, Integer weekendRentStartTime,
+        Integer weekendRentEndTime,
+        Integer weekendCheckInTime, Integer weekendCheckOutTime, Integer weekendRentPrice,
+        Integer weekendStayPrice, List<String> urls) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -70,31 +73,31 @@ public class RoomDto {
         this.weekendCheckInTime = weekendCheckInTime;
         this.weekendCheckOutTime = weekendCheckOutTime;
         this.weekendRentPrice = weekendRentPrice;
-        this.weekendSentPrice = weekendSentPrice;
+        this.weekendStayPrice = weekendStayPrice;
         this.urls = urls;
     }
 
     public static RoomDto createNewRoomDto(Room room) {
         return new RoomDto(
-                room.getId(),
-                room.getName(),
-                room.getCategory(),
-                room.getCapacity(),
-                room.getWeekdayRentTime(),
-                room.getWeekdayRentStartTime(),
-                room.getWeekdayRentEndTime(),
-                room.getWeekdayCheckInTime(),
-                room.getWeekdayCheckOutTime(),
-                room.getWeekdayRentPrice(),
-                room.getWeekdayStayPrice(),
-                room.getWeekendRentTime(),
-                room.getWeekendRentStartTime(),
-                room.getWeekendRentEndTime(),
-                room.getWeekendCheckInTime(),
-                room.getWeekendCheckOutTime(),
-                room.getWeekendRentPrice(),
-                room.getWeekendSentPrice(),
-                room.getRoomImages().stream().map(RoomImage::getImageUrl).collect(Collectors.toList())
+            room.getId(),
+            room.getName(),
+            room.getCategory(),
+            room.getCapacity(),
+            room.getWeekdayRentTime(),
+            room.getWeekdayRentStartTime(),
+            room.getWeekdayRentEndTime(),
+            room.getWeekdayCheckInTime(),
+            room.getWeekdayCheckOutTime(),
+            room.getWeekdayRentPrice(),
+            room.getWeekdayStayPrice(),
+            room.getWeekendRentTime(),
+            room.getWeekendRentStartTime(),
+            room.getWeekendRentEndTime(),
+            room.getWeekendCheckInTime(),
+            room.getWeekendCheckOutTime(),
+            room.getWeekendRentPrice(),
+            room.getWeekendStayPrice(),
+            room.getRoomImages().stream().map(RoomImage::getImageUrl).collect(Collectors.toList())
         );
     }
 }

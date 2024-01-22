@@ -37,12 +37,21 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
 
     }
 
+    @Override
+    public List<Room> queryPlace(Long placeId) {
+        return jpaQueryFactory.selectFrom(room).distinct()
+            .join(room.place, place).fetchJoin()
+            .leftJoin(room.couponList).fetchJoin()
+            .where(room.place.id.eq(placeId))
+            .fetch();
+    }
+
     private BooleanBuilder makeBooleanBuilderForSearch(String keyword,
         SearchConditionDto searchConditionDto, List<ThemeType> themeList) {
 
         BooleanBuilder builder = new BooleanBuilder();
-        LocalDate checkinDate = searchConditionDto.getCheckinDate();
-        LocalDate checkoutDate = searchConditionDto.getCheckoutDate();
+        LocalDate checkinDate = searchConditionDto.getCheckInDate();
+        LocalDate checkoutDate = searchConditionDto.getCheckOutDate();
         Integer minPrice = searchConditionDto.getMinPrice();
         Integer maxPrice = searchConditionDto.getMaxPrice();
         Integer capacity = searchConditionDto.getCapacity();
