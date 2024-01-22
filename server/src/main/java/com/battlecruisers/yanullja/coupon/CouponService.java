@@ -6,7 +6,7 @@ import com.battlecruisers.yanullja.room.RoomRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,10 +40,10 @@ public class CouponService {
 
         newCoupon.setDescription("좋은 쿠폰");
         newCoupon.setDiscountLimit(10d);
-        newCoupon.setDiscountPrice(new BigInteger("5000"));
+        newCoupon.setDiscountPrice(new BigDecimal("5000"));
         newCoupon.setDiscountRate(10d);
         newCoupon.setValid(true);
-        newCoupon.setMinimumPrice(new BigInteger("40000"));
+        newCoupon.setMinimumPrice(new BigDecimal("40000"));
         newCoupon.setName("할인 쿠폰");
         newCoupon.setRegion("서울");
         newCoupon.setRoomType(RoomType.DayUse);
