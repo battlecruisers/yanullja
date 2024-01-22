@@ -1,5 +1,6 @@
 package com.battlecruisers.yanullja.coupon.domain;
 
+import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.member.domain.Member;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,7 +27,7 @@ import lombok.ToString;
                 )
         }
 )
-public class MemberCoupon {
+public class MemberCoupon extends BaseDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // 회원쿠폰 아이디
