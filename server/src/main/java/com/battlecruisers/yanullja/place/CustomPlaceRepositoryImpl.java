@@ -30,7 +30,6 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
 
         return jpaQueryFactory.selectFrom(room).distinct()
             .join(room.place, place).fetchJoin()
-            .leftJoin(room.roomInfoList).fetchJoin()
             .where(
                 makeBooleanBuilderForSearch(keyword, searchConditionDto, themeList))
             .orderBy(makeOrderSpecifierForSearch(sortType))
@@ -86,30 +85,30 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
         return builder;
     }
 
-    private BooleanExpression checkApplicable(LocalDate checkinDate, LocalDate checkoutDate,
-        Integer applicable) {
-        return Expressions.asBoolean(true).isTrue();
-    }
 
     private OrderSpecifier makeOrderSpecifierForSearch(SortType sortType) {
 
         OrderSpecifier orderSpecifier = null;
         if (sortType == SortType.PRICE_LOW) {
+            //TODO : 각 숙소의 방에서 최소 가격을 비교해서 정렬
 
         } else if (sortType == SortType.PRICE_HIGH) {
+            //TODO : 각 숙소의 방에서 최소 가격을 비교해서 정렬
 
         } else if (sortType == SortType.REVIEW_GOOD) {
+            //TODO : 숙소의 리뷰의 평점이 높은 순으로 정렬
 
         } else if (sortType == SortType.REVIEW_MANY) {
+            //TODO : 숙소의 리뷰의 평점이 많은 순으로 정렬
 
         } else if (sortType == SortType.BOOKMARK_MANY) {
+            //TODO : 숙소에 대한 찜이 많은 순으로 정렬
 
         }
         return orderSpecifier;
     }
 
     private BooleanExpression eqKeyword(String keyword) {
-        //TODO : 숙소의 이름에 주어진 키워드가 존재하는지 체크하는 로직
         if (StringUtils.isEmpty(keyword)) {
             return null;
         }
@@ -127,19 +126,16 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
         return Expressions.asBoolean(true).isTrue();
     }
 
-    // 사용 인원이 최대 인원보다 적은지 체크하는 로직
     private BooleanExpression checkCapacity(Integer capacity) {
 
         if (capacity == null) {
             return null;
         }
-//        return room.maxCapacity.goe(capacity);
-        return Expressions.asBoolean(true).isTrue();
+        return room.capacity.goe(capacity);
 
     }
 
     private BooleanExpression checkTheme(List<ThemeType> themeTypeList) {
-        //TODO : ThemeType을 모두 가지고 있는지 체크하는 로직
         List<Theme> themeList = jpaQueryFactory.selectFrom(theme)
             .where(theme.type.in(themeTypeList))
             .fetch();
@@ -169,6 +165,13 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
         }
 
         //TODO : 제공한 기간에서 숙박 가능한 방이 있는지 체크하는 로직
+        return Expressions.asBoolean(true).isTrue();
+    }
+
+    private BooleanExpression checkApplicable(LocalDate checkinDate, LocalDate checkoutDate,
+        Integer applicable) {
+
+        //TODO : 방에 적용 가능한 숙소를 리턴하는 경우
         return Expressions.asBoolean(true).isTrue();
     }
 
