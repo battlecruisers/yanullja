@@ -5,6 +5,7 @@ import com.battlecruisers.yanullja.region.domain.SubRegion;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.theme.domain.Theme;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,12 +30,17 @@ public class Place extends BaseDate {
     private String event;
     private String policy;
 
+    private String address;
+
     @ManyToOne
     private SubRegion subRegion;
 
-    @OneToMany(mappedBy = "place")
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
     private List<Room> roomList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "place")
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
     private List<Theme> themeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
+    private List<PlaceImage> placeImages = new ArrayList<>();
 }
