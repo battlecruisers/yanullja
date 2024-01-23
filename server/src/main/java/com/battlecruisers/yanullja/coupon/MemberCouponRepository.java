@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface MemberCouponRepository extends JpaRepository<MemberCoupon, Long> {
     // 회원의 쿠폰 사용내역 조회
-    Optional<List<MemberCoupon>> findByMemberAndIsUsed(Member member, boolean isUsed);
+    List<MemberCoupon> findByMemberAndIsUsed(Member member, boolean isUsed);
 
     // 쿠폰 사용 여부도 고려해서 조회, 멤버아이디도 필요
 

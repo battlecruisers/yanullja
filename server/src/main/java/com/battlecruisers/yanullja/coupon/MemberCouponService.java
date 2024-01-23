@@ -4,6 +4,7 @@ import com.battlecruisers.yanullja.coupon.domain.MemberCoupon;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
 import com.battlecruisers.yanullja.coupon.exception.AlreadyRegisteredException;
 import com.battlecruisers.yanullja.coupon.exception.AlreadyUsedException;
+import com.battlecruisers.yanullja.coupon.exception.CouponUsageHistoryNotFoundException;
 import com.battlecruisers.yanullja.coupon.exception.InvalidCouponException;
 import com.battlecruisers.yanullja.coupon.exception.MemberCouponNotFoundException;
 import com.battlecruisers.yanullja.member.MemberRepository;
@@ -93,12 +94,15 @@ public class MemberCouponService {
 
 
     // 회원이 사용한 쿠폰 내역 조회
-    public List<MemberCouponDto> getUsageHistory(Long memberId) {
+    public List<MemberCouponDto> getUsageHistory(Long memberId) throws CouponUsageHistoryNotFoundException {
 
-        var member = this.memberRepository.findById(1L).orElseThrow();
+        var member = this.memberRepository.findById(2L).orElseThrow();
 
-        var histories = memberCouponRepository.findByMemberAndIsUsed(member, true)
-                .orElseThrow();
+        var histories = memberCouponRepository.findByMemberAndIsUsed(member, true);
+
+        // 리스트의 사이즈가 0일 경우 사용내역이 존재하지 않다는 예외 발생
+        if (histories.size() == 0)
+            throw new CouponUsageHistoryNotFoundException(member.getId());
 
         List<MemberCouponDto> memberCouponDtos = new ArrayList<>();
 

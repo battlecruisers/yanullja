@@ -2,6 +2,7 @@ package com.battlecruisers.yanullja.coupon;
 
 import com.battlecruisers.yanullja.coupon.dto.CouponRequestDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
+import com.battlecruisers.yanullja.coupon.exception.CouponUsageHistoryNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class MemberCouponController {
 
     // 회원이 사용한 쿠폰 내역 조회
     @GetMapping("/usage-history")
-    public List<MemberCouponDto> history(HttpServletRequest request) {
+    public List<MemberCouponDto> history(HttpServletRequest request) throws CouponUsageHistoryNotFoundException {
         // 세션에서 회원 아이디 추출
         HttpSession session = request.getSession();
         Long memberId = (Long) session.getAttribute("id");
@@ -55,16 +56,16 @@ public class MemberCouponController {
 
     // 회원이 쿠폰 사용하는 과정 테스트
     @PatchMapping("/{memberCouponId}")
-    public void use(@PathVariable(name="memberCouponId") Long memberCouponId){
+    public void use(@PathVariable(name = "memberCouponId") Long memberCouponId) {
         // 쿠폰 사용 테스트
         memberCouponService.updateStatus(memberCouponId);
     }
 
     // 특정 숙소에서 사용 가능한 쿠폰 조회
     @GetMapping("/{roomId}")
-    public List<MemberCouponDto> room(@RequestParam(defaultValue = "0", name = "page")int page,
-                                      @RequestParam(defaultValue = "10", name = "size")int size,
-                                      @PathVariable(name="roomId")Long roomId){
+    public List<MemberCouponDto> room(@RequestParam(defaultValue = "0", name = "page") int page,
+                                      @RequestParam(defaultValue = "10", name = "size") int size,
+                                      @PathVariable(name = "roomId") Long roomId) {
         Pageable pageable = PageRequest.of(page, size);
         List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupon(roomId, pageable);
         return memberCouponDtos;
