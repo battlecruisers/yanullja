@@ -17,7 +17,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,7 +28,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 public class Coupon extends BaseDate {
     // 숙소 아이디
     @ManyToOne(fetch = FetchType.LAZY)
@@ -76,6 +74,35 @@ public class Coupon extends BaseDate {
     // 쿠폰 유효기간(종료일)
     private LocalDate validityEndDate;
 
+    // 생성자
+    protected Coupon(String name, BigDecimal minimumPrice, BigDecimal discountPrice,
+                     Double discountRate, Double discountLimit, String description,
+                     String region, RoomType roomType, Room room, boolean isValid, boolean isRegistered) {
+        this.name = name;
+        this.minimumPrice = minimumPrice;
+        this.discountPrice = discountPrice;
+        this.discountRate = discountRate;
+        this.discountLimit = discountLimit;
+        this.description = description;
+        this.region = region;
+        this.roomType = roomType;
+        this.room = room;
+        this.isValid = isValid;
+        this.isRegistered = isRegistered;
+        // 이 곳에는 추가적인 초기화 로직이 있다면 추가할 수 있습니다.
+    }
+
+    // 연관관계 매핑용 생성자
+    public Coupon(Long couponId) {
+        this.id = couponId;
+    }
+
+    // 쿠폰 정보 생성 메서드
+    public static Coupon createCoupon(String name, BigDecimal minimumPrice, BigDecimal discountPrice,
+                                      Double discountRate, Double discountLimit, String description,
+                                      String region, RoomType roomType, Room room, boolean isValid, boolean isRegistered) {
+        return new Coupon(name, minimumPrice, discountPrice, discountRate, discountLimit, description, region, roomType, room, isValid, isRegistered);
+    }
 
     // DB에 데이터가 저장되기 전해 실행되는 로직
     @PrePersist
@@ -92,5 +119,4 @@ public class Coupon extends BaseDate {
     public void changeRegistrationStatus() {
         this.isRegistered = true;
     }
-
 }

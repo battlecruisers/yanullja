@@ -1,6 +1,7 @@
 package com.battlecruisers.yanullja.member;
 
 import com.battlecruisers.yanullja.member.domain.Member;
+import com.battlecruisers.yanullja.member.dto.MemberUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +24,9 @@ public class MemberController {
     }
 
     @PutMapping("/me")
-    public Member updateMyInfo(@Valid @RequestBody Member member) {
+    public Member updateMyInfo(@Valid @RequestBody Member member, @RequestBody MemberUpdateDto dto) {
         var memberId = 1L;
-        return memberService.updateMember(memberId, member);
+        return memberService.updateMember(memberId, dto);
     }
 
 }

@@ -2,7 +2,6 @@ package com.battlecruisers.yanullja.coupon;
 
 import com.battlecruisers.yanullja.coupon.dto.CouponRequestDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
-import com.battlecruisers.yanullja.coupon.exception.CouponUsageHistoryNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +42,7 @@ public class MemberCouponController {
 
     // 회원이 사용한 쿠폰 내역 조회
     @GetMapping("/usage-history")
-    public List<MemberCouponDto> history(HttpServletRequest request) throws CouponUsageHistoryNotFoundException {
+    public List<MemberCouponDto> history(HttpServletRequest request) {
         // 세션에서 회원 아이디 추출
         HttpSession session = request.getSession();
         Long memberId = (Long) session.getAttribute("id");
@@ -67,7 +66,7 @@ public class MemberCouponController {
                                       @RequestParam(defaultValue = "10", name = "size") int size,
                                       @PathVariable(name = "roomId") Long roomId) {
         Pageable pageable = PageRequest.of(page, size);
-        List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupon(roomId, pageable);
+        List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(roomId, pageable);
         return memberCouponDtos;
     }
 }

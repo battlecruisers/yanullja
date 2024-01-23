@@ -2,6 +2,7 @@ package com.battlecruisers.yanullja.coupon.domain;
 
 import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.member.domain.Member;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +14,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
@@ -37,7 +36,7 @@ public class MemberCoupon extends BaseDate {
     private Long id;
 
     // 회원 아이디
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -47,10 +46,24 @@ public class MemberCoupon extends BaseDate {
     private Coupon coupon;
 
     // 상태
-    private boolean isUsed;
+    private Boolean isUsed;
+
+    // protected 생성자
+    protected MemberCoupon(Member member, Coupon coupon, Boolean isUsed) {
+        this.member = member;
+        this.coupon = coupon;
+        this.isUsed = isUsed;
+    }
+
+    // 정적 팩토리 메서드
+    public static MemberCoupon createMemberCoupon(Member member, Coupon coupon, Boolean isUsed) {
+        return new MemberCoupon(member, coupon, isUsed);
+    }
 
     // 쿠폰 상태 변경
     public void updateUsageStatus() {
         this.isUsed = true;
     }
+
+
 }
