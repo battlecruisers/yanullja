@@ -35,11 +35,16 @@ public class MemberCouponService {
 
     // 쿠폰 정보 생성
     public void createMemberCoupon(Long code, Long memberId) {
-        MemberCoupon memberCoupon = new MemberCoupon();
 
         // 로그인한 멤버정보와 등록할 쿠폰 정보를 DB에서 가져온다.
-        // var member = memberRepository.findById(memberId).orElseThrow()
-        var coupon = couponRepository.findById(code).orElseThrow();
+        var member = memberRepository
+                .findById(1L)
+                .orElseThrow();
+
+        // 쿠폰을 찾지 못했을 경우 예외처리
+        var coupon = couponRepository
+                .findById(code)
+                .orElseThrow(() -> new MemberCouponNotFoundException(code));
 
         // 가져온 쿠폰이 유효하지 않은 쿠폰이거나 이미 등록된 쿠폰일 경우 예외 발생
         if (!coupon.isValid()) {
@@ -48,17 +53,20 @@ public class MemberCouponService {
             throw new AlreadyRegisteredException(code);
         }
 
-        var member = memberRepository.findById(1L).orElseThrow();
+        MemberCoupon memberCoupon = MemberCoupon.builder()
+                .member(member)
+                .coupon(coupon)
+                .isUsed(false)
+                .build();
+
 
         // 회원쿠폰 정보 세팅(임시)
-        memberCoupon.setCoupon(coupon);
-        memberCoupon.setUsed(true);
-        memberCoupon.setMember(member);
+
 
         memberCouponRepository.save(memberCoupon);
 
         // 회원이 사용한 쿠폰의 등록여부를 변경해준다.
-        coupon.setRegistered(true);
+        coupon.changeRegistrationStatus();
         couponRepository.save(coupon);
     }
 
@@ -73,7 +81,7 @@ public class MemberCouponService {
         // 쿠폰의 사용여부를 체크한 후 사용했을 경우 예외처리
         if (!memberCoupon.isUsed()) {
             // 멤버쿠폰의 isUsed 컬럼값을 true로 변경
-            memberCoupon.setUsed(true);
+            memberCoupon.updateUsageStatus();
         } else {
             throw new AlreadyUsedException(memberCouponId);
         }
@@ -87,9 +95,9 @@ public class MemberCouponService {
     // 회원이 사용한 쿠폰 내역 조회
     public List<MemberCouponDto> getUsageHistory(Long memberId) {
 
-        var me = this.memberRepository.findById(1L).orElseThrow();
+        var member = this.memberRepository.findById(1L).orElseThrow();
 
-        var histories = memberCouponRepository.findByMemberAndIsUsed(me, true)
+        var histories = memberCouponRepository.findByMemberAndIsUsed(member, true)
                 .orElseThrow();
 
         List<MemberCouponDto> memberCouponDtos = new ArrayList<>();
@@ -111,14 +119,14 @@ public class MemberCouponService {
 
     // 회원이 특정 숙소에서 사용 가능한 쿠폰 목록 조회
     public List<MemberCouponDto> getRoomCoupon(Long roomId, Pageable pageable) {
-        var tests = memberCouponRepository.findByRoomId(roomId, pageable).orElseThrow();
+        var RoomCoupons = memberCouponRepository.findByRoomId(roomId, pageable).orElseThrow();
         // Dto로 변환 후 반환
 
         List<MemberCouponDto> memberCouponDtos = new ArrayList<>();
 
-        for (MemberCoupon m : tests) {
+        for (MemberCoupon m : RoomCoupons) {
             MemberCouponDto dto = new MemberCouponDto();
-            
+
             dto.setId(m.getId());
             dto.setMemberId(m.getMember().getId());
             dto.setCouponId(m.getCoupon().getId());

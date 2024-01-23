@@ -11,14 +11,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
 @Entity
-@ToString
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
@@ -45,4 +48,9 @@ public class MemberCoupon extends BaseDate {
 
     // 상태
     private boolean isUsed;
+
+    // 쿠폰 상태 변경
+    public void updateUsageStatus() {
+        this.isUsed = true;
+    }
 }

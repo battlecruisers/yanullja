@@ -15,8 +15,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,7 +27,9 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Coupon extends BaseDate {
     // 숙소 아이디
     @ManyToOne(fetch = FetchType.LAZY)
@@ -71,6 +76,7 @@ public class Coupon extends BaseDate {
     // 쿠폰 유효기간(종료일)
     private LocalDate validityEndDate;
 
+
     // DB에 데이터가 저장되기 전해 실행되는 로직
     @PrePersist
     public void setValidity() {
@@ -80,6 +86,11 @@ public class Coupon extends BaseDate {
         this.validityStartDate = currentDate;
 
         this.validityEndDate = currentDate.plusWeeks(2);
+    }
+
+    // 쿠폰 등록 여부 변경
+    public void changeRegistrationStatus() {
+        this.isRegistered = true;
     }
 
 }
