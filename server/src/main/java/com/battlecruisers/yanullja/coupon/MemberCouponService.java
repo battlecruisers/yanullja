@@ -47,11 +47,11 @@ public class MemberCouponService {
                 .orElseThrow(() -> new MemberCouponNotFoundException(code));
 
         // 가져온 쿠폰이 유효하지 않은 쿠폰이거나 이미 등록된 쿠폰일 경우 예외 발생
-        if (!coupon.isValid()) {
+        if (!coupon.getIsValid()) {
             throw new InvalidCouponException(coupon.getId());
         }
 
-        if (coupon.isRegistered()) {
+        if (coupon.getIsRegistered()) {
             throw new AlreadyRegisteredException(code);
         }
 
