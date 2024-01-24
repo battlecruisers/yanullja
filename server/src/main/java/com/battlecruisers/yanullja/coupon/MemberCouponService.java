@@ -34,19 +34,12 @@ public class MemberCouponService {
     // 회원이 쿠폰 등록
     public void register(Long code, Long id) {
 
-        saveMemberCoupon(code, id);
-
-    }
-
-    // 쿠폰 정보 생성
-    public void saveMemberCoupon(Long code, Long memberId) {
-
         // 로그인한 멤버정보와 등록할 쿠폰 정보를 DB에서 가져온다.
 //        var member = memberRepository
 //                .findById(1L)
 //                .orElseThrow();
 
-        var member = new Member(memberId);
+        var member = new Member(1L);
 
         // 쿠폰을 찾지 못했을 경우 예외처리
         var coupon = couponRepository

@@ -2,7 +2,6 @@ package com.battlecruisers.yanullja.coupon.domain;
 
 import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.member.domain.Member;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -36,7 +35,7 @@ public class MemberCoupon extends BaseDate {
     private Long id;
 
     // 회원 아이디
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
