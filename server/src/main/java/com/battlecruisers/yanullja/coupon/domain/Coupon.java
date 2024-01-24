@@ -63,10 +63,10 @@ public class Coupon extends BaseDate {
     private RoomType roomType;
 
     // 쿠폰 유효 여부
-    private boolean isValid;
+    private Boolean isValid;
 
     // 쿠폰 등록 여부
-    private boolean isRegistered;
+    private Boolean isRegistered;
 
     // 쿠폰 유효기간(시작일)
     private LocalDate validityStartDate;

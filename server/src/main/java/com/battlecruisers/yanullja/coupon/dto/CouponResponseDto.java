@@ -58,8 +58,8 @@ public class CouponResponseDto {
                 coupon.getDescription(),
                 coupon.getRegion(),
                 coupon.getRoomType(),
-                coupon.isValid(),
-                coupon.isRegistered(),
+                coupon.getIsValid(),
+                coupon.getIsRegistered(),
                 coupon.getValidityStartDate(),
                 coupon.getValidityEndDate()
         );
