@@ -2,6 +2,8 @@ package com.battlecruisers.yanullja.member.domain;
 
 import com.battlecruisers.yanullja.coupon.domain.MemberCoupon;
 import com.battlecruisers.yanullja.member.dto.MemberUpdateDto;
+import com.battlecruisers.yanullja.purchase.domain.Purchase;
+import com.battlecruisers.yanullja.reservation.domain.Reservation;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,6 +34,11 @@ public class Member {
     private String nickName;
     private String phoneNumber;
 
+    @OneToMany(mappedBy = "member")
+    private List<Purchase> purchases;
+
+    @OneToMany(mappedBy = "member")
+    private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "member")
     private List<MemberCoupon> memberCoupons;
