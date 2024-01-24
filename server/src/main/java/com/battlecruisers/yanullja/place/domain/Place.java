@@ -41,26 +41,22 @@ public class Place extends BaseDate {
     private SubRegion subRegion;
 
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
-    private List<Room> roomList = new ArrayList<>();
+    private final List<Room> roomList = new ArrayList<>();
 
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
-    private List<Theme> themeList = new ArrayList<>();
+    private final List<Theme> themeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
-    private List<PlaceImage> placeImages = new ArrayList<>();
+    private final List<PlaceImage> placeImages = new ArrayList<>();
 
     protected Place(String name, String category, String event, String policy, String address,
-        SubRegion subRegion, List<Room> roomList, List<Theme> themeList,
-        List<PlaceImage> placeImages) {
+        SubRegion subRegion) {
         this.name = name;
         this.category = category;
         this.event = event;
         this.policy = policy;
         this.address = address;
         this.subRegion = subRegion;
-        this.roomList = roomList;
-        this.themeList = themeList;
-        this.placeImages = placeImages;
     }
 
     public Place(Long id) {
@@ -68,10 +64,7 @@ public class Place extends BaseDate {
     }
 
     public static Place createPlace(String name, String category, String event, String policy,
-        String address,
-        SubRegion subRegion, List<Room> roomList, List<Theme> themeList,
-        List<PlaceImage> placeImages) {
-        return new Place(name, category, event, policy, address, subRegion, roomList, themeList,
-            placeImages);
+        String address, SubRegion subRegion) {
+        return new Place(name, category, event, policy, address, subRegion);
     }
 }
