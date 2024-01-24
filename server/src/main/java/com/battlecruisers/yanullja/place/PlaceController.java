@@ -1,8 +1,9 @@
 package com.battlecruisers.yanullja.place;
 
 
-import com.battlecruisers.yanullja.place.dto.PlaceListQueryDto;
+import com.battlecruisers.yanullja.place.dto.PlaceQueryDto;
 import com.battlecruisers.yanullja.place.dto.SearchConditionDto;
+import com.battlecruisers.yanullja.room.dto.RoomListQueryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -29,12 +30,12 @@ public class PlaceController {
         @ApiResponse(responseCode = "200", description = "성공적인 조회")
     })
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<PlaceListQueryDto>> searchPlaces(
+    public ResponseEntity<List<PlaceQueryDto>> searchPlaces(
         @PathVariable("keyword") String keyword,
         SearchConditionDto searchConditionDto) {
 
         placeService.searchPlaces(keyword, searchConditionDto);
-        return new ResponseEntity<List<PlaceListQueryDto>>(HttpStatus.OK);
+        return new ResponseEntity<List<PlaceQueryDto>>(HttpStatus.OK);
     }
 
     @Operation(summary = "특정 숙소의 상세정보 조회")
@@ -43,11 +44,12 @@ public class PlaceController {
         @ApiResponse(responseCode = "404", description = "존재하지 않는 숙소의 id 입력")
     })
     @GetMapping("/places/{placeId}")
-    public ResponseEntity<Void> queryPlace(@PathVariable("placeId") Long placeId,
+    public ResponseEntity<List<RoomListQueryDto>> queryPlace(@PathVariable("placeId") Long placeId,
         @RequestParam("checkInDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
-        @RequestParam("checkInDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
-        placeService.queryPlace(placeId, checkInDate, checkOutDate);
-        return new ResponseEntity<>(HttpStatus.OK);
+        @RequestParam("checkOutDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
+        List<RoomListQueryDto> roomListQueryDtoList
+            = placeService.queryPlace(placeId, checkInDate, checkOutDate);
+        return new ResponseEntity<List<RoomListQueryDto>>(roomListQueryDtoList, HttpStatus.OK);
     }
 
 }

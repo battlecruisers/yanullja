@@ -1,6 +1,8 @@
 package com.battlecruisers.yanullja.place;
 
-import com.battlecruisers.yanullja.place.dto.PlaceListQueryDto;
+import com.battlecruisers.yanullja.coupon.domain.Coupon;
+import com.battlecruisers.yanullja.coupon.domain.RoomType;
+import com.battlecruisers.yanullja.place.dto.PlaceQueryDto;
 import com.battlecruisers.yanullja.place.dto.SearchConditionDto;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.room.domain.RoomImage;
@@ -8,7 +10,6 @@ import com.battlecruisers.yanullja.room.dto.RoomListQueryDto;
 import com.battlecruisers.yanullja.theme.ThemeType;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public class PlaceService {
     private final PlaceRepository placeRepository;
 
     @Transactional(readOnly = true)
-    public List<PlaceListQueryDto> searchPlaces(String keyword,
+    public List<PlaceQueryDto> searchPlaces(String keyword,
         SearchConditionDto searchConditionDto) {
 
         String[] themes = searchConditionDto.getThemes().split(",");
@@ -36,25 +37,34 @@ public class PlaceService {
 
         List<Room> roomList = placeRepository.searchPlacesWithConditions(keyword,
             searchConditionDto, themeList, sortType);
+
+        roomListToPlaceListQueryDtoList(roomList);
         return null;
     }
 
-    @Transactional(readOnly = true)
-    public void queryPlace(Long placeId, LocalDate checkInDate, LocalDate checkOutDate) {
+    private void roomListToPlaceListQueryDtoList(List<Room> roomList) {
 
-        List<RoomListQueryDto> roomListQueryDtoList = new ArrayList<>();
+    }
+
+    @Transactional(readOnly = true)
+    public List<RoomListQueryDto> queryPlace(Long placeId, LocalDate checkInDate,
+        LocalDate checkOutDate) {
+
         List<Room> roomList = placeRepository.queryPlace(placeId);
+
+        return getRoomListQueryDto(checkInDate, checkOutDate, roomList);
+    }
+
+    private List<RoomListQueryDto> getRoomListQueryDto(LocalDate checkInDate,
+        LocalDate checkOutDate, List<Room> roomList) {
 
         Long days = checkOutDate.toEpochDay() - checkInDate.toEpochDay();
 
         if (days <= 1) {
-            roomListQueryDtoList = makePlaceDetailQueryDtoWithRent(checkInDate, roomList);
+            return makePlaceDetailQueryDtoWithRent(checkInDate, roomList);
         } else {
-            roomListQueryDtoList = makePlaceDetailQueryDtoWithoutRent(checkInDate, checkOutDate,
-                roomList);
+            return makePlaceDetailQueryDtoWithoutRent(checkInDate, checkOutDate, roomList);
         }
-
-
     }
 
     private List<RoomListQueryDto> makePlaceDetailQueryDtoWithRent(LocalDate checkInDate,
@@ -75,7 +85,8 @@ public class PlaceService {
                         room.getWeekendCheckInTime(),
                         room.getWeekendCheckOutTime(),
                         room.getWeekendStayPrice(),
-                        null, null);
+                        findMaxDiscountPrice(room, checkInDate, RoomType.DayUse),
+                        findMaxDiscountPrice(room, checkInDate, RoomType.Stay));
                 })
                 .collect(Collectors.toList());
         } else {
@@ -93,11 +104,13 @@ public class PlaceService {
                         room.getWeekdayCheckInTime(),
                         room.getWeekdayCheckOutTime(),
                         room.getWeekdayStayPrice(),
-                        null, null);
+                        findMaxDiscountPrice(room, checkInDate, RoomType.DayUse),
+                        findMaxDiscountPrice(room, checkInDate, RoomType.Stay));
                 })
                 .collect(Collectors.toList());
         }
     }
+
 
     private List<RoomListQueryDto> makePlaceDetailQueryDtoWithoutRent(LocalDate checkInDate,
         LocalDate checkOutDate,
@@ -123,11 +136,27 @@ public class PlaceService {
                         : room.getWeekendCheckOutTime(),
                     room.getWeekdayStayPrice() * weekDayCount
                         + room.getWeekendStayPrice() * weekendCount,
-                    null, null);
+                    null, findMaxDiscountPrice(room, checkInDate, RoomType.Stay));
             })
             .collect(Collectors.toList());
 
 
+    }
+
+    private Integer findMaxDiscountPrice(Room room, LocalDate checkInDate, RoomType roomType) {
+        List<Coupon> couponList = room.getCoupons();
+
+        return couponList.stream()
+            .filter(coupon -> (coupon.getValidityStartDate().isBefore(checkInDate)
+                && coupon.getValidityEndDate().isAfter(checkInDate)
+                && coupon.getIsValid()
+                && (coupon.getRoomType().equals(roomType)
+                || coupon.getRoomType().equals(RoomType.All)
+            )))
+            .mapToInt(coupon -> coupon.getDiscountPrice().intValue())
+            .max().orElseGet(() -> {
+                return 0;
+            });
     }
 
 
