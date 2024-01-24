@@ -1,14 +1,20 @@
 package com.battlecruisers.yanullja.coupon;
 
+import com.battlecruisers.yanullja.coupon.dto.CouponRequestDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -20,14 +26,14 @@ import java.util.List;
 public class MemberCouponController {
     private final MemberCouponService memberCouponService;
 
-    @PostMapping("/{code}")
+    @PostMapping("")
     // 회원이 쿠폰 등록
-    public void register(@PathVariable(name = "code") Long code, HttpServletRequest request) {
+    public void register(@RequestBody CouponRequestDto dto, HttpServletRequest request) {
         // 세션에서 회원 아이디 추출
         HttpSession session = request.getSession();
         Long memberId = (Long) session.getAttribute("id");
 
-        memberCouponService.register(code, memberId);
+        memberCouponService.register(dto.getCode(), memberId);
     }
 
     // 회원이 보유한 최대할인쿠폰정보를 받아오려면 가격 정보도 필요
@@ -47,4 +53,20 @@ public class MemberCouponController {
         return histories;
     }
 
+    // 회원이 쿠폰 사용하는 과정 테스트
+    @PatchMapping("/{memberCouponId}")
+    public void use(@PathVariable(name = "memberCouponId") Long memberCouponId) {
+        // 쿠폰 사용 테스트
+        memberCouponService.updateStatus(memberCouponId);
+    }
+
+    // 특정 숙소에서 사용 가능한 쿠폰 조회
+    @GetMapping("/{roomId}")
+    public List<MemberCouponDto> room(@RequestParam(defaultValue = "0", name = "page") int page,
+                                      @RequestParam(defaultValue = "10", name = "size") int size,
+                                      @PathVariable(name = "roomId") Long roomId) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(roomId, pageable);
+        return memberCouponDtos;
+    }
 }
