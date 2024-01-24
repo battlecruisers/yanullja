@@ -41,7 +41,7 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
     public List<Room> queryPlace(Long placeId) {
         return jpaQueryFactory.selectFrom(room).distinct()
             .join(room.place, place).fetchJoin()
-            .leftJoin(room.couponList).fetchJoin()
+            .leftJoin(room.coupons).fetchJoin()
             .where(room.place.id.eq(placeId))
             .fetch();
     }
