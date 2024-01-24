@@ -63,6 +63,10 @@ public class Place extends BaseDate {
         this.placeImages = placeImages;
     }
 
+    public Place(Long id) {
+        this.id = id;
+    }
+
     public static Place createPlace(String name, String category, String event, String policy,
         String address,
         SubRegion subRegion, List<Room> roomList, List<Theme> themeList,
