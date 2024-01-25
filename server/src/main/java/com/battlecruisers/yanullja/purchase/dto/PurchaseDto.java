@@ -5,11 +5,13 @@ import com.battlecruisers.yanullja.purchase.domain.PayType;
 import com.battlecruisers.yanullja.room.domain.Room;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class PurchaseDto {
 
     private Long id;
-    private Long price;
+    private BigDecimal price;
     private PayType payType;
     private Boolean paymentStatus;
 
