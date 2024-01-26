@@ -2,13 +2,12 @@ package com.battlecruisers.yanullja.place;
 
 
 import com.battlecruisers.yanullja.place.dto.PlaceInfoQueryDto;
-import com.battlecruisers.yanullja.place.dto.PlaceQueryDto;
 import com.battlecruisers.yanullja.place.dto.SearchConditionDto;
+import com.battlecruisers.yanullja.place.dto.SearchResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -29,13 +28,13 @@ public class PlaceController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "성공적인 조회")
     })
-    @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<PlaceQueryDto>> searchPlaces(
-        @PathVariable("keyword") String keyword,
+    @GetMapping("/accommodations")
+    public ResponseEntity<SearchResponseDto> searchPlaces(
         SearchConditionDto searchConditionDto) {
 
-        placeService.searchPlaces(keyword, searchConditionDto);
-        return new ResponseEntity<List<PlaceQueryDto>>(HttpStatus.OK);
+        SearchResponseDto placeQueryDtoList = placeService.searchPlaces(keyword,
+            searchConditionDto);
+        return new ResponseEntity<SearchResponseDto>(placeQueryDtoList, HttpStatus.OK);
     }
 
     @Operation(summary = "특정 숙소의 상세정보 조회")

@@ -6,6 +6,7 @@ import com.battlecruisers.yanullja.place.domain.Place;
 import com.battlecruisers.yanullja.place.dto.PlaceInfoQueryDto;
 import com.battlecruisers.yanullja.place.dto.PlaceQueryDto;
 import com.battlecruisers.yanullja.place.dto.SearchConditionDto;
+import com.battlecruisers.yanullja.place.dto.SearchResponseDto;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.room.dto.RoomQueryDto;
 import java.time.DayOfWeek;
@@ -59,16 +60,16 @@ public class PlaceService {
     }
 
     @Transactional(readOnly = true)
-    public List<PlaceQueryDto> searchPlaces(String keyword,
-        SearchConditionDto searchConditionDto) {
-        if (searchConditionDto.getThemes() == null && searchConditionDto.getSort() == null) {
-            List<Place> placeList = placeRepository.searchPlacesWithConditions(keyword,
-                searchConditionDto, null, null);
+    public SearchResponseDto searchPlaces(SearchConditionDto searchConditionDto) {
+        List<Place> placeList = placeRepository.searchPlacesWithConditions(
+            searchConditionDto, null, null);
 
-            return roomListToPlaceListQueryDtoList(placeList, searchConditionDto.getCheckInDate(),
-                searchConditionDto.getCheckOutDate());
-        }
+        return roomListToPlaceListQueryDtoList(placeList, searchConditionDto.getStartDate(),
+            searchConditionDto.getEndDate());
 
+        /**
+         * TODO : 나중에 테마리스트, 정렬 프론트엔드 기능 추가시 추가할예정
+         */
 //        String[] themes = searchConditionDto.getThemes().split(",");
 //
 //        List<ThemeType> themeList = Arrays.stream(themes)
@@ -76,14 +77,12 @@ public class PlaceService {
 //            .collect(Collectors.toList());
 //
 //        SortType sortType = SortType.valueOf(searchConditionDto.getSort());
-//
-//        List<Room> roomList = placeRepository.searchPlacesWithConditions(keyword,
-//            searchConditionDto, themeList, sortType);
-//
-//        roomListToPlaceListQueryDtoList(roomList);
-        return null;
+
     }
 
+    /**
+     * TODO : 지금은 숙박만 진행하지만 대실도 진행하는 경우 추가할 예정
+     */
 //    private List<RoomListQueryDto> makePlaceDetailQueryDtoWithRent(LocalDate checkInDate,
 //        List<Room> roomList) {
 //
@@ -160,14 +159,14 @@ public class PlaceService {
 //
 //
 //    }
-
-    private List<PlaceQueryDto> roomListToPlaceListQueryDtoList(List<Place> placeList,
+    private SearchResponseDto roomListToPlaceListQueryDtoList(List<Place> placeList,
         LocalDate checkInDate, LocalDate checkOutDate) {
-        return placeList.stream()
+        List<PlaceQueryDto> placeQueryDtoList = placeList.stream()
             .map(place -> {
                 return PlaceQueryDto.from(place, checkInDate, checkOutDate);
             })
             .collect(Collectors.toList());
+        return new SearchResponseDto(placeQueryDtoList);
     }
 
     @Transactional(readOnly = true)
@@ -183,6 +182,7 @@ public class PlaceService {
     private PlaceInfoQueryDto getPlaceRoomInfoQueryDto(Long placeId, LocalDate checkInDate,
         LocalDate checkOutDate, List<Room> roomList) {
 
+        //TODO : 대실이 추가되면 추가할 예정
 //        if (days <= 1L) {
 //            return makePlaceDetailQueryDtoWithRent(checkInDate, roomList);
 //        } else {

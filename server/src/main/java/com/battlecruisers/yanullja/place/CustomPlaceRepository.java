@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface CustomPlaceRepository {
 
-    List<Place> searchPlacesWithConditions(String keyword,
-        SearchConditionDto searchConditionDto, List<ThemeType> themeList,
+    List<Place> searchPlacesWithConditions(SearchConditionDto searchConditionDto,
+        List<ThemeType> themeList,
         SortType sortType);
 
     List<Room> queryPlace(Long placeId, LocalDate checkInDate, LocalDate checkOutDate,

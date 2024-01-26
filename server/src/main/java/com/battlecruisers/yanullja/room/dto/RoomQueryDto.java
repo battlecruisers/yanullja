@@ -4,12 +4,12 @@ import static com.battlecruisers.yanullja.place.PlaceService.findMaxDiscountPric
 import static com.battlecruisers.yanullja.place.PlaceService.getWeekDayCount;
 
 import com.battlecruisers.yanullja.coupon.domain.RoomType;
+import com.battlecruisers.yanullja.place.dto.RoomOptionImageDto;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.room.domain.RoomImage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class RoomQueryDto {
     private String name;
 
     @Schema(name = "객실 대표 사진 리스트", description = "객실 대표 사진의 저장 url을 리턴", example = "https://aws1.s3.ap-northeast-2.amazonaws.com/room/room1.jpg")
-    private List<String> roomOptionImage;
+    private RoomOptionImageDto roomOptionImage;
 
     @Schema(name = "객실 최대 인원", example = "4")
     private Integer capacity;
@@ -65,8 +65,8 @@ public class RoomQueryDto {
             room.getId(),
             room.getPlace().getId(),
             room.getName(),
-            room.getRoomImages().stream().map(RoomImage::getImageUrl)
-                .collect(Collectors.toList()),
+            new RoomOptionImageDto(room.getRoomImages().stream().map(RoomImage::getImageUrl)
+                .collect(Collectors.toList())),
             room.getCapacity(),
             room.getTotalRoomCount(),
             reservedRoomCount,

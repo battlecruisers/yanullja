@@ -27,15 +27,17 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Place> searchPlacesWithConditions(String keyword,
+    public List<Place> searchPlacesWithConditions(
         SearchConditionDto searchConditionDto, List<ThemeType> themeList, SortType sortType) {
 
         return jpaQueryFactory.selectFrom(place).distinct()
             .join(place.roomList).fetchJoin()
             .leftJoin(place.subRegion, subRegion).fetchJoin()
             .where(
-                makeBooleanBuilderForSearch(keyword, searchConditionDto, themeList))
-            .orderBy(makeOrderSpecifierForSearch(sortType))
+//                makeBooleanBuilderForSearch(keyword, searchConditionDto, themeList))
+//            .orderBy(makeOrderSpecifierForSearch(sortType)
+                eqKeyword(searchConditionDto.getName())
+            )
             .fetch();
 
     }
@@ -65,18 +67,19 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
         return null;
     }
 
-    private BooleanBuilder makeBooleanBuilderForSearch(String keyword,
+    private BooleanBuilder makeBooleanBuilderForSearch(
         SearchConditionDto searchConditionDto, List<ThemeType> themeList) {
 
         BooleanBuilder builder = new BooleanBuilder();
-        LocalDate checkinDate = searchConditionDto.getCheckInDate();
-        LocalDate checkoutDate = searchConditionDto.getCheckOutDate();
+        LocalDate checkinDate = searchConditionDto.getStartDate();
+        LocalDate checkoutDate = searchConditionDto.getEndDate();
         Integer minPrice = searchConditionDto.getMinPrice();
         Integer maxPrice = searchConditionDto.getMaxPrice();
-        Integer capacity = searchConditionDto.getCapacity();
+        Integer capacity = searchConditionDto.getGuest();
         Integer rentable = searchConditionDto.getRentable();
         Integer stayable = searchConditionDto.getStayable();
         Integer applicable = searchConditionDto.getApplicable();
+        String keyword = searchConditionDto.getName();
 
         if (keyword != null && !keyword.isBlank()) {
             builder.and(eqKeyword(keyword));
@@ -141,7 +144,7 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
             return null;
         }
 
-        return room.place.name.contains(keyword);
+        return place.name.contains(keyword);
     }
 
     private BooleanExpression checkAvailableDate(LocalDate checkinDate, LocalDate checkoutDate) {
