@@ -1,5 +1,6 @@
 package com.battlecruisers.yanullja.room.domain;
 
+import static com.battlecruisers.yanullja.place.PlaceService.getWeekDayCount;
 import static com.battlecruisers.yanullja.place.PlaceService.isWeekend;
 
 import com.battlecruisers.yanullja.base.BaseDate;
@@ -138,7 +139,11 @@ public class Room extends BaseDate {
         }
     }
 
-    public Integer calcTotalPrice(Integer weekdayCount, Integer weekendCount) {
-        return weekdayCount * weekdayStayPrice + weekendCount * weekendStayPrice;
+    public Integer calcTotalPrice(LocalDate checkInDate, LocalDate checkOutDate) {
+        Long days = (checkOutDate.toEpochDay() - checkInDate.toEpochDay());
+        Integer weekDayCount = getWeekDayCount(checkInDate, checkOutDate);
+        Integer weekendCount = days.intValue() - weekDayCount;
+
+        return weekDayCount * weekdayStayPrice + weekendCount * weekendStayPrice;
     }
 }

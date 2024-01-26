@@ -1,7 +1,6 @@
 package com.battlecruisers.yanullja.room.dto;
 
 import static com.battlecruisers.yanullja.place.PlaceService.findMaxDiscountPrice;
-import static com.battlecruisers.yanullja.place.PlaceService.getWeekDayCount;
 
 import com.battlecruisers.yanullja.coupon.domain.RoomType;
 import com.battlecruisers.yanullja.place.dto.RoomOptionImageDto;
@@ -57,9 +56,7 @@ public class RoomQueryDto {
     public static RoomQueryDto from(Room room, LocalDate checkInDate, LocalDate checkOutDate,
         Integer reservedRoomCount) {
 
-        Long days = (checkOutDate.toEpochDay() - checkInDate.toEpochDay());
-        Integer weekDayCount = getWeekDayCount(checkInDate, checkOutDate);
-        Integer weekendCount = days.intValue() - weekDayCount;
+        Long days = checkOutDate.toEpochDay() - checkInDate.toEpochDay();
 
         return new RoomQueryDto(
             room.getId(),
@@ -73,7 +70,7 @@ public class RoomQueryDto {
             "example description",
             room.choiceCheckInTime(checkInDate),
             room.choiceCheckOutTime(checkOutDate),
-            room.calcTotalPrice(weekDayCount, weekendCount),
+            room.calcTotalPrice(checkInDate, checkOutDate),
             days.intValue(),
             findMaxDiscountPrice(room, checkInDate, RoomType.Stay)
         );
