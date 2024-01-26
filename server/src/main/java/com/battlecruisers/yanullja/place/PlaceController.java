@@ -32,8 +32,7 @@ public class PlaceController {
     public ResponseEntity<SearchResponseDto> searchPlaces(
         SearchConditionDto searchConditionDto) {
 
-        SearchResponseDto placeQueryDtoList = placeService.searchPlaces(keyword,
-            searchConditionDto);
+        SearchResponseDto placeQueryDtoList = placeService.searchPlaces(searchConditionDto);
         return new ResponseEntity<SearchResponseDto>(placeQueryDtoList, HttpStatus.OK);
     }
 

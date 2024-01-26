@@ -1,5 +1,7 @@
 package com.battlecruisers.yanullja.region;
 
+import com.battlecruisers.yanullja.region.domain.SubRegion;
+import com.battlecruisers.yanullja.region.dto.RegionListQueryDto;
 import com.battlecruisers.yanullja.region.dto.RegionQueryDto;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,5 +35,14 @@ public class RegionService {
         return subRegionRepository.findAllByMainRegionId(mainRegionId).stream()
             .map(RegionQueryDto::new)
             .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public RegionListQueryDto queryRegions() {
+
+        List<String> regionNameList = subRegionRepository.findAll()
+            .stream().map(SubRegion::getName)
+            .collect(Collectors.toList());
+        return new RegionListQueryDto(regionNameList);
     }
 }
