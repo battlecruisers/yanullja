@@ -17,4 +17,6 @@ public interface CustomPlaceRepository {
         Integer guestCount);
 
     List<Place> queryPlacesInRegion(String regionName);
+
+    List<Place> queryPlaceInCategory(String categoryName, PlaceCategory placeCategory);
 }

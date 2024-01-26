@@ -12,4 +12,14 @@ public enum PlaceCategory {
     PlaceCategory(String name) {
         this.name = name;
     }
+
+    public static PlaceCategory fromString(String value) {
+        for (PlaceCategory category : PlaceCategory.values()) {
+            if (category.name.equalsIgnoreCase(value)) {
+                return category;
+            }
+        }
+        throw new IllegalArgumentException(
+            "No constant with name " + value + " found in PlaceCategory enum");
+    }
 }

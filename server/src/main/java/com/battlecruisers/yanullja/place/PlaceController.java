@@ -67,5 +67,22 @@ public class PlaceController {
         return new ResponseEntity<SearchResponseDto>(searchResponseDto, HttpStatus.OK);
     }
 
+    @Operation(summary = "특정 카테고리의 모든 숙소 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공적인 조회")
+    })
+    @GetMapping("/accommodations/category")
+    public ResponseEntity<SearchResponseDto> queryPlacesInCategory(
+        @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+        @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
+        @RequestParam("guest") Integer guestCount,
+        @RequestParam("category") String categoryName
+    ) {
+        SearchResponseDto searchResponseDto = placeService.queryPlaceInCategory(checkInDate,
+            checkOutDate, guestCount, categoryName);
+        return new ResponseEntity<SearchResponseDto>(searchResponseDto, HttpStatus.OK);
+    }
+
+
 }
 

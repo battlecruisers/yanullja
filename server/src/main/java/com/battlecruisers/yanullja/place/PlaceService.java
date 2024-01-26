@@ -210,4 +210,15 @@ public class PlaceService {
         return roomListToPlaceListQueryDtoList(placeList, checkInDate, checkOutDate);
 
     }
+
+
+    @Transactional(readOnly = true)
+    public SearchResponseDto queryPlaceInCategory(LocalDate checkInDate, LocalDate checkOutDate,
+        Integer guestCount, String categoryName) {
+
+        PlaceCategory placeCategory = PlaceCategory.fromString(categoryName);
+
+        List<Place> placeList = placeRepository.queryPlaceInCategory(categoryName, placeCategory);
+        return roomListToPlaceListQueryDtoList(placeList, checkInDate, checkOutDate);
+    }
 }

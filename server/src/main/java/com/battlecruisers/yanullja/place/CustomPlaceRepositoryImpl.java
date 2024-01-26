@@ -64,6 +64,14 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
             .fetch();
     }
 
+    @Override
+    public List<Place> queryPlaceInCategory(String categoryName, PlaceCategory placeCategory) {
+        return jpaQueryFactory.selectFrom(place).distinct()
+            .join(place.roomList).fetchJoin()
+            .where(place.category.eq(placeCategory))
+            .fetch();
+    }
+
     private BooleanExpression goeGuestCount(Integer guestCount) {
         return room.capacity.goe(guestCount);
     }
