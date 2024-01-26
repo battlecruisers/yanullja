@@ -32,8 +32,6 @@ logging:
         type.descriptor.sql: debug
       springframework: info
       springframework.web: trace
-      springframework.web.filter:
-        CommonsRequestLoggingFilter: trace
     root: info
 
 # Logbook
