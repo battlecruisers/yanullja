@@ -1,5 +1,6 @@
 package com.battlecruisers.yanullja.coupon.domain;
 
+import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.member.domain.Member;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,14 +11,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
 @Entity
-@ToString
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
@@ -26,7 +28,7 @@ import lombok.ToString;
                 )
         }
 )
-public class MemberCoupon {
+public class MemberCoupon extends BaseDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // 회원쿠폰 아이디
@@ -43,5 +45,24 @@ public class MemberCoupon {
     private Coupon coupon;
 
     // 상태
-    private boolean isUsed;
+    private Boolean isUsed;
+
+    // protected 생성자
+    protected MemberCoupon(Member member, Coupon coupon, Boolean isUsed) {
+        this.member = member;
+        this.coupon = coupon;
+        this.isUsed = isUsed;
+    }
+
+    // 정적 팩토리 메서드
+    public static MemberCoupon createMemberCoupon(Member member, Coupon coupon, Boolean isUsed) {
+        return new MemberCoupon(member, coupon, isUsed);
+    }
+
+    // 쿠폰 상태 변경
+    public void updateUsageStatus() {
+        this.isUsed = true;
+    }
+
+
 }

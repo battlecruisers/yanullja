@@ -1,6 +1,7 @@
 package com.battlecruisers.yanullja.member;
 
 import com.battlecruisers.yanullja.member.domain.Member;
+import com.battlecruisers.yanullja.member.dto.MemberUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    
+
     public Member getMember(Long memberId) {
         var member = memberRepository.findById(memberId)
                 .orElseThrow(
@@ -21,14 +22,13 @@ public class MemberService {
     }
 
     @Transactional
-    public Member updateMember(Long memberId, Member updatedMember) {
+    public Member updateMember(Long memberId, MemberUpdateDto dto) {
         var member = memberRepository.findById(memberId).orElseThrow(
                 () -> new MemberNotFoundException(memberId)
         );
 
-        member.setNickName(updatedMember.getNickName());
-        member.setPhoneNumber(updatedMember.getPhoneNumber());
-        member.setPromotionalConsent(updatedMember.getPromotionalConsent());
+        member.updateMember(dto);
+
         return memberRepository.save(member);
 
     }

@@ -1,5 +1,6 @@
 ### secrets ###
 env.properties
+env.yml
 .env*
 
 HELP.md
