@@ -1,4 +1,4 @@
-package com.battlecruisers.yanullja.common.logging.config;
+package com.battlecruisers.yanullja.common.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
