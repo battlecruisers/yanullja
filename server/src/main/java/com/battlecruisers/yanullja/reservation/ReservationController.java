@@ -24,12 +24,7 @@ public class ReservationController {
         log.info("ReservationController 호출 됨");
         log.info("ReservationController reservationRequestDto = {}", reservationRequestDto);
 
-        Long reservationId = reservationService.reserve(
-                reservationRequestDto.getMemberId(),
-                reservationRequestDto.getRoomId(),
-                reservationRequestDto.getStartDate(),
-                reservationRequestDto.getEndDate()
-        );
+        Long reservationId = reservationService.reserve(reservationRequestDto);
 
         return ResponseEntity.ok().body(reservationId);
     }
