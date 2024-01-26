@@ -2,6 +2,7 @@ package com.battlecruisers.yanullja.reservation;
 
 import com.battlecruisers.yanullja.member.domain.Member;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
+import com.battlecruisers.yanullja.reservation.dto.ReservationRequestDto;
 import com.battlecruisers.yanullja.reservation.exception.NotEnoughRoomCapacityException;
 import com.battlecruisers.yanullja.room.RoomRepository;
 import com.battlecruisers.yanullja.room.domain.Room;
@@ -22,19 +23,27 @@ public class ReservationService {
     private final RoomRepository roomRepository;
 
     /**
-     * 회원정보, 방정보를 토대로 예약 정보를 저장합니다.
+     * 예약 요청 정보를 토대로 예약을 진행합니다.
      *
-     * @param memberId 회원 식별자
-     * @param roomId   방 식별자
-     * @return 예약 식별자
+     * @param reservationRequestDto 예약 요청 정보
+     * @return reserveId 예약 식별자
      */
     @Transactional
-    public Long reserve(Long memberId, Long roomId, LocalDate startDate, LocalDate endDate) {
+    public Long reserve(ReservationRequestDto reservationRequestDto) {
+        Long memberId = reservationRequestDto.getMemberId();
+        Long roomId = reservationRequestDto.getRoomId();
+        LocalDate startDate = reservationRequestDto.getStartDate();
+        LocalDate endDate = reservationRequestDto.getEndDate();
+
         Member member = new Member(memberId);
         Room room = new Room(roomId);
 
         // 해당 날짜에 방이 사용 가능한지 확인
-        validateRoomAffordable(roomId, startDate, endDate);
+        if (!isRoomAffordable(roomId, startDate, endDate)) {
+            throw new NotEnoughRoomCapacityException();
+        }
+
+        // purchase 진행
 
         // 주문 생성
         Reservation reservation = Reservation.createReservation(member, room, startDate, endDate);
@@ -50,13 +59,14 @@ public class ReservationService {
      * @param endDate   예약 종료 날짜
      * @throws NotEnoughRoomCapacityException 방의 수용 가능 인원을 초과하는 경우 발생하는 예외
      */
-    private void validateRoomAffordable(Long roomId, LocalDate startDate, LocalDate endDate) {
+    public boolean isRoomAffordable(Long roomId, LocalDate startDate, LocalDate endDate) {
         List<Reservation> reservations = reservationRepository.reservationsInDateRange(roomId, startDate, endDate);
         Room room = roomRepository.findById(roomId).orElseThrow();
 
         for (Reservation r : reservations) {
             log.info("reservation = {}", r);
         }
+
 
         // 날짜 별 예약 수 확인
         for (LocalDate date = startDate; date.isEqual(endDate) || date.isBefore(endDate); date = date.plusDays(1)) {
@@ -70,10 +80,11 @@ public class ReservationService {
             log.info("room.capacity = {}", room.getCapacity());
 
             if (reservationCountForDate >= room.getCapacity()) {
-                throw new NotEnoughRoomCapacityException();
+                return false;
             }
         }
 
+        return true;
     }
 
     /**

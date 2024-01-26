@@ -71,4 +71,11 @@ public class Room extends BaseDate {
         this.id = id;
     }
 
+    // 테스트용 생성자
+    public Room(Long id, Place place, Integer capacity) {
+        this.id = id;
+        this.place = place;
+        this.capacity = capacity;
+    }
+
 }

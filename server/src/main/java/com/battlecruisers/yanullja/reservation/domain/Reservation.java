@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 public class Reservation extends BaseDate {
 
     @Id
