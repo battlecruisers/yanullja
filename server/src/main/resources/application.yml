@@ -1,0 +1,42 @@
+# Spring
+spring:
+  config:
+    import:
+      - env.properties
+      - optional:env.yml
+  # JPA
+  jpa:
+    show-sql: true
+    properties:
+      format_sql: true
+      show_sql: true
+      hibernate:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    open-in-view: false
+  thymeleaf:
+    check-template-location: false
+
+# Logging
+logging:
+  level:
+    web: debug
+    com.battlecruisers.yanullja: trace
+    org:
+      zalando:
+        logbook: trace
+      hibernate:
+        sql: trace
+        type.descriptor.sql: debug
+      springframework: info
+      springframework.web: trace
+    root: info
+
+# Logbook
+logbook:
+  format:
+    style: http
+  write:
+    max-body-size: 1024

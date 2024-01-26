@@ -1,18 +1,15 @@
 package com.battlecruisers.yanullja.coupon.dto;
 
-import com.battlecruisers.yanullja.coupon.domain.Coupon;
 import com.battlecruisers.yanullja.coupon.domain.RoomType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
 public class CouponResponseDto {
     // 쿠폰번호
     Long id;
@@ -45,25 +42,4 @@ public class CouponResponseDto {
     LocalDate validityStartDate;
     // 쿠폰 유효기간(종료일)
     LocalDate validityEndDate;
-
-    public static CouponResponseDto createCouponResponseDto(Coupon coupon) {
-        return new CouponResponseDto(
-                coupon.getId(),
-                coupon.getRoom().getId(),
-                coupon.getName(),
-                coupon.getMinimumPrice(),
-                coupon.getDiscountPrice(),
-                coupon.getDiscountRate(),
-                coupon.getDiscountLimit(),
-                coupon.getDescription(),
-                coupon.getRegion(),
-                coupon.getRoomType(),
-                coupon.getIsValid(),
-                coupon.getIsRegistered(),
-                coupon.getValidityStartDate(),
-                coupon.getValidityEndDate()
-        );
-
-    }
-
 }
