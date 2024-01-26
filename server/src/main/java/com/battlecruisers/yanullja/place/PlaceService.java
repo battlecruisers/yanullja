@@ -202,4 +202,12 @@ public class PlaceService {
     }
 
 
+    @Transactional(readOnly = true)
+    public SearchResponseDto queryPlacesInRegion(LocalDate checkInDate, LocalDate checkOutDate,
+        Integer guestCount, String regionName) {
+
+        List<Place> placeList = placeRepository.queryPlacesInRegion(regionName);
+        return roomListToPlaceListQueryDtoList(placeList, checkInDate, checkOutDate);
+
+    }
 }

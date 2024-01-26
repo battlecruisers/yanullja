@@ -15,4 +15,6 @@ public interface CustomPlaceRepository {
 
     List<Room> queryPlace(Long placeId, LocalDate checkInDate, LocalDate checkOutDate,
         Integer guestCount);
+
+    List<Place> queryPlacesInRegion(String regionName);
 }

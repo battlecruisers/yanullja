@@ -56,6 +56,14 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
             .fetch();
     }
 
+    @Override
+    public List<Place> queryPlacesInRegion(String regionName) {
+        return jpaQueryFactory.selectFrom(place).distinct()
+            .join(place.roomList).fetchJoin()
+            .where(place.subRegion.name.eq(regionName))
+            .fetch();
+    }
+
     private BooleanExpression goeGuestCount(Integer guestCount) {
         return room.capacity.goe(guestCount);
     }
