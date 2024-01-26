@@ -3,7 +3,7 @@ spring:
   config:
     import:
       - env.properties
-      - env.yml
+      - optional:env.yml
   # JPA
   jpa:
     show-sql: true
