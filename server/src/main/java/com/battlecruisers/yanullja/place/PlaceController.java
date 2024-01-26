@@ -1,9 +1,9 @@
 package com.battlecruisers.yanullja.place;
 
 
+import com.battlecruisers.yanullja.place.dto.PlaceInfoQueryDto;
 import com.battlecruisers.yanullja.place.dto.PlaceQueryDto;
 import com.battlecruisers.yanullja.place.dto.SearchConditionDto;
-import com.battlecruisers.yanullja.room.dto.RoomListQueryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -43,13 +43,14 @@ public class PlaceController {
         @ApiResponse(responseCode = "200", description = "성공적인 조회"),
         @ApiResponse(responseCode = "404", description = "존재하지 않는 숙소의 id 입력")
     })
-    @GetMapping("/places/{placeId}")
-    public ResponseEntity<List<RoomListQueryDto>> queryPlace(@PathVariable("placeId") Long placeId,
-        @RequestParam("checkInDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
-        @RequestParam("checkOutDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate) {
-        List<RoomListQueryDto> roomListQueryDtoList
-            = placeService.queryPlace(placeId, checkInDate, checkOutDate);
-        return new ResponseEntity<List<RoomListQueryDto>>(roomListQueryDtoList, HttpStatus.OK);
+    @GetMapping("/accommodations/{placeId}")
+    public ResponseEntity<PlaceInfoQueryDto> queryPlace(@PathVariable("placeId") Long placeId,
+        @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+        @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
+        @RequestParam("guest") Integer guestCount) {
+        PlaceInfoQueryDto placeRoomInfoQueryDto
+            = placeService.queryPlace(placeId, checkInDate, checkOutDate, guestCount);
+        return new ResponseEntity<PlaceInfoQueryDto>(placeRoomInfoQueryDto, HttpStatus.OK);
     }
 
 }

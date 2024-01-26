@@ -1,5 +1,7 @@
 package com.battlecruisers.yanullja.room.domain;
 
+import static com.battlecruisers.yanullja.place.PlaceService.isWeekend;
+
 import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.coupon.domain.Coupon;
 import com.battlecruisers.yanullja.place.domain.Place;
@@ -13,6 +15,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -27,42 +31,51 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Room extends BaseDate {
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
-    private final List<Reservation> reservations = new ArrayList<>();
+    private final List<Coupon> coupons = new ArrayList<>();
     @OneToMany(mappedBy = "room", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private final List<RoomImage> roomImages = new ArrayList<>();
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
-    private final List<Coupon> coupons = new ArrayList<>();
+    private final List<Reservation> reservations = new ArrayList<>();
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String category;
     private Integer capacity;
-    private Integer weekdayRentTime;
-    private Integer weekdayRentStartTime;
-    private Integer weekdayRentEndTime;
-    private Integer weekdayCheckInTime;
-    private Integer weekdayCheckOutTime;
+    private LocalTime weekdayRentTime;
+    private LocalTime weekdayRentStartTime;
+    private LocalTime weekdayRentEndTime;
+    private LocalTime weekdayCheckInTime;
+    private LocalTime weekdayCheckOutTime;
     private Integer weekdayRentPrice;
     private Integer weekdayStayPrice;
-    private Integer weekendRentTime;
-    private Integer weekendRentStartTime;
-    private Integer weekendRentEndTime;
-    private Integer weekendCheckInTime;
-    private Integer weekendCheckOutTime;
+
+    private LocalTime weekendRentTime;
+    private LocalTime weekendRentStartTime;
+    private LocalTime weekendRentEndTime;
+    private LocalTime weekendCheckInTime;
+    private LocalTime weekendCheckOutTime;
     private Integer weekendRentPrice;
     private Integer weekendStayPrice;
+
+    private Integer totalRoomCount;
+
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
-    protected Room(String name, String category, Integer capacity, Integer weekdayRentTime,
-        Integer weekdayRentStartTime, Integer weekdayRentEndTime, Integer weekdayCheckInTime,
-        Integer weekdayCheckOutTime, Integer weekdayRentPrice, Integer weekdayStayPrice,
-        Integer weekendRentTime, Integer weekendRentStartTime, Integer weekendRentEndTime,
-        Integer weekendCheckInTime, Integer weekendCheckOutTime, Integer weekendRentPrice,
-        Integer weekendStayPrice, Place place) {
+    /**
+     * id와 oneToMany 3개 빠졌습니다.
+     */
+    public Room(String name, String category, Integer capacity, LocalTime weekdayRentTime,
+        LocalTime weekdayRentStartTime, LocalTime weekdayRentEndTime, LocalTime weekdayCheckInTime,
+        LocalTime weekdayCheckOutTime, Integer weekdayRentPrice, Integer weekdayStayPrice,
+        LocalTime weekendRentTime, LocalTime weekendRentStartTime, LocalTime weekendRentEndTime,
+        LocalTime weekendCheckInTime, LocalTime weekendCheckOutTime, Integer weekendRentPrice,
+        Integer weekendStayPrice, Integer totalRoomCount, Place place) {
         this.name = name;
         this.category = category;
         this.capacity = capacity;
@@ -80,6 +93,7 @@ public class Room extends BaseDate {
         this.weekendCheckOutTime = weekendCheckOutTime;
         this.weekendRentPrice = weekendRentPrice;
         this.weekendStayPrice = weekendStayPrice;
+        this.totalRoomCount = totalRoomCount;
         this.place = place;
     }
 
@@ -87,17 +101,44 @@ public class Room extends BaseDate {
         this.id = id;
     }
 
-    public static Room createRoom(String name, String category, Integer capacity,
-        Integer weekdayRentTime,
-        Integer weekdayRentStartTime, Integer weekdayRentEndTime, Integer weekdayCheckInTime,
-        Integer weekdayCheckOutTime, Integer weekdayRentPrice, Integer weekdayStayPrice,
-        Integer weekendRentTime, Integer weekendRentStartTime, Integer weekendRentEndTime,
-        Integer weekendCheckInTime, Integer weekendCheckOutTime, Integer weekendRentPrice,
-        Integer weekendStayPrice, Place place) {
-        return new Room(name, category, capacity, weekdayRentTime, weekdayRentStartTime,
-            weekdayRentEndTime,
-            weekdayCheckInTime, weekdayCheckOutTime, weekdayRentPrice, weekdayStayPrice,
-            weekendRentTime, weekendRentStartTime, weekendRentEndTime, weekendCheckInTime,
-            weekendCheckOutTime, weekendRentPrice, weekendStayPrice, place);
+    /**
+     * 비즈니스 로직
+     */
+
+
+    public LocalTime choiceCheckInTime(LocalDate localDate) {
+        if (isWeekend(localDate)) {
+            return weekendCheckInTime;
+        } else {
+            return weekdayCheckInTime;
+        }
+    }
+
+    public LocalTime choiceCheckOutTime(LocalDate localDate) {
+        if (isWeekend(localDate)) {
+            return weekendCheckOutTime;
+        } else {
+            return weekdayCheckOutTime;
+        }
+    }
+
+    public Integer choiceRentPrice(LocalDate localDate) {
+        if (isWeekend(localDate)) {
+            return weekendRentPrice;
+        } else {
+            return weekdayRentPrice;
+        }
+    }
+
+    public Integer choiceStayPrice(LocalDate localDate) {
+        if (isWeekend(localDate)) {
+            return weekendStayPrice;
+        } else {
+            return weekdayStayPrice;
+        }
+    }
+
+    public Integer calcTotalPrice(Integer weekdayCount, Integer weekendCount) {
+        return weekdayCount * weekdayStayPrice + weekendCount * weekendStayPrice;
     }
 }

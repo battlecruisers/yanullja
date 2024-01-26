@@ -2,7 +2,7 @@ package com.battlecruisers.yanullja.place.dto;
 
 import com.battlecruisers.yanullja.place.domain.Place;
 import com.battlecruisers.yanullja.place.domain.PlaceImage;
-import com.battlecruisers.yanullja.room.dto.RoomListQueryDto;
+import com.battlecruisers.yanullja.room.dto.RoomQueryDto;
 import com.battlecruisers.yanullja.theme.ThemeType;
 import com.battlecruisers.yanullja.theme.domain.Theme;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,9 +26,9 @@ public class PlaceDetailQueryDto {
     private List<String> placeImageList = new ArrayList<>();
 
 
-    private List<RoomListQueryDto> roomList = new ArrayList<>();
+    private List<RoomQueryDto> roomList = new ArrayList<>();
 
-    public PlaceDetailQueryDto(Place place, List<RoomListQueryDto> roomList) {
+    public PlaceDetailQueryDto(Place place, List<RoomQueryDto> roomList) {
         this.name = place.getName();
         this.themeList = place.getThemeList().stream()
             .map(Theme::getType)

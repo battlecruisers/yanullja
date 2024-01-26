@@ -2,9 +2,11 @@ package com.battlecruisers.yanullja.place;
 
 
 import static com.battlecruisers.yanullja.place.domain.QPlace.place;
+import static com.battlecruisers.yanullja.region.domain.QSubRegion.subRegion;
 import static com.battlecruisers.yanullja.room.domain.QRoom.room;
 import static com.battlecruisers.yanullja.theme.domain.QTheme.theme;
 
+import com.battlecruisers.yanullja.place.domain.Place;
 import com.battlecruisers.yanullja.place.dto.SearchConditionDto;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.theme.ThemeType;
@@ -25,11 +27,12 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Room> searchPlacesWithConditions(String keyword,
+    public List<Place> searchPlacesWithConditions(String keyword,
         SearchConditionDto searchConditionDto, List<ThemeType> themeList, SortType sortType) {
 
-        return jpaQueryFactory.selectFrom(room).distinct()
-            .join(room.place, place).fetchJoin()
+        return jpaQueryFactory.selectFrom(place).distinct()
+            .join(place.roomList).fetchJoin()
+            .leftJoin(place.subRegion, subRegion).fetchJoin()
             .where(
                 makeBooleanBuilderForSearch(keyword, searchConditionDto, themeList))
             .orderBy(makeOrderSpecifierForSearch(sortType))
@@ -38,12 +41,28 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
     }
 
     @Override
-    public List<Room> queryPlace(Long placeId) {
+    public List<Room> queryPlace(Long placeId, LocalDate checkInDate, LocalDate checkOutDate,
+        Integer guestCount) {
         return jpaQueryFactory.selectFrom(room).distinct()
             .join(room.place, place).fetchJoin()
             .leftJoin(room.coupons).fetchJoin()
             .where(room.place.id.eq(placeId))
+            .where(
+                canReserve(checkInDate, checkOutDate, placeId),
+                goeGuestCount(guestCount)
+            )
             .fetch();
+    }
+
+    private BooleanExpression goeGuestCount(Integer guestCount) {
+        return room.capacity.goe(guestCount);
+    }
+
+    private BooleanExpression canReserve(LocalDate checkInDate, LocalDate checkOutDate,
+        Long placeId) {
+        //TODO : 숙소 내의 각 방에 대해서 예약 목록 체크해서 예약 가능한지 확인하기
+
+        return null;
     }
 
     private BooleanBuilder makeBooleanBuilderForSearch(String keyword,
