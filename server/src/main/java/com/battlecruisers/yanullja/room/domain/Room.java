@@ -64,4 +64,11 @@ public class Room extends BaseDate {
     @OneToMany(mappedBy = "room", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<RoomImage> roomImages = new ArrayList<>();
 
+    public Room() {
+    }
+
+    public Room(Long id) {
+        this.id = id;
+    }
+
 }
