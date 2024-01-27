@@ -28,7 +28,7 @@ public class PlaceInfoQueryDto {
         this.region = place.getSubRegion().getName();
         this.address = place.getAddress();
         this.description = place.getDescription();
-        this.thumbnailImageUrl = "place.getThumbnailImageUrl()";
+        this.thumbnailImageUrl = place.getThumbnailImageUrl();
         this.roomOptions = roomOptions;
     }
 }
