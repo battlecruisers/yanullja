@@ -27,9 +27,9 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews")
-    public ResponseEntity<Object> fetchReviews(@RequestParam(value = "placeId") Long placeId, @RequestParam(value = "roomId", required = false) Long roomId,
-                                               @RequestParam(value = "photo", required = false, defaultValue = "false") boolean photo,
-                                               @PageableDefault(size = 15, sort = "createdDate") Pageable pageable) {
+    public ResponseEntity<Slice<ReviewDetailDto>> fetchReviews(@RequestParam(value = "placeId") Long placeId, @RequestParam(value = "roomId", required = false) Long roomId,
+                                                               @RequestParam(value = "photo", required = false, defaultValue = "false") boolean photo,
+                                                               @PageableDefault(size = 15, sort = "createdDate") Pageable pageable) {
 
         ReviewSearchCond cond = new ReviewSearchCond(placeId, roomId, photo, pageable);
         Slice<ReviewDetailDto> reviews = reviewService.getReviewDetails(cond, pageable);
@@ -53,7 +53,7 @@ public class ReviewController {
      * 나중에 Place Controller 생기면 옮겨야 함
      */
     @GetMapping("/places/{placeId}/review")
-    public ResponseEntity<Object> fetchReviews(@PathVariable(value = "placeId") Long placeId, @RequestParam(value = "roomId", required = false) Long roomId) {
+    public ResponseEntity<ReviewStatisticsDto> fetchReviews(@PathVariable(value = "placeId") Long placeId, @RequestParam(value = "roomId", required = false) Long roomId) {
 
         ReviewStatisticsDto reviewInfo = reviewService.getReviewInfo(placeId, roomId);
 
