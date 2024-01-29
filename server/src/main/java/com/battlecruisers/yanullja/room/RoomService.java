@@ -14,11 +14,15 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
 
+//    public fromEntityToDto(Room room, RoomDto roomDto) {
+//        this.roomMapper.convert(room, roomDto);
+//    }
 
-    public RoomDto getRoom(Long roomId){
+    public RoomDto getRoom(Long roomId) {
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(IllegalArgumentException::new);
 
-        return RoomDto.createNewRoomDto(room);
+//        return RoomDto.createNewRoomDto(room);
+        return null;
     }
 }

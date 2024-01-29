@@ -1,29 +1,26 @@
 package com.battlecruisers.yanullja.place.dto;
 
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.*;
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 public class SearchConditionDto {
 
-    @Schema(name = "체크인 날짜", requiredMode = NOT_REQUIRED, example = "2024-01-20", description = "YYYY-MM-DD 형식으로 전송")
+    @Schema(name = "체크인 날짜", requiredMode = REQUIRED, example = "2024-01-20", description = "YYYY-MM-DD 형식으로 전송")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate checkinDate;
+    private LocalDate startDate;
 
-    @Schema(name = "체크아웃 날짜", requiredMode = NOT_REQUIRED, example = "2024-01-25", description = "YYYY-MM-DD 형식으로 전송")
+    @Schema(name = "체크아웃 날짜", requiredMode = REQUIRED, example = "2024-01-25", description = "YYYY-MM-DD 형식으로 전송")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate checkoutDate;
+    private LocalDate endDate;
 
     @Schema(name = "투숙 인원", requiredMode = NOT_REQUIRED, example = "4")
-    private Integer capacity;
+    private Integer guest;
 
     @Schema(name = "대실 가능 여부", requiredMode = NOT_REQUIRED, example = "1", description = "대실 가능하면 1, 대실 불가능하면 0")
     private Integer rentable;
@@ -48,4 +45,6 @@ public class SearchConditionDto {
 
     @Schema(name = "정렬", requiredMode = NOT_REQUIRED, example = "REVIEW_GOOD", description = "REVIEW_GOOD, REVIEW_MANY, BOOKMARK_MANY, PRICE_LOW, PRICE_HIGH")
     private String sort;
+
+    private String name;
 }

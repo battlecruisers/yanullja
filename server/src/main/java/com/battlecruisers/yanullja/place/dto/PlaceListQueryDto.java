@@ -11,4 +11,6 @@ public class PlaceListQueryDto {
     private Integer placeCount;
 
     private List<PlaceQueryDto> placeList;
+
+
 }
