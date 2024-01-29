@@ -4,6 +4,7 @@ import com.battlecruisers.yanullja.coupon.domain.RoomType;
 import com.battlecruisers.yanullja.coupon.dto.CouponDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
 import com.battlecruisers.yanullja.room.domain.Room;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,21 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/coupons")
 public class CouponController {
 
     private final CouponService couponService;
-
-
-    public CouponController(CouponService couponService) {
-        this.couponService = couponService;
-    }
-
+    
     @GetMapping("")
     // 전체 쿠폰 목록 조회
     public ResponseEntity<List<CouponDto>> list() {
@@ -61,7 +57,7 @@ public class CouponController {
 
         List<MemberCouponDto> list = couponService.getAvailableCouponsByRoomId(room.getId());
 
-        List<CouponDto> maxDiscountCoupons = couponService.findMostDiscountedCoupon(list, room, LocalDate.now(), RoomType.DayUse);
+        List<CouponDto> maxDiscountCoupons = couponService.findMostDiscountedCoupon(list, room, RoomType.DayUse);
 
         return ResponseEntity.ok().body(maxDiscountCoupons);
 

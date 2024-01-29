@@ -104,6 +104,55 @@ public class Coupon extends BaseDate {
         return new Coupon(name, minimumPrice, discountPrice, discountRate, discountLimit, description, region, roomType, room, isValid, isRegistered);
     }
 
+    // 할인이 적용된 가격 반환
+    public static BigDecimal getCalculateDiscountedPrice(BigDecimal originalPrice, Coupon coupon) {
+        // 쿠폰의 고정 할인 금액
+        BigDecimal discountPrice = coupon.getDiscountPrice();
+        // 쿠폰의 할인율
+        BigDecimal discountRate = BigDecimal.valueOf(coupon.getDiscountRate());
+
+        // 고정 할인 금액을 적용합니다.
+        BigDecimal priceAfterFixedDiscount = originalPrice
+                .subtract(discountPrice)
+                .max(BigDecimal.ZERO);
+
+        // 할인율이 0이면, 고정 할인 금액을 적용한 가격을 반환합니다.
+        if (discountRate.compareTo(BigDecimal.ZERO) == 0) {
+            return priceAfterFixedDiscount;
+        }
+
+        // 할인율을 적용한 할인 금액을 계산합니다.
+        BigDecimal discountAmount = originalPrice.multiply(discountRate.divide(BigDecimal.valueOf(100)));
+        BigDecimal priceAfterPercentageDiscount = originalPrice.subtract(discountAmount);
+
+        // 할인 금액이 할인 제한을 초과하면, 할인 제한만큼만 할인을 적용합니다.
+        if (discountAmount.compareTo(coupon.getDiscountLimit()) > 0) {
+            return priceAfterFixedDiscount.subtract(coupon.getDiscountLimit());
+        }
+
+        // 할인율을 적용한 가격을 반환합니다.
+        return priceAfterPercentageDiscount;
+    }
+
+    public static BigDecimal getCalculateCouponDiscountAmount(BigDecimal originalPrice, Coupon coupon) {
+        // 쿠폰의 고정 할인 금액
+        BigDecimal discountPrice = coupon.getDiscountPrice();
+        // 쿠폰의 할인율
+        BigDecimal discountRate = BigDecimal.valueOf(coupon.getDiscountRate());
+
+        // 할인율 적용시 얼마나 할인받을 수 있는지 계산
+        BigDecimal discountRatePrice = BigDecimal.ZERO;
+        // 0이 아닐 경우에만 계산한다.
+        if (discountRate.compareTo(BigDecimal.ZERO) != 0) {
+            discountRatePrice = originalPrice.multiply(discountRate.divide(BigDecimal.valueOf(100)));
+        }
+
+        // 할인받을 수 있는 금액이 최대 할인 한도를 초과할 경우 최대 할인 한도만큼을 할인금액으로 하여 반환
+        return (discountPrice.add(discountRatePrice)
+                .compareTo(coupon.getDiscountLimit()) > 0) ? coupon.getDiscountLimit() : discountPrice.add(discountRatePrice);
+
+    }
+
     // DB에 데이터가 저장되기 전해 실행되는 로직
     @PrePersist
     public void setValidity() {
