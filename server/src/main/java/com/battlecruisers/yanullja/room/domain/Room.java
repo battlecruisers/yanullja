@@ -4,7 +4,9 @@ import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.place.domain.Place;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Room extends BaseDate {
 
     @Id
@@ -63,5 +66,5 @@ public class Room extends BaseDate {
 
     @OneToMany(mappedBy = "room", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<RoomImage> roomImages = new ArrayList<>();
-
+    
 }

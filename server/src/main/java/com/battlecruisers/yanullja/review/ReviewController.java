@@ -2,8 +2,9 @@ package com.battlecruisers.yanullja.review;
 
 
 import com.battlecruisers.yanullja.review.dto.ReviewDetailDto;
-import com.battlecruisers.yanullja.review.dto.ReviewInfo;
+import com.battlecruisers.yanullja.review.dto.ReviewSaveDto;
 import com.battlecruisers.yanullja.review.dto.ReviewSearchCond;
+import com.battlecruisers.yanullja.review.dto.ReviewStatisticsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -32,13 +33,23 @@ public class ReviewController {
                 .body(reviews);
     }
 
+    @PostMapping("/reviews")
+    public ResponseEntity<Object> writeReviews(@RequestBody ReviewSaveDto saveForm) {
+
+        reviewService.saveReview(saveForm);
+
+        return ResponseEntity
+                .ok()
+                .build();
+    }
+
     /**
      * 나중에 Place Controller 생기면 옮겨야 함
      */
     @GetMapping("/places/{placeId}/review")
     public ResponseEntity<Object> fetchReviews(@PathVariable(value = "placeId") Long placeId, @RequestParam(value = "roomId", required = false) Long roomId) {
 
-        ReviewInfo reviewInfo = reviewService.getReviewInfo(placeId, roomId);
+        ReviewStatisticsDto reviewInfo = reviewService.getReviewInfo(placeId, roomId);
 
         return ResponseEntity
                 .ok()

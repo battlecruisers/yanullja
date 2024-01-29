@@ -13,28 +13,31 @@ public class ReviewDetailDto {
 
     private Long id;
 
+    private Double totalRate;
+
     private String writer;
 
     private String roomName;
 
-    private LocalDateTime createdDate;
+    private LocalDateTime creationDate;
 
     private String content;
 
-    private List<String> imgUrls;
+    private List<String> roomImageUrls;
 
-    public ReviewDetailDto(Review review) {
+    private ReviewDetailDto(Review review) {
         this.id = review.getId();
+        this.totalRate = review.getTotalRate();
         this.writer = review.getMember().getNickName();
         this.roomName = review.getRoom().getName();
-        this.createdDate = review.getCreatedDate();
+        this.creationDate = review.getCreatedDate();
         this.content = review.getContent();
-        this.imgUrls = review.getReviewImages().stream()
+        this.roomImageUrls = review.getReviewImages().stream()
                 .map(img -> img.getImageUrl())
                 .collect(Collectors.toList());
     }
 
-    public static ReviewDetailDto createNewReviewDetail(Review review){
+    public static ReviewDetailDto from(Review review) {
         return new ReviewDetailDto(review);
     }
 }
