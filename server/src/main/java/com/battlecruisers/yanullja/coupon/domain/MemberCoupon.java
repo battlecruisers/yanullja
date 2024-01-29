@@ -64,5 +64,7 @@ public class MemberCoupon extends BaseDate {
         this.isUsed = true;
     }
 
+    // 가격을 제일 많이 할인해주는 쿠폰 반환
+
 
 }

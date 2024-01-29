@@ -50,7 +50,7 @@ public class Coupon extends BaseDate {
     // 할인률
     private Double discountRate;
     // 할인한도
-    private Double discountLimit;
+    private BigDecimal discountLimit;
     // 설명
     private String description;
     // 사용지역
@@ -76,7 +76,7 @@ public class Coupon extends BaseDate {
 
     // 생성자
     protected Coupon(String name, BigDecimal minimumPrice, BigDecimal discountPrice,
-                     Double discountRate, Double discountLimit, String description,
+                     Double discountRate, BigDecimal discountLimit, String description,
                      String region, RoomType roomType, Room room, boolean isValid, boolean isRegistered) {
         this.name = name;
         this.minimumPrice = minimumPrice;
@@ -99,7 +99,7 @@ public class Coupon extends BaseDate {
 
     // 쿠폰 정보 생성 메서드
     public static Coupon createCoupon(String name, BigDecimal minimumPrice, BigDecimal discountPrice,
-                                      Double discountRate, Double discountLimit, String description,
+                                      Double discountRate, BigDecimal discountLimit, String description,
                                       String region, RoomType roomType, Room room, boolean isValid, boolean isRegistered) {
         return new Coupon(name, minimumPrice, discountPrice, discountRate, discountLimit, description, region, roomType, room, isValid, isRegistered);
     }

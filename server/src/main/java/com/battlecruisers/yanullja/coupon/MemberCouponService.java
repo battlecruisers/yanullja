@@ -13,7 +13,6 @@ import com.battlecruisers.yanullja.member.domain.Member;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -60,7 +59,6 @@ public class MemberCouponService {
 
         // 회원쿠폰 정보 세팅(임시)
 
-
         memberCouponRepository.save(memberCoupon);
 
         // 회원이 사용한 쿠폰의 등록여부를 변경해준다.
@@ -77,14 +75,12 @@ public class MemberCouponService {
                 .orElseThrow(() -> new MemberCouponNotFoundException(memberCouponId));
 
         // 쿠폰의 사용여부를 체크한 후 사용했을 경우 예외처리
-        if (!memberCoupon.getIsUsed()) {
-            // 멤버쿠폰의 isUsed 컬럼값을 true로 변경
-            memberCoupon.updateUsageStatus();
-
-
-        } else {
+        if (memberCoupon.getIsUsed()) {
             throw new AlreadyUsedException(memberCouponId);
         }
+
+        // 멤버쿠폰의 isUsed 컬럼값을 true로 변경
+        memberCoupon.updateUsageStatus();
 
         // DB에 반영
         memberCouponRepository.save(memberCoupon);
@@ -100,19 +96,15 @@ public class MemberCouponService {
         var histories = memberCouponRepository.findByMemberAndIsUsed(member, true);
 
         // 리스트의 사이즈가 0일 경우 사용내역이 존재하지 않다는 예외 발생
-        if (histories.size() == 0)
+        if (histories.size() == 0) {
             throw new CouponUsageHistoryNotFoundException(member.getId());
+        }
 
         List<MemberCouponDto> memberCouponDtos = new ArrayList<>();
 
         // Dto로 변환 후 반환
         for (MemberCoupon m : histories) {
-            MemberCouponDto dto = new MemberCouponDto();
-            dto.setId(m.getId());
-            dto.setMemberId(m.getMember().getId());
-            dto.setCouponId(m.getCoupon().getId());
-            dto.setUsed(m.getIsUsed());
-
+            var dto = MemberCouponDto.from(m);
             memberCouponDtos.add(dto);
         }
 
@@ -121,27 +113,24 @@ public class MemberCouponService {
 
 
     // 회원이 특정 숙소에서 사용 가능한 쿠폰 목록 조회
-    public List<MemberCouponDto> getRoomCoupons(Long roomId, Pageable pageable) {
-        var roomCoupons = memberCouponRepository.findByRoomId(roomId, pageable);
+    public List<MemberCouponDto> getRoomCoupons(Long roomId) {
+        var roomCoupons = memberCouponRepository.findByRoomId(roomId);
         // Dto로 변환 후 반환
 
         // 리스트의 사이즈가 0일 경우 사용할 수 있는 쿠폰이 없다는 예외를 발생
-        if (roomCoupons.isEmpty())
+        if (roomCoupons.isEmpty()) {
             throw new NoAvailableCouponsException();
+        }
 
         List<MemberCouponDto> memberCouponDtos = new ArrayList<>();
 
         for (MemberCoupon m : roomCoupons) {
-            MemberCouponDto dto = new MemberCouponDto();
-
-            dto.setId(m.getId());
-            dto.setMemberId(m.getMember().getId());
-            dto.setCouponId(m.getCoupon().getId());
-            dto.setUsed(m.getIsUsed());
+            var dto = MemberCouponDto.from(m);
             memberCouponDtos.add(dto);
         }
 
         return memberCouponDtos;
     }
+
 
 }
