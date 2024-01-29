@@ -6,6 +6,7 @@ import com.battlecruisers.yanullja.review.domain.Review;
 import com.battlecruisers.yanullja.review.dto.ReviewDetailDto;
 import com.battlecruisers.yanullja.review.dto.ReviewSearchCond;
 import com.battlecruisers.yanullja.review.dto.ReviewStatisticsDto;
+import com.battlecruisers.yanullja.review.exception.NoReviewsException;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -122,19 +123,26 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
                 .limit(10)
                 .fetch();
 
-
         ArrayList<ReviewDetailDto> reviews = new ArrayList<>();
         for (Tuple t : data) {
             reviews.add(ReviewDetailDto.from(t.get(review)));
         }
 
+        Tuple tuple = null;
+
+        try {
+            tuple = data.get(0);
+        } catch (IndexOutOfBoundsException e) {
+            throw new NoReviewsException();
+        }
+
         return new ReviewStatisticsDto(
-                data.get(0).get(1, Long.class),
-                data.get(0).get(2, Double.class),
-                data.get(0).get(3, Double.class),
-                data.get(0).get(4, Double.class),
-                data.get(0).get(5, Double.class),
-                data.get(0).get(6, Double.class),
+                tuple.get(1, Long.class),
+                tuple.get(2, Double.class),
+                tuple.get(3, Double.class),
+                tuple.get(4, Double.class),
+                tuple.get(5, Double.class),
+                tuple.get(6, Double.class),
                 reviews
         );
     }

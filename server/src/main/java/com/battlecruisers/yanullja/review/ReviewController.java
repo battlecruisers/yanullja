@@ -5,6 +5,7 @@ import com.battlecruisers.yanullja.review.dto.ReviewDetailDto;
 import com.battlecruisers.yanullja.review.dto.ReviewSaveDto;
 import com.battlecruisers.yanullja.review.dto.ReviewSearchCond;
 import com.battlecruisers.yanullja.review.dto.ReviewStatisticsDto;
+import com.battlecruisers.yanullja.review.exception.NoReviewsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -19,6 +20,11 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+
+    @ExceptionHandler
+    public ResponseEntity<Object> noReviewsExceptionHandler(NoReviewsException e) {
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/reviews")
     public ResponseEntity<Object> fetchReviews(@RequestParam(value = "placeId") Long placeId, @RequestParam(value = "roomId", required = false) Long roomId,
