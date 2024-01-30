@@ -9,14 +9,15 @@ import com.battlecruisers.yanullja.place.dto.SearchConditionDto;
 import com.battlecruisers.yanullja.place.dto.SearchResponseDto;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.room.dto.RoomQueryDto;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -30,7 +31,7 @@ public class PlaceService {
     }
 
     public static Integer getWeekDayCount(LocalDate checkInDate,
-        LocalDate checkOutDate) {
+                                          LocalDate checkOutDate) {
 
         Integer weekDayCount = 0;
         for (LocalDate date = checkInDate; date.isBefore(checkOutDate); date = date.plusDays(1)) {
@@ -42,30 +43,30 @@ public class PlaceService {
     }
 
     public static Integer findMaxDiscountPrice(Room room, LocalDate checkInDate,
-        RoomType roomType) {
+                                               RoomType roomType) {
         List<Coupon> couponList = room.getCoupons();
 //        MemeberCoupon memberCoupon = findMaxDiscountPrice(room, MemberCouponList)
 
         return couponList.stream()
-            .filter(coupon -> (coupon.getValidityStartDate().isBefore(checkInDate)
-                && coupon.getValidityEndDate().isAfter(checkInDate)
-                && coupon.getIsValid()
-                && (coupon.getRoomType().equals(roomType)
-                || coupon.getRoomType().equals(RoomType.All)
-            )))
-            .mapToInt(coupon -> coupon.getDiscountPrice().intValue())
-            .max().orElseGet(() -> {
-                return 0;
-            });
+                .filter(coupon -> (coupon.getValidityStartDate().isBefore(checkInDate)
+                        && coupon.getValidityEndDate().isAfter(checkInDate)
+                        && coupon.getIsValid()
+                        && (coupon.getRoomType().equals(roomType)
+                        || coupon.getRoomType().equals(RoomType.ALL)
+                )))
+                .mapToInt(coupon -> coupon.getDiscountPrice().intValue())
+                .max().orElseGet(() -> {
+                    return 0;
+                });
     }
 
     @Transactional(readOnly = true)
     public SearchResponseDto searchPlaces(SearchConditionDto searchConditionDto) {
         List<Place> placeList = placeRepository.searchPlacesWithConditions(
-            searchConditionDto, null, null);
+                searchConditionDto, null, null);
 
         return roomListToPlaceListQueryDtoList(placeList, searchConditionDto.getStartDate(),
-            searchConditionDto.getEndDate());
+                searchConditionDto.getEndDate());
 
         /**
          * TODO : 나중에 테마리스트, 정렬 프론트엔드 기능 추가시 추가할예정
@@ -160,27 +161,27 @@ public class PlaceService {
 //
 //    }
     private SearchResponseDto roomListToPlaceListQueryDtoList(List<Place> placeList,
-        LocalDate checkInDate, LocalDate checkOutDate) {
+                                                              LocalDate checkInDate, LocalDate checkOutDate) {
         List<PlaceQueryDto> placeQueryDtoList = placeList.stream()
-            .map(place -> {
-                return PlaceQueryDto.from(place, checkInDate, checkOutDate);
-            })
-            .collect(Collectors.toList());
+                .map(place -> {
+                    return PlaceQueryDto.from(place, checkInDate, checkOutDate);
+                })
+                .collect(Collectors.toList());
         return new SearchResponseDto(placeQueryDtoList);
     }
 
     @Transactional(readOnly = true)
     public PlaceInfoQueryDto queryPlace(Long placeId, LocalDate checkInDate,
-        LocalDate checkOutDate, Integer guestCount) {
+                                        LocalDate checkOutDate, Integer guestCount) {
 
         List<Room> roomList
-            = placeRepository.queryPlace(placeId, checkInDate, checkOutDate, guestCount);
+                = placeRepository.queryPlace(placeId, checkInDate, checkOutDate, guestCount);
 
         return getPlaceRoomInfoQueryDto(placeId, checkInDate, checkOutDate, roomList);
     }
 
     private PlaceInfoQueryDto getPlaceRoomInfoQueryDto(Long placeId, LocalDate checkInDate,
-        LocalDate checkOutDate, List<Room> roomList) {
+                                                       LocalDate checkOutDate, List<Room> roomList) {
 
         //TODO : 대실이 추가되면 추가할 예정
 //        if (days <= 1L) {
@@ -190,13 +191,13 @@ public class PlaceService {
 //        }
 
         Place place = placeRepository.findById(placeId)
-            .orElseThrow(() -> new NotFoundException("Place Not Found"));
+                .orElseThrow(() -> new NotFoundException("Place Not Found"));
 
         List<RoomQueryDto> roomQueryDto = roomList.stream()
-            .map(room -> {
-                return RoomQueryDto.from(room, checkInDate, checkOutDate, null);
-            })
-            .collect(Collectors.toList());
+                .map(room -> {
+                    return RoomQueryDto.from(room, checkInDate, checkOutDate, null);
+                })
+                .collect(Collectors.toList());
 
         return new PlaceInfoQueryDto(place, roomQueryDto);
     }
@@ -204,7 +205,7 @@ public class PlaceService {
 
     @Transactional(readOnly = true)
     public SearchResponseDto queryPlacesInRegion(LocalDate checkInDate, LocalDate checkOutDate,
-        Integer guestCount, String regionName) {
+                                                 Integer guestCount, String regionName) {
 
         List<Place> placeList = placeRepository.queryPlacesInRegion(regionName);
         return roomListToPlaceListQueryDtoList(placeList, checkInDate, checkOutDate);
@@ -214,7 +215,7 @@ public class PlaceService {
 
     @Transactional(readOnly = true)
     public SearchResponseDto queryPlaceInCategory(LocalDate checkInDate, LocalDate checkOutDate,
-        Integer guestCount, String categoryName) {
+                                                  Integer guestCount, String categoryName) {
 
         PlaceCategory placeCategory = PlaceCategory.fromString(categoryName);
 
