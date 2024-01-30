@@ -2,6 +2,7 @@ package com.battlecruisers.yanullja.coupon;
 
 import com.battlecruisers.yanullja.coupon.domain.MemberCoupon;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
+import com.battlecruisers.yanullja.coupon.dto.MemberCouponResponseDto;
 import com.battlecruisers.yanullja.coupon.exception.AlreadyRegisteredException;
 import com.battlecruisers.yanullja.coupon.exception.AlreadyUsedException;
 import com.battlecruisers.yanullja.coupon.exception.CouponUsageHistoryNotFoundException;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.battlecruisers.yanullja.coupon.domain.MemberCoupon.createMemberCoupon;
 
@@ -132,5 +134,15 @@ public class MemberCouponService {
         return memberCouponDtos;
     }
 
+    // 회원이 사용 가능한 쿠폰목록 조회
+    public List<MemberCouponResponseDto> findMemberCouponsWithCoupon(Long memberId) {
+//        fetch join this
+//        List<MemberCoupon> memberCoupons = memberCouponRepository.findByMemberAndIsUsed(memberId, false);
+        // chat gpt change this to fetch join
 
+        List<MemberCoupon> res = this.memberCouponRepository.findMemberCouponsWithCoupon(memberId);
+        return res.stream().map(
+                MemberCouponResponseDto::from
+        ).collect(Collectors.toList());
+    }
 }
