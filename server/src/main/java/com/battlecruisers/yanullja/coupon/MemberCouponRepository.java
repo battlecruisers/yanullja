@@ -18,6 +18,7 @@ public interface MemberCouponRepository extends JpaRepository<MemberCoupon, Long
             "and c.isValid = true and mc.isUsed = false and c.isRegistered = true")
     List<MemberCoupon> findByRoomId(@Param("roomId") Long roomId);
 
+    // 회원이 사용 가능한 쿠폰 목록 조회
     @Query(value = "select mc from MemberCoupon mc join fetch mc.coupon where mc.member.id = :memberId and mc.isUsed = false")
     List<MemberCoupon> findMemberCouponsWithCoupon(@Param("memberId") Long memberId);
 
