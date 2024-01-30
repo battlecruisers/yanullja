@@ -2,12 +2,15 @@ package com.battlecruisers.yanullja.place;
 
 
 import com.battlecruisers.yanullja.place.dto.PlaceInfoQueryDto;
+import com.battlecruisers.yanullja.place.dto.PlaceQueryDto;
 import com.battlecruisers.yanullja.place.dto.SearchConditionDto;
 import com.battlecruisers.yanullja.place.dto.SearchResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +33,11 @@ public class PlaceController {
             @ApiResponse(responseCode = "200", description = "성공적인 조회")
     })
     @GetMapping("/accommodations")
-    public ResponseEntity<SearchResponseDto> searchPlaces(
-            SearchConditionDto searchConditionDto) {
+    public ResponseEntity<Page<PlaceQueryDto>> searchPlaces(Pageable pageable,
+                                                            SearchConditionDto searchConditionDto) {
 
-        SearchResponseDto placeQueryDtoList = placeService.searchPlaces(searchConditionDto);
-        return new ResponseEntity<SearchResponseDto>(placeQueryDtoList, HttpStatus.OK);
+        Page<PlaceQueryDto> placeQueryDtoList = placeService.searchPlaces(pageable, searchConditionDto);
+        return new ResponseEntity<Page<PlaceQueryDto>>(placeQueryDtoList, HttpStatus.OK);
     }
 
     @Operation(summary = "특정 숙소의 상세정보 조회")
@@ -57,18 +60,18 @@ public class PlaceController {
             @ApiResponse(responseCode = "200", description = "성공적인 조회")
     })
     @GetMapping("/accommodations/region")
-    public ResponseEntity<SearchResponseDto> queryPlacesInRegion(
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
-            @RequestParam("guest") Integer guestCount,
-            @RequestParam("region") String regionName
+    public ResponseEntity<Page<PlaceQueryDto>> queryPlacesInRegion(Pageable pageable,
+                                                                   @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+                                                                   @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
+                                                                   @RequestParam("guest") Integer guestCount,
+                                                                   @RequestParam("region") String regionName
     ) {
-        SearchResponseDto searchResponseDto = placeService.queryPlacesInRegion(checkInDate,
+        Page<PlaceQueryDto> searchResponseDto = placeService.queryPlacesInRegion(pageable, checkInDate,
                 checkOutDate, guestCount, regionName);
-        return new ResponseEntity<SearchResponseDto>(searchResponseDto, HttpStatus.OK);
+        return new ResponseEntity<Page<PlaceQueryDto>>(searchResponseDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "특정 지역의 모든 숙소 조회")
+    @Operation(summary = "특정 카테고리의 모든 숙소 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공적인 조회")
     })
