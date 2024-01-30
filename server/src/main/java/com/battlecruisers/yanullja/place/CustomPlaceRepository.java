@@ -19,5 +19,5 @@ public interface CustomPlaceRepository {
 
     List<Place> queryPlaceInCategory(String categoryName, PlaceCategory placeCategory);
 
-    List<Place> queryPlacesRanking();
+    List<Place> queryPlacesRanking(Pageable pageable);
 }

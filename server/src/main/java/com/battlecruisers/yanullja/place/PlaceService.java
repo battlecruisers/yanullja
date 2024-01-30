@@ -363,13 +363,17 @@ public class PlaceService {
         PlaceCategory placeCategory = PlaceCategory.fromString(categoryName);
 
         List<Place> placeList = placeRepository.queryPlaceInCategory(categoryName, placeCategory);
+        placeList = checkCapacity(placeList, guestCount);
         return toSearchResponseDto(toPlaceQueryDtoList(placeList, checkInDate, checkOutDate));
     }
 
     @Transactional(readOnly = true)
-    public SearchResponseDto queryPlacesRanking(LocalDate checkInDate, LocalDate checkOutDate) {
+    public SearchResponseDto queryPlacesRanking(Pageable pageable, LocalDate checkInDate, LocalDate checkOutDate) {
 
-        List<Place> placeList = placeRepository.queryPlacesRanking();
+        List<Place> placeList = placeRepository.queryPlacesRanking(pageable);
+//        List<Place> placeList = reservationList.stream()
+//                .map(tuple -> tuple.get(0, Place.class))
+//                .collect(Collectors.toList());
         return toSearchResponseDto(toPlaceQueryDtoList(placeList, checkInDate, checkOutDate));
     }
 }

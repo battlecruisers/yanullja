@@ -92,12 +92,12 @@ public class PlaceController {
             @ApiResponse(responseCode = "200", description = "성공적인 조회")
     })
     @GetMapping("/accommodations/ranking")
-    public ResponseEntity<SearchResponseDto> queryPlacesInCategory(
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
-            @RequestParam("guest") Integer guestCount
+    public ResponseEntity<SearchResponseDto> queryPlacesInCategory(Pageable pageable,
+                                                                   @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+                                                                   @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
+                                                                   @RequestParam("guest") Integer guestCount
     ) {
-        SearchResponseDto searchResponseDto = placeService.queryPlacesRanking(checkInDate,
+        SearchResponseDto searchResponseDto = placeService.queryPlacesRanking(pageable, checkInDate,
                 checkOutDate);
         return new ResponseEntity<SearchResponseDto>(searchResponseDto, HttpStatus.OK);
     }

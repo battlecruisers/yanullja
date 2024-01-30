@@ -16,6 +16,7 @@ import java.util.List;
 
 import static com.battlecruisers.yanullja.place.domain.QPlace.place;
 import static com.battlecruisers.yanullja.region.domain.QSubRegion.subRegion;
+import static com.battlecruisers.yanullja.reservation.domain.QReservation.reservation;
 import static com.battlecruisers.yanullja.room.domain.QRoom.room;
 
 @RequiredArgsConstructor
@@ -70,9 +71,15 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
     }
 
     @Override
-    public List<Place> queryPlacesRanking() {
-        return jpaQueryFactory.selectFrom(place).distinct()
-                .join(place.roomList).fetchJoin()
+    public List<Place> queryPlacesRanking(Pageable pageable) {
+        return jpaQueryFactory.select(place)
+                .from(reservation)
+                .leftJoin(reservation.room, room)
+                .leftJoin(room.place, place)
+                .groupBy(place)
+                .orderBy(reservation.count().desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 
@@ -91,11 +98,6 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
         if (keyword != null && !keyword.isBlank() && !keyword.equals("null")) {
             builder.and(eqKeyword(keyword));
         }
-
-
-        if (capacity != null) {
-            builder.and(checkCapacity(capacity));
-        }
         return builder;
     }
 
@@ -107,11 +109,4 @@ public class CustomPlaceRepositoryImpl implements CustomPlaceRepository {
 
         return place.name.containsIgnoreCase(keyword);
     }
-
-
-    private BooleanExpression checkCapacity(Integer capacity) {
-        return room.capacity.goe(capacity);
-    }
-
-
 }
