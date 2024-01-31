@@ -1,11 +1,9 @@
 package com.battlecruisers.yanullja.reservation;
 
-import com.battlecruisers.yanullja.member.MemberService;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
 import com.battlecruisers.yanullja.reservation.dto.ReservationCancelRequestDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationRequestDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationResponseDto;
-import com.battlecruisers.yanullja.room.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +19,6 @@ import java.util.List;
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final MemberService memberService;
-    private final RoomService roomService;
 
     @GetMapping
     @Operation(summary = "결제 로직 조회")

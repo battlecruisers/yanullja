@@ -142,6 +142,7 @@ public class Room extends BaseDate {
         log.info("weekendCount = {}", weekendCount);
 
         Integer totalPrice = weekDayCount * weekdayStayPrice + weekendCount * weekendStayPrice;
+        log.info("totalPrice = {}", totalPrice);
 
         return new BigDecimal(totalPrice);
     }

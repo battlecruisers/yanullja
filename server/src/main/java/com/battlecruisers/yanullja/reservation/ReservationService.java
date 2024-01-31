@@ -6,7 +6,9 @@ import com.battlecruisers.yanullja.member.domain.Member;
 import com.battlecruisers.yanullja.purchase.PurchaseService;
 import com.battlecruisers.yanullja.purchase.domain.Purchase;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
-import com.battlecruisers.yanullja.reservation.dto.*;
+import com.battlecruisers.yanullja.reservation.dto.ReservationCancelRequestDto;
+import com.battlecruisers.yanullja.reservation.dto.ReservationRequestDto;
+import com.battlecruisers.yanullja.reservation.dto.ReservationResponseDto;
 import com.battlecruisers.yanullja.reservation.exception.NotEnoughTotalRoomCountException;
 import com.battlecruisers.yanullja.room.RoomRepository;
 import com.battlecruisers.yanullja.room.domain.Room;
@@ -61,9 +63,9 @@ public class ReservationService {
 
         // 해당 날짜에 방이 사용 가능한지 확인
         List<Reservation> reservations = reservationRepository.reservationsInDateRangeByRoomId(roomId, startDate, endDate);
-        Integer minimumRoomCount = getMaxAvailableRoomCount(reservations, room, startDate, endDate);
+        Integer remainingRoomCount = room.getTotalRoomCount() - getMaxAvailableRoomCount(reservations, room, startDate, endDate);
 
-        if (room.getTotalRoomCount() - minimumRoomCount <= 0) {
+        if (remainingRoomCount < 0) {
             throw new NotEnoughTotalRoomCountException();
         }
 
@@ -74,7 +76,7 @@ public class ReservationService {
         // purchase 진행 (쿠폰 계산로직 포함)
         Purchase purchase = purchaseService.purchase(reservation, memberCouponId);
 
-        return buildReservationResponseDto(reservation, purchase);
+        return ReservationResponseDto.buildReservationResponseDto(reservation, purchase);
     }
 
     private Room validateAndGetRoom(Long roomId) {
@@ -116,25 +118,6 @@ public class ReservationService {
 
         // 사용 가능한 객실 수의 최소값 반환
         return Collections.max(reservationCounts);
-    }
-
-    private ReservationResponseDto buildReservationResponseDto(Reservation reservation, Purchase purchase) {
-        // DTO 설정
-        // 1. DTO: Room 설정
-        PurchaseRoomResponseDto purchaseRoomResponseDto =
-                PurchaseRoomResponseDto.createPurchaseRoomResponseDto(purchase, reservation.getRoom());
-
-        // 2. DTO: Place 설정
-        PurchasePlaceResponseDto purchasePlaceResponseDto =
-                PurchasePlaceResponseDto.createPurchasePlaceResponseDto(reservation.getRoom().getPlace());
-        purchasePlaceResponseDto.getRoomOptions().add(purchaseRoomResponseDto);
-
-        // 3. DTO: Reserve 설정
-        ReservationResponseDto reservationResponseDto =
-                ReservationResponseDto.createReservationResponseDto(reservation.getId());
-        reservationResponseDto.getAccommodations().add(purchasePlaceResponseDto);
-
-        return reservationResponseDto;
     }
 
     /**
