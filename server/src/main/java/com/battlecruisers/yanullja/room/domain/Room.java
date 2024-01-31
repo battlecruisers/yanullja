@@ -8,9 +8,11 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.List;
 import static com.battlecruisers.yanullja.place.PlaceService.getWeekDayCount;
 import static com.battlecruisers.yanullja.place.PlaceService.isWeekend;
 
+@Slf4j
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -98,8 +101,6 @@ public class Room extends BaseDate {
     /**
      * 비즈니스 로직
      */
-
-
     public LocalTime choiceCheckInTime(LocalDate localDate) {
         if (isWeekend(localDate)) {
             return weekendCheckInTime;
@@ -132,11 +133,16 @@ public class Room extends BaseDate {
         }
     }
 
-    public Integer calcTotalPrice(LocalDate checkInDate, LocalDate checkOutDate) {
+    public BigDecimal calcTotalPrice(LocalDate checkInDate, LocalDate checkOutDate) {
         Long days = (checkOutDate.toEpochDay() - checkInDate.toEpochDay());
         Integer weekDayCount = getWeekDayCount(checkInDate, checkOutDate);
         Integer weekendCount = days.intValue() - weekDayCount;
 
-        return weekDayCount * weekdayStayPrice + weekendCount * weekendStayPrice;
+        log.info("weekDayCount = {}", weekDayCount);
+        log.info("weekendCount = {}", weekendCount);
+
+        Integer totalPrice = weekDayCount * weekdayStayPrice + weekendCount * weekendStayPrice;
+
+        return new BigDecimal(totalPrice);
     }
 }
