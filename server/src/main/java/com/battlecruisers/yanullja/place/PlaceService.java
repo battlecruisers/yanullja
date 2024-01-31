@@ -23,7 +23,11 @@ import org.webjars.NotFoundException;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -61,7 +65,7 @@ public class PlaceService {
                         && coupon.getValidityEndDate().isAfter(checkInDate)
                         && coupon.getIsValid()
                         && (coupon.getRoomType().equals(roomType)
-                        || coupon.getRoomType().equals(RoomType.All)
+                        || coupon.getRoomType().equals(RoomType.ALL)
                 )))
                 .mapToInt(coupon -> coupon.getDiscountPrice().intValue())
                 .max().orElseGet(() -> {
