@@ -36,11 +36,18 @@ public class PurchaseService {
         BigDecimal totalPrice = room.calcTotalPrice(reservation.getStartDate(), reservation.getEndDate());
 
         // 쿠폰 적용 (사용 가능 여부 판단 &  쿠폰 적용 후 금액 계산)
-        BigDecimal finalPrice = BigDecimal.ZERO;
+        BigDecimal finalPrice = totalPrice;
+
         if (memberCouponId != null) {
             MemberCoupon memberCoupon = validateAndGetMemberCoupon(memberCouponId);
             finalPrice = memberCouponService.applyMemberCoupon(memberCoupon, totalPrice);
+
+            // 쿠폰 사용상태:isUsed 변경 (미사용 -> 사용)
+            memberCoupon.updateUsageStatus();
+            memberCouponRepository.save(memberCoupon);
         }
+
+        log.info("finalPrice = {}", finalPrice);
 
         // 결제 정보 저장
         Purchase purchase = Purchase.createPurchase(reservation, finalPrice);
