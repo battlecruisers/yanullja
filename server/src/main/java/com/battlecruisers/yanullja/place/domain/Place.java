@@ -5,8 +5,10 @@ import static com.battlecruisers.yanullja.place.PlaceService.getWeekDayCount;
 import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.place.PlaceCategory;
 import com.battlecruisers.yanullja.region.domain.SubRegion;
+import com.battlecruisers.yanullja.review.domain.Review;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.theme.domain.Theme;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -35,6 +37,9 @@ public class Place extends BaseDate {
     private final List<Theme> themeList = new ArrayList<>();
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
     private final List<PlaceImage> placeImages = new ArrayList<>();
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private final List<Review> reviews = new ArrayList<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

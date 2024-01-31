@@ -4,8 +4,9 @@ package com.battlecruisers.yanullja.review;
 import com.battlecruisers.yanullja.review.domain.QReview;
 import com.battlecruisers.yanullja.review.domain.Review;
 import com.battlecruisers.yanullja.review.dto.ReviewDetailDto;
-import com.battlecruisers.yanullja.review.dto.ReviewInfo;
 import com.battlecruisers.yanullja.review.dto.ReviewSearchCond;
+import com.battlecruisers.yanullja.review.dto.ReviewStatisticsDto;
+import com.battlecruisers.yanullja.review.exception.NoReviewsException;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -67,7 +68,7 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
 
 
         List<ReviewDetailDto> content = reviews.stream()
-                .map(ReviewDetailDto::createNewReviewDetail)
+                .map(ReviewDetailDto::from)
                 .collect(Collectors.toList());
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
@@ -95,11 +96,12 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
 
 
     @Override
-    public ReviewInfo findReviewInfo(Long placeId, Long roomId) {
+    public ReviewStatisticsDto findReviewInfo(Long placeId, Long roomId) {
         QReview reviewRate = new QReview("reviewRate");
         List<Tuple> data = query
                 .select(
                         review,
+                        select(review.count()).from(review),
                         select(reviewRate.totalRate.avg()).from(reviewRate),
                         select(reviewRate.cleanlinessRate.avg()).from(reviewRate),
                         select(reviewRate.convenienceRate.avg()).from(reviewRate),
@@ -121,18 +123,26 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
                 .limit(10)
                 .fetch();
 
-
         ArrayList<ReviewDetailDto> reviews = new ArrayList<>();
         for (Tuple t : data) {
-            reviews.add(ReviewDetailDto.createNewReviewDetail(t.get(review)));
+            reviews.add(ReviewDetailDto.from(t.get(review)));
         }
 
-        return new ReviewInfo(
-                data.get(0).get(1, Double.class),
-                data.get(0).get(2, Double.class),
-                data.get(0).get(3, Double.class),
-                data.get(0).get(4, Double.class),
-                data.get(0).get(5, Double.class),
+        Tuple tuple = null;
+
+        try {
+            tuple = data.get(0);
+        } catch (IndexOutOfBoundsException e) {
+            throw new NoReviewsException();
+        }
+
+        return new ReviewStatisticsDto(
+                tuple.get(1, Long.class),
+                tuple.get(2, Double.class),
+                tuple.get(3, Double.class),
+                tuple.get(4, Double.class),
+                tuple.get(5, Double.class),
+                tuple.get(6, Double.class),
                 reviews
         );
     }
