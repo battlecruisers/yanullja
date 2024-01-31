@@ -7,7 +7,6 @@ import com.battlecruisers.yanullja.coupon.dto.CouponDto;
 import com.battlecruisers.yanullja.coupon.exception.BelowMinimumCouponAmountException;
 import com.battlecruisers.yanullja.coupon.exception.InvalidCouponException;
 import com.battlecruisers.yanullja.room.RoomRepository;
-import com.battlecruisers.yanullja.room.domain.Room;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import java.util.List;
 
 import static com.battlecruisers.yanullja.place.PlaceService.isWeekend;
 
-
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -29,6 +27,64 @@ public class CouponService {
     // 테스트
     private final MemberCouponRepository memberCouponRepository;
 
+
+    // 가장 할인을 많이 해주는 쿠폰 반환, 메서드에서 필요한 인자는 매개변수로 다 받아오게끔 처리
+    public List<CouponDto> findMostDiscountedCoupon(Long roomId) {
+        // 사용 가능한 쿠폰목록
+        List<MemberCoupon> availableCoupons = this.getAvailableCouponsByRoomId(roomId);
+
+        // 최대 할인 쿠폰(최대로 할인 가능한 쿠폰이 2개 이상 존재할 수 있기 때문에 리스트를 사용)
+        List<CouponDto> mostDiscountedCoupons = new ArrayList<>();
+
+        // 쿠폰 할인 적용 대상인 객실의 정보
+
+
+        // 최대로 할인 받는 금액을 초기화
+        BigDecimal maxDiscountAmount = BigDecimal.ZERO;
+
+        // 기준날짜 지정
+        LocalDate nowTime = LocalDate.now();
+
+        // 리스트르에서 회원 쿠폰 정보를 읽어오면서 최대 할인 쿠폰 목록을 생성한다.
+        for (MemberCoupon m : availableCoupons) {
+
+            BigDecimal discountAmount = calculateCouponDiscountAmount(
+                    m,
+                    isWeekend(nowTime) ?
+                            (m.getCoupon().getRoomType().equals(RoomType.STAY) ?
+                                    BigDecimal.valueOf(m.getCoupon().getRoom().getWeekendStayPrice()) :
+                                    BigDecimal.valueOf(m.getCoupon().getRoom().getWeekendRentPrice())) :
+                            (m.getCoupon().getRoomType().equals(RoomType.STAY) ?
+                                    BigDecimal.valueOf(m.getCoupon().getRoom().getWeekdayStayPrice()) :
+                                    BigDecimal.valueOf(m.getCoupon().getRoom().getWeekdayRentPrice()))
+            );
+
+            if (discountAmount.compareTo(maxDiscountAmount) > 0) {
+                mostDiscountedCoupons.clear();
+                maxDiscountAmount = discountAmount;
+
+                Coupon coupon = couponRepository
+                        .findById(m.getCoupon().getId())
+                        .orElseThrow();
+
+                CouponDto couponDto = CouponDto.from(coupon);
+
+                mostDiscountedCoupons.add(couponDto);
+            } else if (discountAmount.compareTo(maxDiscountAmount) == 0) {
+                Coupon coupon = couponRepository
+                        .findById(m.getCoupon().getId())
+                        .orElseThrow();
+
+                CouponDto couponDto = CouponDto.from(coupon);
+
+                mostDiscountedCoupons.add(couponDto);
+            }
+
+
+        }
+
+        return mostDiscountedCoupons;
+    }
 
     // 적용 가능한 전체 쿠폰 조회
     public List<CouponDto> getCouponList() {
@@ -105,65 +161,7 @@ public class CouponService {
     }
 
 
-    // 가장 할인을 많이 해주는 쿠폰 반환
-    public List<CouponDto> findMostDiscountedCoupon(Long roomId) {
-        // 사용 가능한 쿠폰목록
-        List<MemberCoupon> availableCoupons = this.getAvailableCouponsByRoomId(roomId);
-
-        // 최대 할인 쿠폰(최대로 할인 가능한 쿠폰이 2개 이상 존재할 수 있기 때문에 리스트를 사용)
-        List<CouponDto> mostDiscountedCoupons = new ArrayList<>();
-
-        // 쿠폰 할인 적용 대상인 객실의 정보
-
-
-        // 최대로 할인 받는 금액을 초기화
-        BigDecimal maxDiscountAmount = BigDecimal.ZERO;
-
-        // 기준날짜 지정
-        LocalDate nowTime = LocalDate.now();
-
-        // 리스트르에서 회원 쿠폰 정보를 읽어오면서 최대 할인 쿠폰 목록을 생성한다.
-        for (MemberCoupon m : availableCoupons) {
-
-            BigDecimal discountAmount = calculateCouponDiscountAmount(
-                    m,
-                    isWeekend(nowTime) ?
-                            (m.getCoupon().getRoomType().equals(RoomType.STAY) ?
-                                    BigDecimal.valueOf(m.getCoupon().getRoom().getWeekendStayPrice()) :
-                                    BigDecimal.valueOf(m.getCoupon().getRoom().getWeekendRentPrice())) :
-                            (m.getCoupon().getRoomType().equals(RoomType.STAY) ?
-                                    BigDecimal.valueOf(m.getCoupon().getRoom().getWeekdayStayPrice()) :
-                                    BigDecimal.valueOf(m.getCoupon().getRoom().getWeekdayRentPrice()))
-            );
-
-            if (discountAmount.compareTo(maxDiscountAmount) > 0) {
-                mostDiscountedCoupons.clear();
-                maxDiscountAmount = discountAmount;
-
-                Coupon coupon = couponRepository
-                        .findById(m.getCoupon().getId())
-                        .orElseThrow();
-
-                CouponDto couponDto = CouponDto.from(coupon);
-
-                mostDiscountedCoupons.add(couponDto);
-            } else if (discountAmount.compareTo(maxDiscountAmount) == 0) {
-                Coupon coupon = couponRepository
-                        .findById(m.getCoupon().getId())
-                        .orElseThrow();
-
-                CouponDto couponDto = CouponDto.from(coupon);
-
-                mostDiscountedCoupons.add(couponDto);
-            }
-
-
-        }
-
-        return mostDiscountedCoupons;
-    }
-
-
+    // 특정 숙소에서 사용 가능한 쿠폰 목록 <<  MemberCouponService로 옮기는게 나을 듯
     public List<MemberCoupon> getAvailableCouponsByRoomId(Long roomId) {
         List<MemberCoupon> availableCoupons = memberCouponRepository.findByRoomId(roomId);
 //        List<MemberCouponDto> memberCouponDtos = new ArrayList<>();
@@ -174,8 +172,4 @@ public class CouponService {
         return availableCoupons;
     }
 
-
-    public Room getRoomInfo(Long roomId) {
-        return roomRepository.findById(roomId).orElseThrow();
-    }
 }
