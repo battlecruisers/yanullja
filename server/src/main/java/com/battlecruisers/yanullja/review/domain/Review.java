@@ -6,14 +6,21 @@ import com.battlecruisers.yanullja.member.domain.Member;
 import com.battlecruisers.yanullja.place.domain.Place;
 import com.battlecruisers.yanullja.review.dto.ReviewSaveDto;
 import com.battlecruisers.yanullja.room.domain.Room;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -59,7 +66,9 @@ public class Review extends BaseDate {
         this.id = id;
     }
 
-    private Review(String content, Double kindnessRate, Double cleanlinessRate, Double convenienceRate, Double locationRate, Double totalRate, Member member, Place place, Room room) {
+    private Review(String content, Double kindnessRate, Double cleanlinessRate,
+        Double convenienceRate, Double locationRate, Double totalRate,
+        Member member, Place place, Room room) {
         this.content = content;
         this.kindnessRate = kindnessRate;
         this.cleanlinessRate = cleanlinessRate;
@@ -73,15 +82,15 @@ public class Review extends BaseDate {
 
     public static Review from(ReviewSaveDto form) {
         return new Review(
-                form.getContent(),
-                form.getKindnessRate(),
-                form.getCleanlinessRate(),
-                form.getConvenienceRate(),
-                form.getLocationRate(),
-                form.getTotalRate(),
-                new Member(form.getMemberId()),
-                new Place(form.getPlaceId()),
-                new Room(form.getRoomId())
+            form.getContent(),
+            form.getKindnessRate(),
+            form.getCleanlinessRate(),
+            form.getConvenienceRate(),
+            form.getLocationRate(),
+            form.getTotalRate(),
+            new Member(form.getMemberId()),
+            new Place(form.getPlaceId()),
+            new Room(form.getRoomId())
         );
     }
 

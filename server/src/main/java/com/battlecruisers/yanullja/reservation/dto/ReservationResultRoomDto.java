@@ -3,9 +3,8 @@ package com.battlecruisers.yanullja.reservation.dto;
 import com.battlecruisers.yanullja.purchase.domain.Purchase;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
 import com.battlecruisers.yanullja.room.domain.Room;
-import lombok.Data;
-
 import java.time.LocalDate;
+import lombok.Data;
 
 @Data
 public class ReservationResultRoomDto {
@@ -47,10 +46,12 @@ public class ReservationResultRoomDto {
         this.totalPrice = purchase.getPrice().longValue();
         this.reservationStartDate = reservation.getStartDate();
         this.reservationEndDate = reservation.getEndDate();
-        this.stayDuration = reservationStartDate.until(reservationEndDate).getDays();
+        this.stayDuration = reservationStartDate.until(reservationEndDate)
+            .getDays();
     }
 
-    public static ReservationResultRoomDto createReservationRoomResponseDto(Purchase purchase) {
+    public static ReservationResultRoomDto createReservationRoomResponseDto(
+        Purchase purchase) {
         return new ReservationResultRoomDto(purchase);
     }
 

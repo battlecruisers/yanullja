@@ -16,12 +16,15 @@ public class JSendResponseAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
 
-        return returnType.getContainingClass().isAnnotationPresent(RestController.class) ||
-                returnType.hasMethodAnnotation(ResponseBody.class);
+        return returnType.getContainingClass()
+            .isAnnotationPresent(RestController.class) ||
+            returnType.hasMethodAnnotation(ResponseBody.class);
     }
 
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+    public Object beforeBodyWrite(Object body, MethodParameter returnType,
+        MediaType selectedContentType, Class selectedConverterType,
+        ServerHttpRequest request, ServerHttpResponse response) {
         if (body instanceof JSendResponse) {
             return body;
         }

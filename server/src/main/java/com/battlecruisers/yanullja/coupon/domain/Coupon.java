@@ -15,20 +15,20 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Coupon extends BaseDate {
+
     // 숙소 아이디
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
@@ -75,9 +75,11 @@ public class Coupon extends BaseDate {
     private LocalDate validityEndDate;
 
     // 생성자
-    protected Coupon(String name, BigDecimal minimumPrice, BigDecimal discountPrice,
-                     Double discountRate, BigDecimal discountLimit, String description,
-                     String region, RoomType roomType, Room room, boolean isValid, boolean isRegistered) {
+    protected Coupon(String name, BigDecimal minimumPrice,
+        BigDecimal discountPrice,
+        Double discountRate, BigDecimal discountLimit, String description,
+        String region, RoomType roomType, Room room, boolean isValid,
+        boolean isRegistered) {
         this.name = name;
         this.minimumPrice = minimumPrice;
         this.discountPrice = discountPrice;
@@ -98,10 +100,14 @@ public class Coupon extends BaseDate {
     }
 
     // 쿠폰 정보 생성 메서드
-    public static Coupon createCoupon(String name, BigDecimal minimumPrice, BigDecimal discountPrice,
-                                      Double discountRate, BigDecimal discountLimit, String description,
-                                      String region, RoomType roomType, Room room, boolean isValid, boolean isRegistered) {
-        return new Coupon(name, minimumPrice, discountPrice, discountRate, discountLimit, description, region, roomType, room, isValid, isRegistered);
+    public static Coupon createCoupon(String name, BigDecimal minimumPrice,
+        BigDecimal discountPrice,
+        Double discountRate, BigDecimal discountLimit, String description,
+        String region, RoomType roomType, Room room, boolean isValid,
+        boolean isRegistered) {
+        return new Coupon(name, minimumPrice, discountPrice, discountRate,
+            discountLimit, description, region, roomType, room, isValid,
+            isRegistered);
     }
 
 
@@ -120,6 +126,6 @@ public class Coupon extends BaseDate {
     public void changeRegistrationStatus() {
         this.isRegistered = true;
     }
-    
+
 
 }

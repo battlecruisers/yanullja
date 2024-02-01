@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({Exception.class})
-    protected ResponseEntity<JSendResponse> handleServerException(Exception ex) {
+    protected ResponseEntity<JSendResponse> handleServerException(
+        Exception ex) {
         log.error("Globally handling Exception! ", ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(JSendResponse.error(ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(JSendResponse.error(ex.getMessage()));
     }
 }

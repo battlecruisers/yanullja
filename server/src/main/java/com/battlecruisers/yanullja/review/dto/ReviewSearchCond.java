@@ -15,13 +15,15 @@ public class ReviewSearchCond {
     private String orderProperty;
     private Order direction;
 
-    public ReviewSearchCond(Long placeId, Long roomId, Boolean hasPhoto, Pageable pageable) {
+    public ReviewSearchCond(Long placeId, Long roomId, Boolean hasPhoto,
+        Pageable pageable) {
         this.placeId = placeId;
         this.roomId = roomId;
         this.hasPhoto = hasPhoto;
         Sort.Order order = pageable.getSort().stream().findAny()
-                .orElseThrow(IllegalStateException::new);
+            .orElseThrow(IllegalStateException::new);
         this.orderProperty = order.getProperty();
-        this.direction = order.getDirection() == Sort.Direction.ASC ? Order.ASC : Order.DESC;
+        this.direction =
+            order.getDirection() == Sort.Direction.ASC ? Order.ASC : Order.DESC;
     }
 }

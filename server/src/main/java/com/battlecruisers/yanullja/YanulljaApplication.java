@@ -8,7 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
 @SpringBootApplication
-@OpenAPIDefinition(servers = {@Server(url = "/", description = "Default Server Url")})
+@OpenAPIDefinition(servers = {
+    @Server(url = "/", description = "Default Server Url")})
 public class YanulljaApplication {
 
     public static void main(String[] args) {

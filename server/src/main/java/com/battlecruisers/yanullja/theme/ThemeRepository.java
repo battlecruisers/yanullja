@@ -1,9 +1,8 @@
 package com.battlecruisers.yanullja.theme;
 
 import com.battlecruisers.yanullja.theme.domain.Theme;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ThemeRepository extends JpaRepository<Theme, Long> {
 

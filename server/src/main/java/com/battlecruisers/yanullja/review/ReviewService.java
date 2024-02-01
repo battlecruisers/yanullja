@@ -21,7 +21,8 @@ public class ReviewService {
 
 
     @Transactional(readOnly = true)
-    public Slice<ReviewDetailDto> getReviewDetails(ReviewSearchCond cond, Pageable pageable) {
+    public Slice<ReviewDetailDto> getReviewDetails(ReviewSearchCond cond,
+        Pageable pageable) {
         return reviewRepository.findReviews(cond, pageable);
     }
 
@@ -33,7 +34,7 @@ public class ReviewService {
     public Long saveReview(ReviewSaveDto form) {
         Review review = Review.from(form);
         return reviewRepository.save(review)
-                .getId();
+            .getId();
     }
 
 }

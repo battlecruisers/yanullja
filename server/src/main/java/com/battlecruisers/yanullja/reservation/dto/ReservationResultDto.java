@@ -5,11 +5,10 @@ import com.battlecruisers.yanullja.purchase.domain.Purchase;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
 import com.battlecruisers.yanullja.reservation.domain.ReservationStatus;
 import com.battlecruisers.yanullja.room.domain.Room;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Slf4j
@@ -23,12 +22,14 @@ public class ReservationResultDto {
 
     protected ReservationResultDto(Reservation reservation) {
         this.paymentId = reservation.getId();
-        this.paymentCanceled = "CANCEL".equals(reservation.getReservationStatus());
+        this.paymentCanceled = "CANCEL".equals(
+            reservation.getReservationStatus());
         this.reservationNumber = reservation.getReserveNumber();
         this.accommodations = new ArrayList<>();
     }
 
-    public static ReservationResultDto createReservationResultDto(Purchase purchase) {
+    public static ReservationResultDto createReservationResultDto(
+        Purchase purchase) {
         Reservation reservation = purchase.getReservation();
         ReservationStatus reservationStatus = reservation.getReservationStatus();
         log.info("test용 reservationStatus = {}", reservationStatus);
@@ -37,16 +38,17 @@ public class ReservationResultDto {
 
         // 1. DTO: Room 설정
         ReservationResultRoomDto reservationResultRoomDto =
-                ReservationResultRoomDto.createReservationRoomResponseDto(purchase);
+            ReservationResultRoomDto.createReservationRoomResponseDto(purchase);
 
         // 2. DTO: Place 설정 (1의 Room 정보 추가)
         ReservationResultPlaceDto reservationResultPlaceDto =
-                ReservationResultPlaceDto.createReservationResultPlaceDto(place);
-        reservationResultPlaceDto.getRoomOptions().add(reservationResultRoomDto);
+            ReservationResultPlaceDto.createReservationResultPlaceDto(place);
+        reservationResultPlaceDto.getRoomOptions()
+            .add(reservationResultRoomDto);
 
         // 3. DTO: Reserve 설정 (2의 Place 정보 추가)
         ReservationResultDto reservationResultDto =
-                new ReservationResultDto(reservation);
+            new ReservationResultDto(reservation);
         reservationResultDto.getAccommodations().add(reservationResultPlaceDto);
 
         return reservationResultDto;

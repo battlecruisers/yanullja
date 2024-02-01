@@ -1,8 +1,7 @@
 package com.battlecruisers.yanullja.reservation.dto;
 
-import lombok.Data;
-
 import java.time.LocalDate;
+import lombok.Data;
 
 @Data
 public class ReservationRequestDto {

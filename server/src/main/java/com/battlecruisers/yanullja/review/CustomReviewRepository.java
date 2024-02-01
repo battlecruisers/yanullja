@@ -9,7 +9,8 @@ import org.springframework.data.domain.Slice;
 public interface CustomReviewRepository {
 
 
-    Slice<ReviewDetailDto> findReviews(ReviewSearchCond cond, Pageable pageable);
+    Slice<ReviewDetailDto> findReviews(ReviewSearchCond cond,
+        Pageable pageable);
 
     ReviewStatisticsDto findReviewInfo(Long placeId, Long roomId);
 
