@@ -40,7 +40,8 @@ public class SubRegion extends BaseDate {
         this.id = id;
     }
 
-    public static SubRegion createSubRegion(String name, MainRegion mainRegion) {
+    public static SubRegion createSubRegion(String name,
+        MainRegion mainRegion) {
         return new SubRegion(name, mainRegion);
     }
 }

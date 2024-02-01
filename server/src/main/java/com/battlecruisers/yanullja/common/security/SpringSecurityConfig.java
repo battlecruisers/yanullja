@@ -1,7 +1,6 @@
 package com.battlecruisers.yanullja.common.security;
 
 import com.battlecruisers.yanullja.auth.CustomAuthenticationFilter;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,7 +25,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SpringSecurityConfig {
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http)
+        throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class).build();
     }
 
@@ -34,9 +34,10 @@ public class SpringSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         var config = new org.springframework.web.cors.CorsConfiguration();
         config.setAllowedOrigins(
-                java.util.List.of("http://localhost:5173", "https://yanullja.com"));
+            java.util.List.of("http://localhost:5173", "https://yanullja.com"));
         config.setAllowedHeaders(java.util.List.of("*"));
-        config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(
+            java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
         config.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -46,46 +47,50 @@ public class SpringSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+        HttpSecurity http, AuthenticationManager authenticationManager)
+        throws Exception {
         http.httpBasic(HttpBasicConfigurer::disable)
-                .formLogin(FormLoginConfigurer::disable)
-                .csrf(CsrfConfigurer::disable);
+            .formLogin(FormLoginConfigurer::disable)
+            .csrf(CsrfConfigurer::disable);
 
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         http.authorizeHttpRequests(
-                (auth) ->
-                        auth.requestMatchers("/users")
-                                .authenticated()
-                                .requestMatchers("/payment/instant")
-                                .authenticated()
-                                .requestMatchers("/payment/purchase")
-                                .authenticated()
-                                .requestMatchers(HttpMethod.GET, "/payment")
-                                .authenticated()
-                                .requestMatchers("/carts")
-                                .authenticated()
-                                .anyRequest()
-                                .permitAll());
+            (auth) ->
+                auth.requestMatchers("/users")
+                    .authenticated()
+                    .requestMatchers("/payment/instant")
+                    .authenticated()
+                    .requestMatchers("/payment/purchase")
+                    .authenticated()
+                    .requestMatchers(HttpMethod.GET, "/payment")
+                    .authenticated()
+                    .requestMatchers("/carts")
+                    .authenticated()
+                    .anyRequest()
+                    .permitAll());
 
         // log in
-        var customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManager);
+        var customAuthenticationFilter = new CustomAuthenticationFilter(
+            authenticationManager);
         customAuthenticationFilter.setFilterProcessesUrl("/auth/login");
         http.addFilter(customAuthenticationFilter);
 
         // log out
         http.logout(
-                logout ->
-                        logout.logoutUrl("/auth/logout")
-                                .logoutSuccessHandler(
-                                        new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
-                                .invalidateHttpSession(true)
-                                .clearAuthentication(true)
-                                .deleteCookies("JSESSIONID"));
+            logout ->
+                logout.logoutUrl("/auth/logout")
+                    .logoutSuccessHandler(
+                        new HttpStatusReturningLogoutSuccessHandler(
+                            HttpStatus.OK))
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                    .deleteCookies("JSESSIONID"));
 
         http.sessionManagement(
-                sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+            sessionManagement ->
+                sessionManagement.sessionCreationPolicy(
+                    SessionCreationPolicy.IF_REQUIRED));
 
         return http.build();
     }

@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MemberCouponResponseDto {
+
     MemberCouponDto memberCouponDto;
     CouponDto couponDto;
 

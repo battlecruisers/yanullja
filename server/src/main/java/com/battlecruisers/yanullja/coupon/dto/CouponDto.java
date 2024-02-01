@@ -5,21 +5,20 @@ import com.battlecruisers.yanullja.coupon.domain.RoomType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class CouponDto {
+
     // 쿠폰번호
     public Long id;
-
     // 객실id
     public Long roomId;
     // 쿠폰명

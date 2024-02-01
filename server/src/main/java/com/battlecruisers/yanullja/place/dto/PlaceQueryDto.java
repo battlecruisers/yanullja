@@ -35,7 +35,8 @@ public class PlaceQueryDto {
     @Schema(name = "카테고리")
     private String category;
 
-    public static PlaceQueryDto from(Place place, LocalDate checkInDate, LocalDate checkOutDate) {
+    public static PlaceQueryDto from(Place place, LocalDate checkInDate,
+        LocalDate checkOutDate) {
 
         return new PlaceQueryDto(
             place.getId(),

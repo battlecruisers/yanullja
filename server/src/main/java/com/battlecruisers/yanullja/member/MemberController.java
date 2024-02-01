@@ -24,7 +24,8 @@ public class MemberController {
     }
 
     @PutMapping("/me")
-    public Member updateMyInfo(@Valid @RequestBody Member member, @RequestBody MemberUpdateDto dto) {
+    public Member updateMyInfo(@Valid @RequestBody Member member,
+        @RequestBody MemberUpdateDto dto) {
         var memberId = 1L;
         return memberService.updateMember(memberId, dto);
     }
