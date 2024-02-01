@@ -36,8 +36,6 @@ dependencies {
 
 
     //For Logbook
-    implementation 'org.zalando:logbook-core'
-    implementation 'org.zalando:logbook-spring-boot-starter:3.7.2'
 
     compileOnly 'org.projectlombok:lombok'
 

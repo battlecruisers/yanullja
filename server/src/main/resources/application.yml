@@ -17,15 +17,15 @@ spring:
         format_sql: true
   thymeleaf:
     check-template-location: false
+  mvc:
+    log-request-details: true
 
 # Logging
 logging:
   level:
-    web: debug
+    web: trace
     com.battlecruisers.yanullja: trace
     org:
-      zalando:
-        logbook: trace
       hibernate:
         sql: trace
         type.descriptor.sql: debug

@@ -17,7 +17,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class HttpLoggingFilter extends OncePerRequestFilter {
+public class ReqResGuideLogFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
