@@ -21,7 +21,7 @@ public class MemberCouponDto {
         memberCouponDto.id = memberCoupon.getId();
         memberCouponDto.name = memberCoupon.getCoupon().getName();
         memberCouponDto.discountRate = BigDecimal.valueOf(memberCoupon.getCoupon().getDiscountRate());
-        memberCouponDto.discountRate = memberCoupon.getCoupon().getDiscountPrice();
+        memberCouponDto.discountPrice = memberCoupon.getCoupon().getDiscountPrice();
         return memberCouponDto;
     }
 }

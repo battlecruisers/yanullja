@@ -130,7 +130,7 @@ public class MemberCouponService {
 
     // 특정 숙소에서 사용 가능한 쿠폰 목록 <<  MemberCouponService로 옮기는게 나을 듯
     public List<MemberCoupon> getAvailableCouponsByRoomId(Long roomId) {
-        List<MemberCoupon> availableCoupons = memberCouponRepository.findByRoomId(roomId);
+        List<MemberCoupon> availableCoupons = memberCouponRepository.findByRoomIdAndMemberId(roomId, 1L);
 //        List<MemberCouponDto> memberCouponDtos = new ArrayList<>();
 //        for (MemberCoupon m : list) {
 //            memberCouponDtos.add(MemberCouponDto.from(m));
@@ -226,30 +226,34 @@ public class MemberCouponService {
     // 회원이 사용한 쿠폰 내역 조회
     public List<MemberCouponDto> getUsageHistory(Long memberId) {
 
-        Member member = this.memberRepository.findById(2L).orElseThrow();
+//        Member member = this.memberRepository.findById(2L).orElseThrow();
 
-        List<MemberCoupon> histories = memberCouponRepository.findByMemberAndIsUsed(member, true);
+        List<MemberCoupon> histories = memberCouponRepository.findByMemberIdAndIsUsed(2L, true);
 
         // 리스트의 사이즈가 0일 경우 사용내역이 존재하지 않다는 예외 발생
         if (histories.size() == 0) {
-            throw new CouponUsageHistoryNotFoundException(member.getId());
+            throw new CouponUsageHistoryNotFoundException(2L);
         }
         List<MemberCouponDto> memberCouponDtos = new ArrayList<>();
 
         // Dto로 변환 후 반환
-        for (MemberCoupon m : histories) {
-            var dto = MemberCouponDto.from(m);
-            memberCouponDtos.add(dto);
-        }
-
-        return memberCouponDtos;
+//        for (MemberCoupon m : histories) {
+//            var dto = MemberCouponDto.from(m);
+//            memberCouponDtos.add(dto);
+//        }
+//
+//        return memberCouponDtos;
+        return histories.stream().map(
+                MemberCouponDto::from
+        ).collect(Collectors.toList());
     }
 
 
     // 회원이 특정 숙소에서 사용 가능한 쿠폰 목록 조회
     public List<MemberCouponDto> getRoomCoupons(Long roomId) {
         // Dto로 변환 후 반환
-        List<MemberCoupon> roomCoupons = memberCouponRepository.findByRoomId(roomId);
+
+        List<MemberCoupon> roomCoupons = memberCouponRepository.findByRoomIdAndMemberId(roomId, 1L);
 
         // 리스트의 사이즈가 0일 경우 사용할 수 있는 쿠폰이 없다는 예외를 발생
         if (roomCoupons.isEmpty()) {
