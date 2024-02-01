@@ -1,8 +1,13 @@
 package com.battlecruisers.yanullja.room.dto;
 
 
-import java.util.List;
+import com.battlecruisers.yanullja.place.dto.RoomOptionImageDto;
+import com.battlecruisers.yanullja.room.domain.Room;
+import com.battlecruisers.yanullja.room.domain.RoomImage;
 import lombok.Data;
+
+import java.time.LocalTime;
+import java.util.stream.Collectors;
 
 @Data
 public class RoomDto {
@@ -15,43 +20,82 @@ public class RoomDto {
 
     private Integer capacity;
 
-    private Integer weekdayRentTime;
+    private LocalTime weekdayRentTime;
 
-    private Integer weekdayRentStartTime;
+    private LocalTime weekdayRentStartTime;
 
-    private Integer weekdayRentEndTime;
+    private LocalTime weekdayRentEndTime;
 
-    private Integer weekdayCheckInTime;
+    private LocalTime weekdayCheckInTime;
 
-    private Integer weekdayCheckOutTime;
+    private LocalTime weekdayCheckOutTime;
 
     private Integer weekdayRentPrice;
 
     private Integer weekdayStayPrice;
 
-    private Integer weekendRentTime;
+    private LocalTime weekendRentTime;
 
-    private Integer weekendRentStartTime;
+    private LocalTime weekendRentStartTime;
 
-    private Integer weekendRentEndTime;
+    private LocalTime weekendRentEndTime;
 
-    private Integer weekendCheckInTime;
+    private LocalTime weekendCheckInTime;
 
-    private Integer weekendCheckOutTime;
+    private LocalTime weekendCheckOutTime;
 
     private Integer weekendRentPrice;
 
     private Integer weekendStayPrice;
 
-    private List<String> urls;
+    private RoomOptionImageDto roomOptionImage;
 
-//    public static from(Room room) {
-//        return new RoomDto(room.getId(), room.getName(), room.getCategory(), room.getCapacity(),
-//            room.getWeekdayRentTime(), room.getWeekdayRentStartTime(), room.getWeekdayRentEndTime(),
-//            room.getWeekdayCheckInTime(), room.getWeekdayCheckOutTime(), room.getWeekdayRentPrice(),
-//            room.getWeekdayStayPrice(), room.getWeekendRentTime(), room.getWeekendRentStartTime(),
-//            room.getWeekendRentEndTime(), room.getWeekendCheckInTime(),
-//            room.getWeekendCheckOutTime(),
-//            room.getWeekendRentPrice(), room.getWeekendStayPrice(), room.getUrls());
-//    }
+    public RoomDto(Long id, String name, String category, Integer capacity, LocalTime weekdayRentTime, LocalTime weekdayRentStartTime, LocalTime weekdayRentEndTime,
+                   LocalTime weekdayCheckInTime, LocalTime weekdayCheckOutTime, Integer weekdayRentPrice, Integer weekdayStayPrice, LocalTime weekendRentTime,
+                   LocalTime weekendRentStartTime, LocalTime weekendRentEndTime, LocalTime weekendCheckInTime, LocalTime weekendCheckOutTime, Integer weekendRentPrice,
+                   Integer weekendStayPrice, RoomOptionImageDto roomOptionImage) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.capacity = capacity;
+        this.weekdayRentTime = weekdayRentTime;
+        this.weekdayRentStartTime = weekdayRentStartTime;
+        this.weekdayRentEndTime = weekdayRentEndTime;
+        this.weekdayCheckInTime = weekdayCheckInTime;
+        this.weekdayCheckOutTime = weekdayCheckOutTime;
+        this.weekdayRentPrice = weekdayRentPrice;
+        this.weekdayStayPrice = weekdayStayPrice;
+        this.weekendRentTime = weekendRentTime;
+        this.weekendRentStartTime = weekendRentStartTime;
+        this.weekendRentEndTime = weekendRentEndTime;
+        this.weekendCheckInTime = weekendCheckInTime;
+        this.weekendCheckOutTime = weekendCheckOutTime;
+        this.weekendRentPrice = weekendRentPrice;
+        this.weekendStayPrice = weekendStayPrice;
+        this.roomOptionImage = roomOptionImage;
+    }
+
+    public static RoomDto from(Room room) {
+        return new RoomDto(
+                room.getId(),
+                room.getName(),
+                room.getCategory(),
+                room.getCapacity(),
+                room.getWeekdayRentTime(),
+                room.getWeekdayRentStartTime(),
+                room.getWeekdayRentEndTime(),
+                room.getWeekdayCheckInTime(),
+                room.getWeekdayCheckOutTime(),
+                room.getWeekdayRentPrice(),
+                room.getWeekdayStayPrice(),
+                room.getWeekendRentTime(),
+                room.getWeekendRentStartTime(),
+                room.getWeekendRentEndTime(),
+                room.getWeekendCheckInTime(),
+                room.getWeekendCheckOutTime(),
+                room.getWeekendRentPrice(), room.getWeekendStayPrice(),
+                new RoomOptionImageDto(room.getRoomImages().stream().map(RoomImage::getImageUrl)
+                        .collect(Collectors.toList()))
+        );
+    }
 }
