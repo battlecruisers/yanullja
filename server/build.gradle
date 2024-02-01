@@ -1,85 +1,85 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.2.1'
-    id 'io.spring.dependency-management' version '1.1.4'
-
+  id 'java'
+  id 'org.springframework.boot' version '3.2.1'
+  id 'io.spring.dependency-management' version '1.1.4'
+  id 'org.ec4j.editorconfig' version '0.1.0'
 }
 
 group = 'com.battlecruisers'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '17'
+  sourceCompatibility = '17'
 }
 
 configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
 }
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+  implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 //    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    //For Swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+  //For Swagger
+  implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
 
-    //For Logbook
+  //For Logbook
 
-    compileOnly 'org.projectlombok:lombok'
+  compileOnly 'org.projectlombok:lombok'
 
-    // Mapstruct
-    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-    testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-    implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+  // Mapstruct
+  implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+  annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+  testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+  implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
-    implementation 'org.springframework.session:spring-session-data-redis'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  implementation 'org.springframework.session:spring-session-data-redis'
+  implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
 //    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 
-    //For QueryDsl
-    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
-    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+  //For QueryDsl
+  implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+  annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+  annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+  annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
 
-    runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
+  runtimeOnly 'org.postgresql:postgresql'
+  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+  annotationProcessor 'org.projectlombok:lombok'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testCompileOnly 'org.projectlombok:lombok'
+  testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+  useJUnitPlatform()
 }
 
 // For QueryDsl Build
 def querydslDir = "$buildDir/generated/querydsl"
 
 sourceSets {
-    main.java.srcDirs += [querydslDir]
+  main.java.srcDirs += [querydslDir]
 }
 
 tasks.withType(JavaCompile) {
-    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+  options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
 }
 
 clean.doLast {
-    file(querydslDir).deleteDir()
+  file(querydslDir).deleteDir()
 }
