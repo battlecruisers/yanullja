@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class NotEnoughRoomCapacityException extends RuntimeException {
+public class NotEnoughTotalRoomCountException extends RuntimeException {
 
     private final ErrorCode errorCode = ErrorCode.NOT_ENOUGH_ROOM_CAPACITY_EXCEPTION;
 }

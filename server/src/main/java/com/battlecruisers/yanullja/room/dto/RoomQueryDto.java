@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public class RoomQueryDto {
     private LocalTime checkOutTime;
 
     @Schema(name = "숙박 가격", example = "12000")
-    private Integer totalPrice;
+    private BigDecimal totalPrice;
 
     private Integer stayDuration;
 
