@@ -1,6 +1,7 @@
 package com.battlecruisers.yanullja.coupon.dto;
 
 import com.battlecruisers.yanullja.coupon.domain.MemberCoupon;
+import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class MemberCouponDto {
+
     public Long id;
     public String name;
     public BigDecimal discountRate;

@@ -4,6 +4,7 @@ import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/member-coupons")
 @RequiredArgsConstructor
 @Slf4j
 public class MemberCouponController {
+
     private final MemberCouponService memberCouponService;
 
     @GetMapping
@@ -50,14 +50,16 @@ public class MemberCouponController {
         Long memberId = (Long) session.getAttribute("id");
 
         // 사용내역 반환
-        List<MemberCouponDto> histories = memberCouponService.getUsageHistory(memberId);
+        List<MemberCouponDto> histories = memberCouponService.getUsageHistory(
+            memberId);
 
         return histories;
     }
 
     // 회원이 쿠폰 사용하는 과정 테스트
     @PatchMapping("/{memberCouponId}")
-    public void use(@PathVariable(name = "memberCouponId") Long memberCouponId) {
+    public void use(
+        @PathVariable(name = "memberCouponId") Long memberCouponId) {
         // 쿠폰 사용 테스트
         memberCouponService.updateStatus(memberCouponId);
     }
@@ -66,7 +68,8 @@ public class MemberCouponController {
     @GetMapping("/{roomId}")
     public List<MemberCouponDto> room(@PathVariable(name = "roomId") Long roomId) {
 //        Pageable pageable = PageRequest.of(page, size);
-        List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(roomId);
+        List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(
+            roomId);
         return memberCouponDtos;
     }
 

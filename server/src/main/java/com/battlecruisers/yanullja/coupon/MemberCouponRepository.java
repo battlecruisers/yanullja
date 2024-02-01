@@ -1,6 +1,7 @@
 package com.battlecruisers.yanullja.coupon;
 
 import com.battlecruisers.yanullja.coupon.domain.MemberCoupon;
+import com.battlecruisers.yanullja.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,7 +23,4 @@ public interface MemberCouponRepository extends JpaRepository<MemberCoupon, Long
     @Query(value = "select mc from MemberCoupon mc join fetch mc.coupon where mc.member.id = :memberId and mc.isUsed = false")
     List<MemberCoupon> findMemberCouponsWithCoupon(@Param("memberId") Long memberId);
 
-//    @Query(value = "SELECT mc FROM MemberCoupon mc JOIN FETCH mc.coupon c WHERE c.room.id = :roomId " +
-//            "and c.isValid = true and mc.isUsed = false and c.isRegistered = true")
-//    List<MemberCoupon> findByRoomIdAndMemberId(Long roomId, Long memberId);
 }
