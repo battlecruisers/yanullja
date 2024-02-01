@@ -5,22 +5,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor
 @Getter
 @Setter
 public class MemberCouponDto {
     public Long id;
-    public Long couponId;
-    public Long memberId;
-    public Boolean isUsed;
+    public String name;
+    public BigDecimal discountRate;
+    public BigDecimal discountPrice;
 
     public static MemberCouponDto from(MemberCoupon memberCoupon) {
         MemberCouponDto memberCouponDto = new MemberCouponDto();
         memberCouponDto.id = memberCoupon.getId();
-        memberCouponDto.couponId = memberCoupon.getCoupon().getId();
-        memberCouponDto.memberId = memberCoupon.getMember().getId();
-        memberCouponDto.isUsed = memberCoupon.getIsUsed();
-
+        memberCouponDto.name = memberCoupon.getCoupon().getName();
+        memberCouponDto.discountRate = BigDecimal.valueOf(memberCoupon.getCoupon().getDiscountRate());
+        memberCouponDto.discountRate = memberCoupon.getCoupon().getDiscountPrice();
         return memberCouponDto;
     }
 }

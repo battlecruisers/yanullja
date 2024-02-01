@@ -19,7 +19,6 @@ import java.time.LocalDate;
 public class CouponDto {
     // 쿠폰번호
     public Long id;
-
     // 객실id
     public Long roomId;
     // 쿠폰명
