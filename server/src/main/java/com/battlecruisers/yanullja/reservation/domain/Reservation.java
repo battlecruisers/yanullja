@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @ToString
 @Entity
@@ -21,11 +22,14 @@ public class Reservation extends BaseDate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 예약 시작 날짜 (해당일 포함)
+    // 예약 시작 날짜 (포함)
     private LocalDate startDate;
 
-    // 예약 종료 날짜 (해당일 포함)
+    // 예약 종료 날짜 (불포함)
     private LocalDate endDate;
+
+    // 예약 번호
+    private UUID reserveNumber;
 
     // 예약 상태 [RESERVE, CANCEL]
     @Enumerated(EnumType.STRING)
@@ -44,8 +48,8 @@ public class Reservation extends BaseDate {
     /**
      * 생성 메서드
      **/
-    protected Reservation(Long roomId) {
-        this.id = roomId;
+    protected Reservation(Long id) {
+        this.id = id;
     }
 
     protected Reservation(
@@ -62,6 +66,7 @@ public class Reservation extends BaseDate {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reservationStatus = ReservationStatus.RESERVE;
+        this.reserveNumber = UUID.randomUUID();
     }
 
     public static Reservation createReservation(
@@ -99,8 +104,7 @@ public class Reservation extends BaseDate {
      * @return 예약 기간 내에 있으면 true, 그렇지 않으면 false
      */
     public boolean isDateWithinReservation(LocalDate checkDate) {
-        return (checkDate.isAfter(startDate) && checkDate.isBefore(endDate)) ||
-                checkDate.isEqual(startDate) || checkDate.isEqual(endDate);
+        return (checkDate.isAfter(startDate) && checkDate.isBefore(endDate)) || checkDate.isEqual(startDate);
     }
 
 }

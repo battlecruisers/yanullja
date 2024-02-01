@@ -1,9 +1,6 @@
 package com.battlecruisers.yanullja.coupon;
 
-import com.battlecruisers.yanullja.coupon.domain.RoomType;
 import com.battlecruisers.yanullja.coupon.dto.CouponDto;
-import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
-import com.battlecruisers.yanullja.room.domain.Room;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +20,7 @@ import java.util.List;
 public class CouponController {
 
     private final CouponService couponService;
-    
+
     @GetMapping("")
     // 전체 쿠폰 목록 조회
     public ResponseEntity<List<CouponDto>> list() {
@@ -53,11 +50,11 @@ public class CouponController {
     @GetMapping("/rooms/{roomId}/max-discount-coupons")
     public ResponseEntity<List<CouponDto>> maxCouponDtos(@PathVariable(name = "roomId") Long roomId) {
 
-        Room room = couponService.getRoomInfo(roomId);
+//        Room room = couponService.getRoomInfo(roomId);
 
-        List<MemberCouponDto> list = couponService.getAvailableCouponsByRoomId(room.getId());
+//        List<MemberCoupon> list = couponService.getAvailableCouponsByRoomId(roomId);
 
-        List<CouponDto> maxDiscountCoupons = couponService.findMostDiscountedCoupon(list, room, RoomType.DayUse);
+        List<CouponDto> maxDiscountCoupons = couponService.findMostDiscountedCoupon(roomId);
 
         return ResponseEntity.ok().body(maxDiscountCoupons);
 

@@ -2,6 +2,7 @@ package com.battlecruisers.yanullja.coupon;
 
 import com.battlecruisers.yanullja.coupon.domain.Coupon;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
+import com.battlecruisers.yanullja.coupon.dto.MemberCouponResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,12 @@ import java.util.List;
 @Slf4j
 public class MemberCouponController {
     private final MemberCouponService memberCouponService;
+
+    @GetMapping
+    public List<MemberCouponResponseDto> getMemberCoupons() {
+        final Long memberId = 1L;
+        return memberCouponService.findMemberCouponsWithCoupon(1L);
+    }
 
     @PostMapping("")
     // 회원이 쿠폰 등록

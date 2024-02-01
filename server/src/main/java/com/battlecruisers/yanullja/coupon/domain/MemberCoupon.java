@@ -67,4 +67,7 @@ public class MemberCoupon extends BaseDate {
     // 가격을 제일 많이 할인해주는 쿠폰 반환
 
 
+    // 회원 아이디로 가능한 쿠폰 출력
+    // return List<CouponDTO>
+
 }
