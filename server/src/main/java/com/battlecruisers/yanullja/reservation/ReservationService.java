@@ -3,12 +3,14 @@ package com.battlecruisers.yanullja.reservation;
 import com.battlecruisers.yanullja.member.MemberNotFoundException;
 import com.battlecruisers.yanullja.member.MemberRepository;
 import com.battlecruisers.yanullja.member.domain.Member;
+import com.battlecruisers.yanullja.purchase.PurchaseRepository;
 import com.battlecruisers.yanullja.purchase.PurchaseService;
 import com.battlecruisers.yanullja.purchase.domain.Purchase;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
 import com.battlecruisers.yanullja.reservation.dto.ReservationCancelRequestDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationRequestDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationResponseDto;
+import com.battlecruisers.yanullja.reservation.dto.ReservationResultDto;
 import com.battlecruisers.yanullja.reservation.exception.NotEnoughTotalRoomCountException;
 import com.battlecruisers.yanullja.room.RoomRepository;
 import com.battlecruisers.yanullja.room.domain.Room;
@@ -33,6 +35,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
     private final PurchaseService purchaseService;
+    private final PurchaseRepository purchaseRepository;
 
     /**
      * 회원 아이디를 통해 예약정보를 조회합니다.
@@ -40,8 +43,17 @@ public class ReservationService {
      * @param memberId
      * @return
      */
-    public List<Reservation> reservationsByMemberId(Long memberId) {
-        return reservationRepository.findByMemberId(memberId);
+    public List<ReservationResultDto> getReservationsByMemberId(Long memberId) {
+        List<ReservationResultDto> results = new ArrayList<>();
+
+        List<Purchase> purchases = purchaseRepository.findAllByMemberIdOrderByCreatedTimeDesc(memberId);
+
+        for (Purchase purchase : purchases) {
+            ReservationResultDto resultDto = ReservationResultDto.createReservationResultDto(purchase);
+            results.add(resultDto);
+        }
+
+        return results;
     }
 
     /**
@@ -76,7 +88,7 @@ public class ReservationService {
         // purchase 진행 (쿠폰 계산로직 포함)
         Purchase purchase = purchaseService.purchase(reservation, memberCouponId);
 
-        return ReservationResponseDto.buildReservationResponseDto(reservation, purchase);
+        return ReservationResponseDto.createReservationResponseDto(reservation, purchase);
     }
 
     private Room validateAndGetRoom(Long roomId) {

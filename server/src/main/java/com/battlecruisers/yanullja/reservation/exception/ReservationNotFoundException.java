@@ -1,12 +1,12 @@
 package com.battlecruisers.yanullja.reservation.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
-public class ReservationNotFoundException {
+public class ReservationNotFoundException extends RuntimeException {
 
-    private final ErrorCode errorCode = ErrorCode.RESERVATION_NOT_FOUND_EXCEPTION;
+    public ReservationNotFoundException() {
+        super(ErrorCode.RESERVATION_NOT_FOUND_EXCEPTION.getMessage());
+    }
 
 }

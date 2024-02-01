@@ -8,7 +8,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class PurchaseRoomResponseDto {
+public class ReservationResponseRoomDto {
 
     private Long cartProductId; // reservationId
 
@@ -30,11 +30,11 @@ public class PurchaseRoomResponseDto {
 
     private Integer stayDuration; // 디비에 없는 값
 
-    public PurchaseRoomResponseDto(Purchase purchase, Room room) {
+    public ReservationResponseRoomDto(Purchase purchase, Room room) {
         Reservation reservation = purchase.getReservation();
 
         this.cartProductId = reservation.getId();
-        this.roomOptionId = room.getId();
+        this.roomOptionId = reservation.getRoom().getId();
         this.name = room.getName();
 //        this.thumbnailImage = room.getThumbnailImage();
         this.capacity = room.getCapacity().longValue();
@@ -45,8 +45,8 @@ public class PurchaseRoomResponseDto {
         this.stayDuration = reservationStartDate.until(reservationEndDate).getDays();
     }
 
-    public static PurchaseRoomResponseDto createPurchaseRoomResponseDto(Purchase purchase, Room room) {
-        return new PurchaseRoomResponseDto(purchase, room);
+    public static ReservationResponseRoomDto createReservationRoomResponseDto(Purchase purchase, Room room) {
+        return new ReservationResponseRoomDto(purchase, room);
     }
 
 }

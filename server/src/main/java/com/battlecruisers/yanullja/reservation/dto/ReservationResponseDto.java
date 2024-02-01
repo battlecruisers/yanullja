@@ -12,32 +12,27 @@ public class ReservationResponseDto {
 
     private Long cartId; // reservationId
     private Long count = 1L; // 예약상품 갯수: 1 (항상 단일 구매만 가능)
-    private List<PurchasePlaceResponseDto> accommodations; // place목록
+    private List<ReservationResponsePlaceDto> accommodations; // place목록
 
-    protected ReservationResponseDto(Long reservationId) {
-        this.cartId = reservationId;
+    protected ReservationResponseDto(Reservation reservation) {
+        this.cartId = reservation.getId();
         this.accommodations = new ArrayList<>();
     }
 
-    public static ReservationResponseDto createReservationResponseDto(Long reservationId) {
-        return new ReservationResponseDto(reservationId);
-    }
-
-    public static ReservationResponseDto buildReservationResponseDto(Reservation reservation, Purchase purchase) {
-        // DTO 설정
+    public static ReservationResponseDto createReservationResponseDto(Reservation reservation, Purchase purchase) {
         // 1. DTO: Room 설정
-        PurchaseRoomResponseDto purchaseRoomResponseDto =
-                PurchaseRoomResponseDto.createPurchaseRoomResponseDto(purchase, reservation.getRoom());
+        ReservationResponseRoomDto reservationResponseRoomDto =
+                ReservationResponseRoomDto.createReservationRoomResponseDto(purchase, reservation.getRoom());
 
-        // 2. DTO: Place 설정
-        PurchasePlaceResponseDto purchasePlaceResponseDto =
-                PurchasePlaceResponseDto.createPurchasePlaceResponseDto(reservation.getRoom().getPlace());
-        purchasePlaceResponseDto.getRoomOptions().add(purchaseRoomResponseDto);
+        // 2. DTO: Place 설정 (1의 Room 정보 추가)
+        ReservationResponsePlaceDto reservationResponsePlaceDto =
+                ReservationResponsePlaceDto.createPurchasePlaceResponseDto(reservation.getRoom().getPlace());
+        reservationResponsePlaceDto.getRoomOptions().add(reservationResponseRoomDto);
 
-        // 3. DTO: Reserve 설정
+        // 3. DTO: Reserve 설정 (2의 Place 정보 추가)
         ReservationResponseDto reservationResponseDto =
-                ReservationResponseDto.createReservationResponseDto(reservation.getId());
-        reservationResponseDto.getAccommodations().add(purchasePlaceResponseDto);
+                new ReservationResponseDto(reservation);
+        reservationResponseDto.getAccommodations().add(reservationResponsePlaceDto);
 
         return reservationResponseDto;
     }

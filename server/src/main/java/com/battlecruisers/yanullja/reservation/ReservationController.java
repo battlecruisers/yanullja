@@ -1,9 +1,9 @@
 package com.battlecruisers.yanullja.reservation;
 
-import com.battlecruisers.yanullja.reservation.domain.Reservation;
 import com.battlecruisers.yanullja.reservation.dto.ReservationCancelRequestDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationRequestDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationResponseDto;
+import com.battlecruisers.yanullja.reservation.dto.ReservationResultDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +22,11 @@ public class ReservationController {
 
     @GetMapping
     @Operation(summary = "결제 로직 조회")
-    public ResponseEntity reservationsByMemberId() {
+    public ResponseEntity reservationsByMemberId(@RequestParam Long memberId) {
         Long mockMemberId = 1L;
 
-        List<Reservation> reservations = reservationService.reservationsByMemberId(mockMemberId);
-        return ResponseEntity.ok().body(reservations);
+        List<ReservationResultDto> results = reservationService.getReservationsByMemberId(memberId);
+        return ResponseEntity.ok().body(results);
     }
 
 

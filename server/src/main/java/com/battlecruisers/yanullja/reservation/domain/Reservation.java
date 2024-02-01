@@ -29,7 +29,7 @@ public class Reservation extends BaseDate {
     private LocalDate endDate;
 
     // 예약 번호
-    private UUID reserveNumber;
+    private String reserveNumber;
 
     // 예약 상태 [RESERVE, CANCEL]
     @Enumerated(EnumType.STRING)
@@ -66,7 +66,7 @@ public class Reservation extends BaseDate {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reservationStatus = ReservationStatus.RESERVE;
-        this.reserveNumber = UUID.randomUUID();
+        this.reserveNumber = UUID.randomUUID().toString();
     }
 
     public static Reservation createReservation(
@@ -79,7 +79,7 @@ public class Reservation extends BaseDate {
     }
 
     private void validateStartBeforeEnd(LocalDate startDate, LocalDate endDate) {
-        if (startDate.isAfter(endDate)) {
+        if (startDate.isAfter(endDate) || startDate.isEqual(endDate)) {
             throw new StartDateNotBeforeEndDateException();
         }
     }
