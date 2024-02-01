@@ -71,4 +71,14 @@ public class MemberCouponController {
         List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(roomId);
         return memberCouponDtos;
     }
+
+    // 최대 할인 쿠폰 조회
+//    @GetMapping("/rooms/{roomId}/max-discount-coupons")
+//    public ResponseEntity<List<CouponDto>> maxCouponDtos(@PathVariable(name = "roomId") Long roomId) {
+//
+//        List<CouponDto> maxDiscountCoupons = memberCouponService.findMostDiscountedCoupon(roomId, List <MemberCoupon > availableCoupons);
+//
+//        return ResponseEntity.ok().body(maxDiscountCoupons);
+//
+//    }
 }
