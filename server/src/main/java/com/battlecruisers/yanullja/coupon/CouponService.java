@@ -106,7 +106,7 @@ public class CouponService {
 
     // 쿠폰 생성
 
-    public Long createCoupon() {
+    public Long doNotUse_CreateCoupon() {
         Coupon newCoupon = Coupon.createCoupon("할인 쿠폰",
                 BigDecimal.valueOf(40000),
                 BigDecimal.valueOf(5000), 10.0, BigDecimal.valueOf(10.0), "좋은 쿠폰",

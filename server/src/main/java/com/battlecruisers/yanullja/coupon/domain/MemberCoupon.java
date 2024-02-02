@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(
+    name = "member_coupon",
     uniqueConstraints = {
         @UniqueConstraint(
             name = "prevent duplication of membercoupon",

@@ -2,8 +2,8 @@ package com.battlecruisers.yanullja.common.security;
 
 import com.battlecruisers.yanullja.member.MemberRepository;
 import com.battlecruisers.yanullja.member.domain.Member;
+import com.battlecruisers.yanullja.member.domain.SecurityMember;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,9 +20,7 @@ public class MockUserDetailsService implements UserDetailsService {
         throws UsernameNotFoundException {
         Member member = memberRepository.findByProviderId(username)
             .orElseThrow(() -> new RuntimeException("Provider Id not found!"));
-        return User.builder()
-            .username(member.getProviderId())
-            .password(member.getProvider())
-            .build();
+
+        return new SecurityMember(member);
     }
 }

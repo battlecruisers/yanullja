@@ -1,6 +1,7 @@
 package com.battlecruisers.yanullja.member;
 
 import com.battlecruisers.yanullja.member.domain.Member;
+import com.battlecruisers.yanullja.member.dto.MemberResponseDto;
 import com.battlecruisers.yanullja.member.dto.MemberUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,12 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public Member getMember(Long memberId) {
+    public MemberResponseDto getMember(Long memberId) {
         var member = memberRepository.findById(memberId)
             .orElseThrow(
                 () -> new MemberNotFoundException(memberId)
             );
-        return member;
+        return MemberResponseDto.from(member);
     }
 
     @Transactional

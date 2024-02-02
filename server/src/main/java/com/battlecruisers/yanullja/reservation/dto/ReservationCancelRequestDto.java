@@ -7,5 +7,5 @@ import lombok.Data;
 public class ReservationCancelRequestDto {
 
     @NotNull
-    private Long reservationId;
+    private Long paymentId; // reservationId
 }

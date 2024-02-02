@@ -1,14 +1,15 @@
 package com.battlecruisers.yanullja.coupon;
 
-import com.battlecruisers.yanullja.coupon.domain.Coupon;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
+import com.battlecruisers.yanullja.coupon.dto.MemberCouponRegisterDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponResponseDto;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import java.util.List;
+import com.battlecruisers.yanullja.member.domain.SecurityMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/member-coupons")
@@ -19,19 +20,19 @@ public class MemberCouponController {
     private final MemberCouponService memberCouponService;
 
     @GetMapping
-    public List<MemberCouponResponseDto> getMemberCoupons() {
-        final Long memberId = 1L;
-        return memberCouponService.findMemberCouponsWithCoupon(1L);
+    public List<MemberCouponResponseDto> getMemberCoupons(
+            @AuthenticationPrincipal
+            SecurityMember me) {
+        var memberId = me.getId();
+        return memberCouponService.findMemberCouponsWithCoupon(memberId);
     }
 
     @PostMapping("")
     // 회원이 쿠폰 등록
-    public void register(@RequestBody Coupon dto, HttpServletRequest request) {
-        // 세션에서 회원 아이디 추출
-        HttpSession session = request.getSession();
-        Long memberId = (Long) session.getAttribute("id");
-
-        memberCouponService.register(dto.getId(), memberId);
+    public void register(@RequestBody MemberCouponRegisterDto dto,
+                         @AuthenticationPrincipal SecurityMember me) {
+        var memberId = me.getId();
+        memberCouponService.register(dto.getCouponId(), memberId);
     }
 
     // 회원이 보유한 최대할인쿠폰정보를 받아오려면 가격 정보도 필요
@@ -40,14 +41,12 @@ public class MemberCouponController {
 
     // 회원이 사용한 쿠폰 내역 조회
     @GetMapping("/usage-history")
-    public List<MemberCouponDto> history(HttpServletRequest request) {
-        // 세션에서 회원 아이디 추출
-        HttpSession session = request.getSession();
-        Long memberId = (Long) session.getAttribute("id");
-
+    public List<MemberCouponDto> history(
+            @AuthenticationPrincipal SecurityMember me) {
+        var memberId = me.getId();
         // 사용내역 반환
         List<MemberCouponDto> histories = memberCouponService.getUsageHistory(
-            memberId);
+                memberId);
 
         return histories;
     }
@@ -55,17 +54,21 @@ public class MemberCouponController {
     // 회원이 쿠폰 사용하는 과정 테스트
     @PatchMapping("/{memberCouponId}")
     public void use(
-        @PathVariable(name = "memberCouponId") Long memberCouponId) {
+            @PathVariable(name = "memberCouponId") Long memberCouponId) {
         // 쿠폰 사용 테스트
         memberCouponService.updateStatus(memberCouponId);
     }
 
     // 특정 숙소에서 사용 가능한 쿠폰 조회
     @GetMapping("/{roomId}")
-    public List<MemberCouponDto> room(@PathVariable(name = "roomId") Long roomId) {
+    public List<MemberCouponDto> room(
+            @PathVariable(name = "roomId") Long roomId,
+            @AuthenticationPrincipal SecurityMember me) {
 //        Pageable pageable = PageRequest.of(page, size);
+
+        var memberId = me.getId();
         List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(
-            roomId);
+                roomId);
         return memberCouponDtos;
     }
 
