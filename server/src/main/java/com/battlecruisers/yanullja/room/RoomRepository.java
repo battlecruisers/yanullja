@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RoomRepository extends JpaRepository<Room, Long> {
+public interface RoomRepository extends JpaRepository<Room, Long>, CustomRoomRepository {
 
     @Query("SELECT new com.battlecruisers.yanullja.room.dto.RoomNameDto(r.id, r.name) FROM Room r WHERE r.place.id = :placeId")
     List<RoomNameDto> findAllRoomNameDtosByPlaceId(@Param("placeId") Long placeId);

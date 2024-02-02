@@ -6,6 +6,7 @@ import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.room.domain.RoomType;
 import com.battlecruisers.yanullja.room.dto.RoomNameDto;
 import com.battlecruisers.yanullja.room.dto.RoomQueryDto;
+import com.battlecruisers.yanullja.room.dto.RoomReservationInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,5 +45,13 @@ public class RoomService {
 
     public List<RoomNameDto> getAllRoomsName(Long placeId) {
         return roomRepository.findAllRoomNameDtosByPlaceId(placeId);
+    }
+
+    @Transactional(readOnly = true)
+    public RoomReservationInfoDto queryRoomDetailForReservation(Long roomId) {
+        Room room = roomRepository.queryRoomById(roomId)
+                .orElseThrow(IllegalArgumentException::new);
+
+        return RoomReservationInfoDto.createRoomReservationInfoDto(room);
     }
 }
