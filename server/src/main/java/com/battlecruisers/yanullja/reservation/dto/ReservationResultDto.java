@@ -23,7 +23,7 @@ public class ReservationResultDto {
 
     protected ReservationResultDto(Reservation reservation) {
         this.paymentId = reservation.getId();
-        this.paymentCanceled = "CANCEL".equals(reservation.getReservationStatus());
+        this.paymentCanceled = ReservationStatus.isCancel(reservation.getReservationStatus());
         this.reservationNumber = reservation.getReserveNumber();
         this.accommodations = new ArrayList<>();
     }
@@ -31,7 +31,6 @@ public class ReservationResultDto {
     public static ReservationResultDto createReservationResultDto(Purchase purchase) {
         Reservation reservation = purchase.getReservation();
         ReservationStatus reservationStatus = reservation.getReservationStatus();
-        log.info("test용 reservationStatus = {}", reservationStatus);
         Room room = reservation.getRoom();
         Place place = room.getPlace();
 
