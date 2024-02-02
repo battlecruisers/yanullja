@@ -1,7 +1,7 @@
 package com.battlecruisers.yanullja.coupon;
 
-import com.battlecruisers.yanullja.coupon.domain.Coupon;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
+import com.battlecruisers.yanullja.coupon.dto.MemberCouponRegisterDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -27,17 +27,19 @@ public class MemberCouponController {
     @GetMapping
     public List<MemberCouponResponseDto> getMemberCoupons() {
         final Long memberId = 1L;
-        return memberCouponService.findMemberCouponsWithCoupon(1L);
+        return memberCouponService.findMemberCouponsWithCoupon(memberId);
     }
 
     @PostMapping("")
     // 회원이 쿠폰 등록
-    public void register(@RequestBody Coupon dto, HttpServletRequest request) {
+    public void register(@RequestBody MemberCouponRegisterDto dto,
+        HttpServletRequest request) {
         // 세션에서 회원 아이디 추출
         HttpSession session = request.getSession();
-        Long memberId = (Long) session.getAttribute("id");
+//        Long memberId = (Long) session.getAttribute("id");
+        Long memberId = 1L;
 
-        memberCouponService.register(dto.getId(), memberId);
+        memberCouponService.register(dto.getCouponId(), memberId);
     }
 
     // 회원이 보유한 최대할인쿠폰정보를 받아오려면 가격 정보도 필요
@@ -49,8 +51,9 @@ public class MemberCouponController {
     public List<MemberCouponDto> history(HttpServletRequest request) {
         // 세션에서 회원 아이디 추출
         HttpSession session = request.getSession();
-        Long memberId = (Long) session.getAttribute("id");
+//        Long memberId = (Long) session.getAttribute("id");
 
+        Long memberId = 1L;
         // 사용내역 반환
         List<MemberCouponDto> histories = memberCouponService.getUsageHistory(
             memberId);
@@ -68,10 +71,11 @@ public class MemberCouponController {
 
     // 특정 숙소에서 사용 가능한 쿠폰 조회
     @GetMapping("/{roomId}")
-    public List<MemberCouponDto> room(Long roomId) {
+    public List<MemberCouponDto> room(
+        @PathVariable(name = "roomId") Long roomId) {
 //        Pageable pageable = PageRequest.of(page, size);
         List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(
-            roomId);
+            roomId, 1L);
         return memberCouponDtos;
     }
 

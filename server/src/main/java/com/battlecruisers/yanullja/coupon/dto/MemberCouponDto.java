@@ -22,7 +22,7 @@ public class MemberCouponDto {
         memberCouponDto.name = memberCoupon.getCoupon().getName();
         memberCouponDto.discountRate = BigDecimal.valueOf(
             memberCoupon.getCoupon().getDiscountRate());
-        memberCouponDto.discountRate = memberCoupon.getCoupon()
+        memberCouponDto.discountPrice = memberCoupon.getCoupon()
             .getDiscountPrice();
         return memberCouponDto;
     }
