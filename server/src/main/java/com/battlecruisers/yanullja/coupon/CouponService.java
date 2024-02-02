@@ -59,7 +59,8 @@ public class CouponService {
             // 고정할인금액이 적용된 결과를 반환
             discountedPrice = originalPrice.subtract(discountPrice);
         }
-        return discountedPrice.setScale(0);
+//        return discountedPrice.setScale(0);
+        return discountedPrice;
     }
 
     // 쿠폰 할인금액 적용 결과 계산
