@@ -2,11 +2,10 @@ package com.battlecruisers.yanullja.review.dto;
 
 
 import com.battlecruisers.yanullja.review.domain.Review;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.Data;
 
 @Data
 public class ReviewDetailDto {
@@ -33,8 +32,8 @@ public class ReviewDetailDto {
         this.creationDate = review.getCreatedDate();
         this.content = review.getContent();
         this.roomImageUrls = review.getReviewImages().stream()
-                .map(img -> img.getImageUrl())
-                .collect(Collectors.toList());
+            .map(img -> img.getImageUrl())
+            .collect(Collectors.toList());
     }
 
     public static ReviewDetailDto from(Review review) {

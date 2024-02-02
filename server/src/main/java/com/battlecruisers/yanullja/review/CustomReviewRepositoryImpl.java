@@ -1,6 +1,12 @@
 package com.battlecruisers.yanullja.review;
 
 
+import static com.battlecruisers.yanullja.member.domain.QMember.member;
+import static com.battlecruisers.yanullja.review.domain.QReview.review;
+import static com.battlecruisers.yanullja.review.domain.QReviewImage.reviewImage;
+import static com.battlecruisers.yanullja.room.domain.QRoom.room;
+import static com.querydsl.jpa.JPAExpressions.select;
+
 import com.battlecruisers.yanullja.review.domain.QReview;
 import com.battlecruisers.yanullja.review.domain.Review;
 import com.battlecruisers.yanullja.review.dto.ReviewDetailDto;
@@ -13,22 +19,15 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.battlecruisers.yanullja.member.domain.QMember.member;
-import static com.battlecruisers.yanullja.review.domain.QReview.review;
-import static com.battlecruisers.yanullja.review.domain.QReviewImage.reviewImage;
-import static com.battlecruisers.yanullja.room.domain.QRoom.room;
-import static com.querydsl.jpa.JPAExpressions.select;
 
 @Slf4j
 @Repository
@@ -39,7 +38,8 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
 
 
     @Override
-    public Slice<ReviewDetailDto> findReviews(ReviewSearchCond cond, Pageable pageable) {
+    public Slice<ReviewDetailDto> findReviews(ReviewSearchCond cond,
+        Pageable pageable) {
         List<Review> reviews = query
                 .select(review)
                 .from(review)
@@ -59,11 +59,10 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
                 .fetch();
 
         List<ReviewDetailDto> content = reviews.stream()
-                .map(ReviewDetailDto::from)
-                .collect(Collectors.toList());
+            .map(ReviewDetailDto::from)
+            .collect(Collectors.toList());
 
-        return new SliceImpl(content, pageable, reviews.size() > pageable.getPageSize() ? true : false);
-
+        return new SliceImpl<>(content, pageable, reviews.size() > pageable.getPageSize());
     }
 
 
@@ -77,10 +76,11 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
 
     private OrderSpecifier<?> reviewSort(ReviewSearchCond cond) {
         if (cond.getOrderProperty().equals("totalRate")) {
-            if (cond.getDirection().equals(Order.ASC))
+            if (cond.getDirection().equals(Order.ASC)) {
                 return review.totalRate.asc();
-            else
+            } else {
                 return review.totalRate.desc();
+            }
         }
         return review.createdDate.desc();
     }

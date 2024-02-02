@@ -16,15 +16,15 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-
     @PostMapping("/reviews")
-    public ResponseEntity<Object> writeReviews(@RequestBody ReviewSaveDto saveForm) {
+    public ResponseEntity<Object> writeReviews(
+        @RequestBody ReviewSaveDto saveForm) {
 
         reviewService.saveReview(saveForm);
 
         return ResponseEntity
-                .ok()
-                .build();
+            .ok()
+            .build();
     }
 
 }

@@ -21,14 +21,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "prevent duplication of membercoupon",
-                        columnNames = {"member_id", "coupon_id"}
-                )
-        }
+    name = "member_coupon",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "prevent duplication of membercoupon",
+            columnNames = {"member_id", "coupon_id"}
+        )
+    }
 )
 public class MemberCoupon extends BaseDate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // 회원쿠폰 아이디
@@ -55,7 +57,8 @@ public class MemberCoupon extends BaseDate {
     }
 
     // 정적 팩토리 메서드
-    public static MemberCoupon createMemberCoupon(Member member, Coupon coupon, Boolean isUsed) {
+    public static MemberCoupon createMemberCoupon(Member member, Coupon coupon,
+        Boolean isUsed) {
         return new MemberCoupon(member, coupon, isUsed);
     }
 
@@ -66,5 +69,7 @@ public class MemberCoupon extends BaseDate {
 
     // 가격을 제일 많이 할인해주는 쿠폰 반환
 
+    // 회원 아이디로 가능한 쿠폰 출력
+    // return List<CouponDTO>
 
 }

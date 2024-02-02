@@ -1,20 +1,30 @@
 package com.battlecruisers.yanullja.place.domain;
 
+import static com.battlecruisers.yanullja.place.PlaceService.getWeekDayCount;
+
 import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.place.PlaceCategory;
 import com.battlecruisers.yanullja.region.domain.SubRegion;
+import com.battlecruisers.yanullja.review.domain.Review;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.theme.domain.Theme;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.battlecruisers.yanullja.place.PlaceService.getWeekDayCount;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -27,6 +37,9 @@ public class Place extends BaseDate {
     private final List<Theme> themeList = new ArrayList<>();
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY)
     private final List<PlaceImage> placeImages = new ArrayList<>();
+    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private final List<Review> reviews = new ArrayList<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,8 +58,9 @@ public class Place extends BaseDate {
     @JoinColumn(name = "sub_region_id")
     private SubRegion subRegion;
 
-    protected Place(String name, PlaceCategory category, String thumbnailImageUrl, String event,
-                    String description, String address, SubRegion subRegion) {
+    protected Place(String name, PlaceCategory category,
+        String thumbnailImageUrl, String event,
+        String description, String address, SubRegion subRegion) {
         this.name = name;
         this.category = category;
         this.thumbnailImageUrl = thumbnailImageUrl;
@@ -60,54 +74,71 @@ public class Place extends BaseDate {
         this.id = id;
     }
 
-    public static Place createPlace(String name, PlaceCategory category, String thumbnailImageUrl,
-                                    String event, String policy, String address, SubRegion subRegion) {
-        return new Place(name, category, thumbnailImageUrl, event, policy, address, subRegion);
+    public static Place createPlace(String name, PlaceCategory category,
+        String thumbnailImageUrl,
+        String event, String policy, String address, SubRegion subRegion) {
+        return new Place(name, category, thumbnailImageUrl, event, policy,
+            address, subRegion);
     }
 
     /**
      * 비즈니스 로직
      */
-    public Integer getMinimumPrice(LocalDate checkInDate, LocalDate checkOutDate) {
+    public Integer getMinimumPrice(LocalDate checkInDate,
+        LocalDate checkOutDate) {
         Integer weekDayCount = getWeekDayCount(checkInDate, checkOutDate);
         Integer weekendCount =
-                (int) (checkOutDate.toEpochDay() - checkInDate.toEpochDay()) - weekDayCount;
+            (int) (checkOutDate.toEpochDay() - checkInDate.toEpochDay())
+                - weekDayCount;
 
         return roomList.stream()
-                .mapToInt(room -> calculateMinimumPrice(room, weekDayCount, weekendCount))
-                .min().orElse(0);
+            .mapToInt(
+                room -> calculateMinimumPrice(room, weekDayCount, weekendCount))
+            .min().orElse(0);
     }
 
     public Integer getMaxPrice(LocalDate checkInDate, LocalDate checkOutDate) {
         Integer weekDayCount = getWeekDayCount(checkInDate, checkOutDate);
         Integer weekendCount =
-                (int) (checkOutDate.toEpochDay() - checkInDate.toEpochDay()) - weekDayCount;
+            (int) (checkOutDate.toEpochDay() - checkInDate.toEpochDay())
+                - weekDayCount;
 
         return roomList.stream()
-                .mapToInt(room -> calculateMaxPrice(room, weekDayCount, weekendCount))
-                .max().orElse(0);
+            .mapToInt(
+                room -> calculateMaxPrice(room, weekDayCount, weekendCount))
+            .max().orElse(0);
     }
 
-    private Integer calculateMinimumPrice(Room room, Integer weekDayCount, Integer weekendCount) {
+    private Integer calculateMinimumPrice(Room room, Integer weekDayCount,
+        Integer weekendCount) {
         if (weekendCount > 0 && weekDayCount > 0) {
-            return Math.min(Math.min(room.getWeekdayRentPrice(), room.getWeekendRentPrice()),
-                    Math.min(room.getWeekdayStayPrice(), room.getWeekendStayPrice()));
+            return Math.min(Math.min(room.getWeekdayRentPrice(),
+                    room.getWeekendRentPrice()),
+                Math.min(room.getWeekdayStayPrice(),
+                    room.getWeekendStayPrice()));
         } else if (weekendCount == 0) {
-            return Math.min(room.getWeekdayRentPrice(), room.getWeekdayStayPrice());
+            return Math.min(room.getWeekdayRentPrice(),
+                room.getWeekdayStayPrice());
         } else {
-            return Math.min(room.getWeekendStayPrice(), room.getWeekendRentPrice());
+            return Math.min(room.getWeekendStayPrice(),
+                room.getWeekendRentPrice());
         }
     }
 
 
-    private Integer calculateMaxPrice(Room room, Integer weekDayCount, Integer weekendCount) {
+    private Integer calculateMaxPrice(Room room, Integer weekDayCount,
+        Integer weekendCount) {
         if (weekendCount > 0 && weekDayCount > 0) {
-            return Math.max(Math.max(room.getWeekdayRentPrice(), room.getWeekendRentPrice()),
-                    Math.max(room.getWeekdayStayPrice(), room.getWeekendStayPrice()));
+            return Math.max(Math.max(room.getWeekdayRentPrice(),
+                    room.getWeekendRentPrice()),
+                Math.max(room.getWeekdayStayPrice(),
+                    room.getWeekendStayPrice()));
         } else if (weekendCount == 0) {
-            return Math.max(room.getWeekdayRentPrice(), room.getWeekdayStayPrice());
+            return Math.max(room.getWeekdayRentPrice(),
+                room.getWeekdayStayPrice());
         } else {
-            return Math.max(room.getWeekendStayPrice(), room.getWeekendRentPrice());
+            return Math.max(room.getWeekendStayPrice(),
+                room.getWeekendRentPrice());
         }
     }
 }

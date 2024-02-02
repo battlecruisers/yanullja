@@ -8,6 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class JSendResponse {
+
     private String status;
     private Object data;
 

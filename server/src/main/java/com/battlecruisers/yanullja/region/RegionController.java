@@ -25,7 +25,8 @@ public class RegionController {
     @GetMapping("/main-regions")
     public ResponseEntity<List<RegionQueryDto>> queryMainRegions() {
         List<RegionQueryDto> regionDtoList = regionService.queryMainRegions();
-        return new ResponseEntity<List<RegionQueryDto>>(regionDtoList, HttpStatus.OK);
+        return new ResponseEntity<List<RegionQueryDto>>(regionDtoList,
+            HttpStatus.OK);
     }
 
 //    @Operation(summary = "특정 메인 지역의 서브 지역 전체 조회")
@@ -46,7 +47,8 @@ public class RegionController {
     @GetMapping("/regions")
     public ResponseEntity<RegionListQueryDto> queryRegions() {
         RegionListQueryDto regionListQueryDto = regionService.queryRegions();
-        return new ResponseEntity<RegionListQueryDto>(regionListQueryDto, HttpStatus.OK);
+        return new ResponseEntity<RegionListQueryDto>(regionListQueryDto,
+            HttpStatus.OK);
     }
 
 

@@ -6,27 +6,32 @@ spring:
       - optional:env.yml
   # JPA
   jpa:
-    show-sql: true
-    properties:
-      format_sql: true
-      show_sql: true
-      hibernate:
     hibernate:
       ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     open-in-view: false
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
   thymeleaf:
     check-template-location: false
+  mvc:
+    log-request-details: true
+
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+
 
 # Logging
 logging:
   level:
-    web: debug
+    web: trace
     com.battlecruisers.yanullja: trace
     org:
-      zalando:
-        logbook: trace
       hibernate:
         sql: trace
         type.descriptor.sql: debug
@@ -40,3 +45,4 @@ logbook:
     style: http
   write:
     max-body-size: 1024
+

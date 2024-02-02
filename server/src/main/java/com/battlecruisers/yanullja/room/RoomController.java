@@ -27,8 +27,8 @@ public class RoomController {
         RoomQueryDto room = roomService.getRoom(roomId, checkInDate, checkOutDate, roomType);
 
         return ResponseEntity
-                .ok()
-                .body(room);
+            .ok()
+            .body(room);
     }
 
 }

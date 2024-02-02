@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public enum RoomType {
-    Stay("Stay"), DayUse("DayUse"), All("All");
+    STAY("STAY"), RENT("RENT"), ALL("ALL");
 
-    private String name;
+    private final String name;
 
-    RoomType(String name){
+    RoomType(String name) {
         this.name = name;
     }
 }

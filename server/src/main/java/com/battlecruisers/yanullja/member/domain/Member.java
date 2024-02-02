@@ -2,20 +2,18 @@ package com.battlecruisers.yanullja.member.domain;
 
 import com.battlecruisers.yanullja.coupon.domain.MemberCoupon;
 import com.battlecruisers.yanullja.member.dto.MemberUpdateDto;
-import com.battlecruisers.yanullja.purchase.domain.Purchase;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -35,9 +33,6 @@ public class Member {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "member")
-    private List<Purchase> purchases;
-
-    @OneToMany(mappedBy = "member")
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "member")
@@ -46,8 +41,8 @@ public class Member {
     private Boolean promotionalConsent;
 
     protected Member(String provider, String providerId, String email,
-                     String nickName, String phoneNumber, List<MemberCoupon> memberCoupons,
-                     Boolean promotionalConsent) {
+        String nickName, String phoneNumber, List<MemberCoupon> memberCoupons,
+        Boolean promotionalConsent) {
         this.provider = provider;
         this.providerId = providerId;
         this.email = email;
@@ -62,11 +57,12 @@ public class Member {
     }
 
     // 정적 팩토리 메소드
-    public static Member createMember(String provider, String providerId, String email,
-                                      String nickName, String phoneNumber,
-                                      List<MemberCoupon> memberCoupons, Boolean promotionalConsent) {
+    public static Member createMember(String provider, String providerId,
+        String email,
+        String nickName, String phoneNumber,
+        List<MemberCoupon> memberCoupons, Boolean promotionalConsent) {
         return new Member(provider, providerId, email, nickName, phoneNumber,
-                memberCoupons, promotionalConsent);
+            memberCoupons, promotionalConsent);
     }
 
     public void updateMember(MemberUpdateDto dto) {
