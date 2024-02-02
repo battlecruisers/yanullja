@@ -132,9 +132,10 @@ public class MemberCouponService {
     }
 
     // 특정 숙소에서 사용 가능한 쿠폰 목록 <<  MemberCouponService로 옮기는게 나을 듯
-    public List<MemberCoupon> getAvailableCouponsByRoomId(Long roomId) {
+    public List<MemberCoupon> getAvailableCouponsByRoomId(Long roomId,
+        Long memberId) {
         List<MemberCoupon> availableCoupons = memberCouponRepository.findByRoomIdAndMemberId(
-            roomId, 1L);
+            roomId, memberId);
 //        List<MemberCouponDto> memberCouponDtos = new ArrayList<>();
 //        for (MemberCoupon m : list) {
 //            memberCouponDtos.add(MemberCouponDto.from(m));
@@ -144,14 +145,9 @@ public class MemberCouponService {
     }
 
     // 회원이 쿠폰 등록
-    public void register(Long code, Long id) {
-
-        // 로그인한 멤버정보와 등록할 쿠폰 정보를 DB에서 가져온다.
-//        var member = memberRepository
-//                .findById(1L)
-//                .orElseThrow();
-
-        Member member = new Member(1L);
+    public void register(Long code, Long memberId) {
+        
+        Member member = new Member(memberId);
 
         // 쿠폰을 찾지 못했을 경우 예외처리
         Coupon coupon = couponRepository
@@ -232,7 +228,7 @@ public class MemberCouponService {
 
     // 회원이 사용한 쿠폰 내역 조회
     public List<MemberCouponDto> getUsageHistory(Long memberId) {
-        
+
         List<MemberCoupon> histories = memberCouponRepository.findByMemberIdAndIsUsed(
             memberId, true);
 
