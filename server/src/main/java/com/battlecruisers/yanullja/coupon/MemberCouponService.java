@@ -232,15 +232,13 @@ public class MemberCouponService {
 
     // 회원이 사용한 쿠폰 내역 조회
     public List<MemberCouponDto> getUsageHistory(Long memberId) {
-
-//        Member member = this.memberRepository.findById(2L).orElseThrow();
-
+        
         List<MemberCoupon> histories = memberCouponRepository.findByMemberIdAndIsUsed(
-            2L, true);
+            memberId, true);
 
         // 리스트의 사이즈가 0일 경우 사용내역이 존재하지 않다는 예외 발생
         if (histories.size() == 0) {
-            throw new CouponUsageHistoryNotFoundException(2L);
+            throw new CouponUsageHistoryNotFoundException(memberId);
         }
         List<MemberCouponDto> memberCouponDtos = new ArrayList<>();
 
@@ -258,11 +256,11 @@ public class MemberCouponService {
 
 
     // 회원이 특정 숙소에서 사용 가능한 쿠폰 목록 조회
-    public List<MemberCouponDto> getRoomCoupons(Long roomId) {
+    public List<MemberCouponDto> getRoomCoupons(Long roomId, Long memberId) {
         // Dto로 변환 후 반환
 
         List<MemberCoupon> roomCoupons = memberCouponRepository.findByRoomIdAndMemberId(
-            roomId, 2L);
+            roomId, memberId);
 
         // 리스트의 사이즈가 0일 경우 사용할 수 있는 쿠폰이 없다는 예외를 발생
         if (roomCoupons.isEmpty()) {

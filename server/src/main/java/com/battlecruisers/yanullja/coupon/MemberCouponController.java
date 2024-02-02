@@ -25,7 +25,7 @@ public class MemberCouponController {
     @GetMapping
     public List<MemberCouponResponseDto> getMemberCoupons() {
         final Long memberId = 1L;
-        return memberCouponService.findMemberCouponsWithCoupon(2L);
+        return memberCouponService.findMemberCouponsWithCoupon(memberId);
     }
 
     @PostMapping("")
@@ -67,10 +67,10 @@ public class MemberCouponController {
     // 특정 숙소에서 사용 가능한 쿠폰 조회
     @GetMapping("/{roomId}")
     public List<MemberCouponDto> room(
-        @PathVariable(name = "roomId") Long roomId) {
+        @PathVariable(name = "roomId") Long roomId, Long memberId) {
 //        Pageable pageable = PageRequest.of(page, size);
         List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(
-            roomId);
+            roomId, memberId);
         return memberCouponDtos;
     }
 
