@@ -1,10 +1,11 @@
 package com.battlecruisers.yanullja.coupon.dto;
 
 import com.battlecruisers.yanullja.coupon.domain.MemberCoupon;
-import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @NoArgsConstructor
 @Getter
@@ -21,9 +22,9 @@ public class MemberCouponDto {
         memberCouponDto.id = memberCoupon.getId();
         memberCouponDto.name = memberCoupon.getCoupon().getName();
         memberCouponDto.discountRate = BigDecimal.valueOf(
-            memberCoupon.getCoupon().getDiscountRate());
-        memberCouponDto.discountRate = memberCoupon.getCoupon()
-            .getDiscountPrice();
+                memberCoupon.getCoupon().getDiscountRate());
+        memberCouponDto.discountPrice = memberCoupon.getCoupon()
+                .getDiscountPrice();
         return memberCouponDto;
     }
 }

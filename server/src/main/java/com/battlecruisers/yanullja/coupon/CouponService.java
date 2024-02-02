@@ -7,11 +7,12 @@ import com.battlecruisers.yanullja.coupon.exception.BelowMinimumCouponAmountExce
 import com.battlecruisers.yanullja.coupon.exception.InvalidCouponException;
 import com.battlecruisers.yanullja.room.RoomRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -27,36 +28,38 @@ public class CouponService {
 
     // 할인이 적용된 가격 반환
     public static BigDecimal getCalculateDiscountedPrice(
-        BigDecimal originalPrice,
-        BigDecimal discountPrice,
-        BigDecimal discountRate,
-        BigDecimal discountLimit) {
+            BigDecimal originalPrice,
+            BigDecimal discountPrice,
+            BigDecimal discountRate,
+            BigDecimal discountLimit) {
         // 할인이 적용된 가격읆 담을 변수
         BigDecimal discountedPrice = BigDecimal.ZERO;
         // 할인 받는 금액
         BigDecimal discountAmount = BigDecimal.ZERO;
 
+        discountPrice = discountPrice.setScale(0);
+
         // 고정 할인 금액이 0원일 경우 할인율을, 할인율이 0일 경우 고정 할인 금액을 적용합니다.
         if (discountPrice.equals(BigDecimal.ZERO)) {
             // 할인율 적용시 할인받는 금액
             discountAmount =
-                originalPrice
-                    .multiply(BigDecimal.ONE.subtract(
-                        discountRate.divide(BigDecimal.valueOf(100))));
+                    originalPrice
+                            .multiply(BigDecimal.ONE.subtract(
+                                    (BigDecimal.valueOf(100).subtract(discountRate)).divide(BigDecimal.valueOf(100))));
 
             // 할인율 적용 시  사용하려는 쿠폰의 최대할인한도를 초과했을 경우, 최대할인한도에 해당하는 금액만큼만 할인을 적용합니다.
             if (discountAmount.compareTo(discountLimit) > 0) {
                 discountedPrice =
-                    originalPrice.subtract(discountLimit);
+                        originalPrice.subtract(discountLimit);
             } else {
                 // 할인 적용된 결과를 반환
                 discountedPrice = originalPrice.subtract(discountAmount);
             }
-        } else if (discountRate.equals(BigDecimal.ZERO)) {
+        } else if (discountRate.equals(0.0)) {
             // 고정할인금액이 적용된 결과를 반환
             discountedPrice = originalPrice.subtract(discountPrice);
         }
-        return discountedPrice;
+        return discountedPrice.setScale(0);
     }
 
     // 쿠폰 할인금액 적용 결과 계산
@@ -95,8 +98,8 @@ public class CouponService {
     // 하나의 쿠폰 정보 조회
     public CouponDto getCoupon(Long id) {
         Coupon coupon = couponRepository
-            .findById(id)
-            .orElseThrow(() -> new InvalidCouponException(id));
+                .findById(id)
+                .orElseThrow(() -> new InvalidCouponException(id));
 
         return CouponDto.from(coupon);
     }
@@ -105,10 +108,10 @@ public class CouponService {
 
     public Long createCoupon() {
         Coupon newCoupon = Coupon.createCoupon("할인 쿠폰",
-            BigDecimal.valueOf(40000),
-            BigDecimal.valueOf(5000), 10.0, BigDecimal.valueOf(10.0), "좋은 쿠폰",
-            "서울", RoomType.RENT,
-            roomRepository.findById(2L).orElseThrow(), true, false);
+                BigDecimal.valueOf(40000),
+                BigDecimal.valueOf(5000), 10.0, BigDecimal.valueOf(10.0), "좋은 쿠폰",
+                "서울", RoomType.RENT,
+                roomRepository.findById(2L).orElseThrow(), true, false);
 
         couponRepository.save(newCoupon);
 
@@ -117,7 +120,7 @@ public class CouponService {
 
     // 예약하려는 방이 쿠폰을 사용할 수 있는지 확인
     public void validateCoupon(BigDecimal minimalPrice, BigDecimal price,
-        Coupon coupon) {
+                               Coupon coupon) {
 //        BigDecimal minimalPrice = coupon.getMinimumPrice();
 //        couponRepository
 //                .findById(memberCoupon.getCoupon().getId())

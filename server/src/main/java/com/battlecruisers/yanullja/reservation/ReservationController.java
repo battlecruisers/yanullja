@@ -5,17 +5,12 @@ import com.battlecruisers.yanullja.reservation.dto.ReservationRequestDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationResponseDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationResultDto;
 import io.swagger.v3.oas.annotations.Operation;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -31,7 +26,7 @@ public class ReservationController {
         Long mockMemberId = 1L;
 
         List<ReservationResultDto> results = reservationService.getReservationsByMemberId(
-            memberId);
+                memberId);
         return ResponseEntity.ok().body(results);
     }
 
@@ -39,14 +34,14 @@ public class ReservationController {
     @PostMapping("/instant")
     @Operation(summary = "예약 및 결제")
     public ResponseEntity reserve(
-        @RequestBody ReservationRequestDto reservationRequestDto) {
+            @RequestBody ReservationRequestDto reservationRequestDto) {
         log.info("ReservationController 호출 됨");
         log.info("ReservationController reservationRequestDto = {}",
-            reservationRequestDto);
+                reservationRequestDto);
         //todo 스프링 시큐리티 멤버로직 추가
         Long mockMemberId = 1L;
         ReservationResponseDto reservationResponseDto = reservationService.reserve(
-            reservationRequestDto, mockMemberId);
+                reservationRequestDto, mockMemberId);
 
         return ResponseEntity.ok().body(reservationResponseDto);
     }
@@ -54,10 +49,18 @@ public class ReservationController {
     @DeleteMapping
     @Operation(summary = "예약 및 결제 취소")
     public ResponseEntity cancel(
-        @RequestBody ReservationCancelRequestDto cancelDto) {
+            @RequestBody ReservationCancelRequestDto cancelDto) {
         reservationService.cancel(cancelDto);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("{reservationId}/info")
+    public ResponseEntity getReservationInfo(@PathVariable("reservationId") Long reservationId) {
+        ReservationInfoDto reservationResultDto = reservationService.getReservationInfo(
+                reservationId);
+        return ResponseEntity.ok().body(reservationResultDto);
+
     }
 
 }
