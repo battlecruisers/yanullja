@@ -2,10 +2,9 @@ package com.battlecruisers.yanullja.reservation.dto;
 
 import com.battlecruisers.yanullja.place.domain.Place;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class ReservationResponsePlaceDto {
@@ -30,7 +29,8 @@ public class ReservationResponsePlaceDto {
         this.roomOptions = new ArrayList<>();
     }
 
-    public static ReservationResponsePlaceDto createPurchasePlaceResponseDto(Place place) {
+    public static ReservationResponsePlaceDto createPurchasePlaceResponseDto(
+        Place place) {
         return new ReservationResponsePlaceDto(place);
     }
 

@@ -23,8 +23,8 @@ public class RoomController {
         RoomDto room = roomService.getRoom(roomId);
 
         return ResponseEntity
-                .ok()
-                .body(room);
+            .ok()
+            .body(room);
     }
 
 }

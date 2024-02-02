@@ -15,15 +15,14 @@ import com.battlecruisers.yanullja.reservation.exception.ReservationNotFoundExce
 import com.battlecruisers.yanullja.room.RoomRepository;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.room.exception.RoomNotFoundException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -46,10 +45,12 @@ public class ReservationService {
     public List<ReservationResultDto> getReservationsByMemberId(Long memberId) {
         List<ReservationResultDto> results = new ArrayList<>();
 
-        List<Purchase> purchases = purchaseRepository.findAllByMemberIdOrderByCreatedTimeDesc(memberId);
+        List<Purchase> purchases = purchaseRepository.findAllByMemberIdOrderByCreatedTimeDesc(
+            memberId);
 
         for (Purchase purchase : purchases) {
-            ReservationResultDto resultDto = ReservationResultDto.createReservationResultDto(purchase);
+            ReservationResultDto resultDto = ReservationResultDto.createReservationResultDto(
+                purchase);
             results.add(resultDto);
         }
 
@@ -63,7 +64,8 @@ public class ReservationService {
      * @return ReservationResponseDto 결제완료 후 응답 관련 dto
      */
     @Transactional
-    public ReservationResponseDto reserve(ReservationRequestDto requestDto, Long memberId) {
+    public ReservationResponseDto reserve(ReservationRequestDto requestDto,
+        Long memberId) {
         Long roomId = requestDto.getRoomOptionId();
         Long memberCouponId = requestDto.getMemberCouponId();
         LocalDate startDate = requestDto.getReservationStartDate();
@@ -74,31 +76,37 @@ public class ReservationService {
         Room room = validateAndGetRoom(roomId);
 
         // 해당 날짜에 방이 사용 가능한지 확인
-        List<Reservation> reservations = reservationRepository.reservationsInDateRangeByRoomId(roomId, startDate, endDate);
-        Integer remainingRoomCount = room.getTotalRoomCount() - getMaxAvailableRoomCount(reservations, room, startDate, endDate);
+        List<Reservation> reservations = reservationRepository.reservationsInDateRangeByRoomId(
+            roomId, startDate, endDate);
+        Integer remainingRoomCount =
+            room.getTotalRoomCount() - getMaxAvailableRoomCount(reservations,
+                room, startDate, endDate);
 
         if (remainingRoomCount < 0) {
             throw new NotEnoughTotalRoomCountException();
         }
 
         // 주문 생성
-        Reservation reservation = Reservation.createReservation(member, room, startDate, endDate);
+        Reservation reservation = Reservation.createReservation(member, room,
+            startDate, endDate);
         reservationRepository.save(reservation);
 
         // purchase 진행 (쿠폰 계산로직 포함)
-        Purchase purchase = purchaseService.purchase(reservation, memberCouponId);
+        Purchase purchase = purchaseService.purchase(reservation,
+            memberCouponId);
 
-        return ReservationResponseDto.createReservationResponseDto(reservation, purchase);
+        return ReservationResponseDto.createReservationResponseDto(reservation,
+            purchase);
     }
 
     private Room validateAndGetRoom(Long roomId) {
         return roomRepository.findById(roomId)
-                .orElseThrow(() -> new RoomNotFoundException(roomId));
+            .orElseThrow(() -> new RoomNotFoundException(roomId));
     }
 
     private Member validateAndGetMember(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
+            .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 
     /**
@@ -110,7 +118,8 @@ public class ReservationService {
      * @param endDate      예약 종료 날짜 (불포함)
      * @return 조회된 기간내 사용가능한 객실 수의 최댓값
      */
-    public Integer getMaxAvailableRoomCount(List<Reservation> reservations, Room room, LocalDate startDate, LocalDate endDate) {
+    public Integer getMaxAvailableRoomCount(List<Reservation> reservations,
+        Room room, LocalDate startDate, LocalDate endDate) {
 
         // 예약이 없는 경우, 전체 객실 수 반환
         if (reservations == null || reservations.isEmpty()) {
@@ -119,11 +128,13 @@ public class ReservationService {
 
         // 날짜 별 예약 수 확인
         List<Integer> reservationCounts = new ArrayList<>();
-        for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1)) {
+        for (LocalDate date = startDate; date.isBefore(endDate);
+            date = date.plusDays(1)) {
             LocalDate currentDate = date;
             long reservationCountForDate = reservations.stream()
-                    .filter(reservation -> reservation.isDateWithinReservation(currentDate))
-                    .count();
+                .filter(reservation -> reservation.isDateWithinReservation(
+                    currentDate))
+                .count();
 
             reservationCounts.add((int) reservationCountForDate);
         }
@@ -142,6 +153,7 @@ public class ReservationService {
     public void cancel(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(ReservationNotFoundException::new);
+
 
         reservation.cancel();
     }

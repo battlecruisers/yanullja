@@ -2,7 +2,14 @@ package com.battlecruisers.yanullja.theme.domain;
 
 import com.battlecruisers.yanullja.place.domain.Place;
 import com.battlecruisers.yanullja.theme.ThemeType;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

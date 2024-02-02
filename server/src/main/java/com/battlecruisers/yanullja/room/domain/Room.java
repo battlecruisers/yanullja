@@ -1,25 +1,32 @@
 package com.battlecruisers.yanullja.room.domain;
 
+import static com.battlecruisers.yanullja.place.PlaceService.getWeekDayCount;
+import static com.battlecruisers.yanullja.place.PlaceService.isWeekend;
+
 import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.coupon.domain.Coupon;
 import com.battlecruisers.yanullja.place.domain.Place;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.battlecruisers.yanullja.place.PlaceService.getWeekDayCount;
-import static com.battlecruisers.yanullja.place.PlaceService.isWeekend;
 
 @Slf4j
 @Entity
@@ -67,12 +74,17 @@ public class Room extends BaseDate {
     /**
      * id와 oneToMany 3개 빠졌습니다.
      */
-    public Room(String name, String category, Integer capacity, LocalTime weekdayRentTime,
-                LocalTime weekdayRentStartTime, LocalTime weekdayRentEndTime, LocalTime weekdayCheckInTime,
-                LocalTime weekdayCheckOutTime, Integer weekdayRentPrice, Integer weekdayStayPrice,
-                LocalTime weekendRentTime, LocalTime weekendRentStartTime, LocalTime weekendRentEndTime,
-                LocalTime weekendCheckInTime, LocalTime weekendCheckOutTime, Integer weekendRentPrice,
-                Integer weekendStayPrice, Integer totalRoomCount, Place place) {
+    public Room(String name, String category, Integer capacity,
+        LocalTime weekdayRentTime,
+        LocalTime weekdayRentStartTime, LocalTime weekdayRentEndTime,
+        LocalTime weekdayCheckInTime,
+        LocalTime weekdayCheckOutTime, Integer weekdayRentPrice,
+        Integer weekdayStayPrice,
+        LocalTime weekendRentTime, LocalTime weekendRentStartTime,
+        LocalTime weekendRentEndTime,
+        LocalTime weekendCheckInTime, LocalTime weekendCheckOutTime,
+        Integer weekendRentPrice,
+        Integer weekendStayPrice, Integer totalRoomCount, Place place) {
         this.name = name;
         this.category = category;
         this.capacity = capacity;
@@ -133,7 +145,8 @@ public class Room extends BaseDate {
         }
     }
 
-    public BigDecimal calcTotalPrice(LocalDate checkInDate, LocalDate checkOutDate) {
+    public BigDecimal calcTotalPrice(LocalDate checkInDate,
+        LocalDate checkOutDate) {
         Long days = (checkOutDate.toEpochDay() - checkInDate.toEpochDay());
         Integer weekDayCount = getWeekDayCount(checkInDate, checkOutDate);
         Integer weekendCount = days.intValue() - weekDayCount;
@@ -141,7 +154,8 @@ public class Room extends BaseDate {
         log.info("weekDayCount = {}", weekDayCount);
         log.info("weekendCount = {}", weekendCount);
 
-        Integer totalPrice = weekDayCount * weekdayStayPrice + weekendCount * weekendStayPrice;
+        Integer totalPrice =
+            weekDayCount * weekdayStayPrice + weekendCount * weekendStayPrice;
         log.info("totalPrice = {}", totalPrice);
 
         return new BigDecimal(totalPrice);

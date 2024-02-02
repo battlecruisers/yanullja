@@ -1,22 +1,20 @@
 package com.battlecruisers.yanullja.common.logging;
 
-import jakarta.servlet.*;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Collections;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Collections;
-import java.util.stream.Collectors;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 1)
@@ -25,11 +23,14 @@ public class CustomHttpLoggingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+        HttpServletRequest request, HttpServletResponse response,
+        FilterChain filterChain)
+        throws ServletException, IOException {
 
-        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(request);
-        ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(response);
+        ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(
+            request);
+        ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(
+            response);
 
         logRequest(wrappedRequest);
 
@@ -50,36 +51,42 @@ public class CustomHttpLoggingFilter extends OncePerRequestFilter {
         }
 
         return Collections.list(headerNames).stream()
-                .map(headerName -> headerName + ": " + request.getHeader(headerName))
-                .collect(Collectors.joining("\n"));
+            .map(
+                headerName -> headerName + ": " + request.getHeader(headerName))
+            .collect(Collectors.joining("\n"));
     }
 
     private String buildResHeaderString(HttpServletResponse response) {
         return response.getHeaderNames().stream()
-                .map(headerName -> headerName + ": " + response.getHeader(headerName))
-                .collect(Collectors.joining("\n"));
+            .map(headerName -> headerName + ": " + response.getHeader(
+                headerName))
+            .collect(Collectors.joining("\n"));
     }
 
-    private void logRequest(ContentCachingRequestWrapper request) throws IOException {
-        String requestBody = new String(request.getContentAsByteArray(), Charset.defaultCharset());
+    private void logRequest(ContentCachingRequestWrapper request)
+        throws IOException {
+        String requestBody = new String(request.getContentAsByteArray(),
+            Charset.defaultCharset());
 
         // Log the request URI, headers, and body
         log.info(
-                "\n\nRequest: {} {}\n{} \n\nRequest Body: {}\n",
-                request.getMethod(),
-                request.getRequestURI(),
-                buildReqHeaderString(request),
-                requestBody.isEmpty() ? "<<No Request Body>>" : requestBody);
+            "\n\nRequest: {} {}\n{} \n\nRequest Body: {}\n",
+            request.getMethod(),
+            request.getRequestURI(),
+            buildReqHeaderString(request),
+            requestBody.isEmpty() ? "<<No Request Body>>" : requestBody);
     }
 
-    private void logResponse(ContentCachingResponseWrapper response) throws IOException {
+    private void logResponse(ContentCachingResponseWrapper response)
+        throws IOException {
         String responseBody =
-                new String(response.getContentAsByteArray(), Charset.defaultCharset());
+            new String(response.getContentAsByteArray(),
+                Charset.defaultCharset());
 
         log.info(
-                "\n\nResponse Status: {}\n{}\n\nResponse Body: {}\n",
-                response.getStatus(),
-                buildResHeaderString(response),
-                responseBody.isEmpty() ? "<<No Response Body>>" : responseBody);
+            "\n\nResponse Status: {}\n{}\n\nResponse Body: {}\n",
+            response.getStatus(),
+            buildResHeaderString(response),
+            responseBody.isEmpty() ? "<<No Response Body>>" : responseBody);
     }
 }

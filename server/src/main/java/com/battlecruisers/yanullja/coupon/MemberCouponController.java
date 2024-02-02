@@ -5,30 +5,33 @@ import com.battlecruisers.yanullja.coupon.dto.MemberCouponRegisterDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/member-coupons")
 @RequiredArgsConstructor
 @Slf4j
 public class MemberCouponController {
+
     private final MemberCouponService memberCouponService;
 
     @GetMapping
     public List<MemberCouponResponseDto> getMemberCoupons() {
         final Long memberId = 1L;
-        return memberCouponService.findMemberCouponsWithCoupon(1L);
+        return memberCouponService.findMemberCouponsWithCoupon(memberId);
     }
 
     @PostMapping("")
     // 회원이 쿠폰 등록
-    public void register(@RequestBody MemberCouponRegisterDto dto, HttpServletRequest request) {
+
+    public void register(@RequestBody MemberCouponRegisterDto dto,
+        HttpServletRequest request) {
         // 세션에서 회원 아이디 추출
-        log.info("couponId = {}", dto.getCouponId());
+        HttpSession session = request.getSession();
+//        Long memberId = (Long) session.getAttribute("id");
         Long memberId = 1L;
 
         memberCouponService.register(dto.getCouponId(), memberId);
@@ -43,26 +46,31 @@ public class MemberCouponController {
     public List<MemberCouponDto> history(HttpServletRequest request) {
         // 세션에서 회원 아이디 추출
         HttpSession session = request.getSession();
-        Long memberId = (Long) session.getAttribute("id");
+//        Long memberId = (Long) session.getAttribute("id");
 
+        Long memberId = 1L;
         // 사용내역 반환
-        List<MemberCouponDto> histories = memberCouponService.getUsageHistory(memberId);
+        List<MemberCouponDto> histories = memberCouponService.getUsageHistory(
+            memberId);
 
         return histories;
     }
 
     // 회원이 쿠폰 사용하는 과정 테스트
     @PatchMapping("/{memberCouponId}")
-    public void use(@PathVariable(name = "memberCouponId") Long memberCouponId) {
+    public void use(
+        @PathVariable(name = "memberCouponId") Long memberCouponId) {
         // 쿠폰 사용 테스트
         memberCouponService.updateStatus(memberCouponId);
     }
 
     // 특정 숙소에서 사용 가능한 쿠폰 조회
     @GetMapping("/{roomId}")
-    public List<MemberCouponDto> room(Long roomId) {
+    public List<MemberCouponDto> room(
+        @PathVariable(name = "roomId") Long roomId) {
 //        Pageable pageable = PageRequest.of(page, size);
-        List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(roomId, 1L);
+        List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(
+            roomId, 1L);
         return memberCouponDtos;
     }
 

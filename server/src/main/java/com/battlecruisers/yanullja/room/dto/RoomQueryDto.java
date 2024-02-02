@@ -1,20 +1,19 @@
 package com.battlecruisers.yanullja.room.dto;
 
+import static com.battlecruisers.yanullja.place.PlaceService.findMaxDiscountPrice;
+
 import com.battlecruisers.yanullja.coupon.domain.RoomType;
 import com.battlecruisers.yanullja.place.dto.RoomOptionImageDto;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.room.domain.RoomImage;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.stream.Collectors;
-
-import static com.battlecruisers.yanullja.place.PlaceService.findMaxDiscountPrice;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -55,26 +54,28 @@ public class RoomQueryDto {
     private Integer stayMaxDiscount;
 
 
-    public static RoomQueryDto from(Room room, LocalDate checkInDate, LocalDate checkOutDate,
-                                    Integer reservedRoomCount) {
+    public static RoomQueryDto from(Room room, LocalDate checkInDate,
+        LocalDate checkOutDate,
+        Integer reservedRoomCount) {
 
         Long days = checkOutDate.toEpochDay() - checkInDate.toEpochDay();
 
         return new RoomQueryDto(
-                room.getId(),
-                room.getPlace().getId(),
-                room.getName(),
-                new RoomOptionImageDto(room.getRoomImages().stream().map(RoomImage::getImageUrl)
-                        .collect(Collectors.toList())),
-                room.getCapacity(),
-                room.getTotalRoomCount(),
-                reservedRoomCount,
-                "example description",
-                room.choiceCheckInTime(checkInDate),
-                room.choiceCheckOutTime(checkOutDate),
-                room.calcTotalPrice(checkInDate, checkOutDate),
-                days.intValue(),
-                findMaxDiscountPrice(room, checkInDate, RoomType.STAY)
+            room.getId(),
+            room.getPlace().getId(),
+            room.getName(),
+            new RoomOptionImageDto(
+                room.getRoomImages().stream().map(RoomImage::getImageUrl)
+                    .collect(Collectors.toList())),
+            room.getCapacity(),
+            room.getTotalRoomCount(),
+            reservedRoomCount,
+            "example description",
+            room.choiceCheckInTime(checkInDate),
+            room.choiceCheckOutTime(checkOutDate),
+            room.calcTotalPrice(checkInDate, checkOutDate),
+            days.intValue(),
+            findMaxDiscountPrice(room, checkInDate, RoomType.STAY)
         );
 
     }

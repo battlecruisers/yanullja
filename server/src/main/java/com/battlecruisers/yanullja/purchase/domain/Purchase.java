@@ -2,13 +2,19 @@ package com.battlecruisers.yanullja.purchase.domain;
 
 import com.battlecruisers.yanullja.base.BaseDate;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -40,8 +46,8 @@ public class Purchase extends BaseDate {
     }
 
     protected Purchase(
-            Reservation reservation,
-            BigDecimal price
+        Reservation reservation,
+        BigDecimal price
     ) {
         this.reservation = reservation;
         this.price = price;
@@ -49,8 +55,8 @@ public class Purchase extends BaseDate {
     }
 
     public static Purchase createPurchase(
-            Reservation reservation,
-            BigDecimal price
+        Reservation reservation,
+        BigDecimal price
     ) {
         return new Purchase(reservation, price);
     }
