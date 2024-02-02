@@ -1,5 +1,6 @@
 package com.battlecruisers.yanullja.reservation;
 
+import com.battlecruisers.yanullja.member.domain.SecurityMember;
 import com.battlecruisers.yanullja.reservation.dto.ReservationCancelRequestDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationRequestDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationResponseDto;
@@ -9,12 +10,12 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -27,8 +28,10 @@ public class ReservationController {
 
     @GetMapping
     @Operation(summary = "결제 로직 조회")
-    public ResponseEntity reservationsByMemberId(@RequestParam Long memberId) {
-        Long mockMemberId = 1L;
+    public ResponseEntity<List<ReservationResultDto>> reservationsByMemberId(
+        @AuthenticationPrincipal SecurityMember me
+    ) {
+        var memberId = me.getId();
 
         List<ReservationResultDto> results = reservationService.getReservationsByMemberId(
             memberId);
@@ -38,13 +41,15 @@ public class ReservationController {
 
     @PostMapping("/instant")
     @Operation(summary = "예약 및 결제")
-    public ResponseEntity reserve(
-        @RequestBody ReservationRequestDto reservationRequestDto) {
+    public ResponseEntity<ReservationResponseDto> reserve(
+        @RequestBody ReservationRequestDto reservationRequestDto,
+        @AuthenticationPrincipal SecurityMember me
+    ) {
         log.info("ReservationController 호출 됨");
         log.info("ReservationController reservationRequestDto = {}",
             reservationRequestDto);
         //todo 스프링 시큐리티 멤버로직 추가
-        Long mockMemberId = 1L;
+        Long mockMemberId = me.getId();
         ReservationResponseDto reservationResponseDto = reservationService.reserve(
             reservationRequestDto, mockMemberId);
 
@@ -53,7 +58,7 @@ public class ReservationController {
 
     @DeleteMapping
     @Operation(summary = "예약 및 결제 취소")
-    public ResponseEntity cancel(
+    public ResponseEntity<Void> cancel(
         @RequestBody ReservationCancelRequestDto cancelDto) {
         reservationService.cancel(cancelDto);
 
