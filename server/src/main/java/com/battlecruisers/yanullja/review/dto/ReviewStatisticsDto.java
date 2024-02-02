@@ -1,9 +1,8 @@
 package com.battlecruisers.yanullja.review.dto;
 
 
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class ReviewStatisticsDto {
@@ -17,7 +16,10 @@ public class ReviewStatisticsDto {
     private List<ReviewDetailDto> reviews;
 
 
-    public ReviewStatisticsDto(Long totalCount, Double totalRateAvg, Double kindnessRateAvg, Double cleanlinessRateAvg, Double convenienceRateAvg, Double locationRateAvg, List<ReviewDetailDto> reviews) {
+    public ReviewStatisticsDto(Long totalCount, Double totalRateAvg,
+        Double kindnessRateAvg, Double cleanlinessRateAvg,
+        Double convenienceRateAvg, Double locationRateAvg,
+        List<ReviewDetailDto> reviews) {
         this.totalCount = totalCount;
         this.totalRateAvg = totalRateAvg;
         this.kindnessRateAvg = kindnessRateAvg;

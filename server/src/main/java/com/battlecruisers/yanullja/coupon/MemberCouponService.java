@@ -40,10 +40,11 @@ public class MemberCouponService {
     private final CouponRepository couponRepository;
     private final CouponService couponService;
 
-    public static BigDecimal getCalculateCouponDiscountAmount(BigDecimal originalPrice,
-                                                              BigDecimal discountPrice,
-                                                              BigDecimal discountRate,
-                                                              BigDecimal discountLimit) {
+    public static BigDecimal getCalculateCouponDiscountAmount(
+            BigDecimal originalPrice,
+            BigDecimal discountPrice,
+            BigDecimal discountRate,
+            BigDecimal discountLimit) {
         // 할인금액
         BigDecimal discountAmount = BigDecimal.ZERO;
 
@@ -57,7 +58,8 @@ public class MemberCouponService {
             }
         } else if (discountPrice.compareTo(BigDecimal.ZERO) == 0) {
             discountAmount =
-                    originalPrice.multiply(BigDecimal.ONE.subtract(discountRate.divide(BigDecimal.valueOf(100))));
+                    originalPrice.multiply(BigDecimal.ONE.subtract(
+                            discountRate.divide(BigDecimal.valueOf(100))));
             // 할인금액 > 최대할인한도를 초과할경우 최대할인한도에 해당하는 금액을 반환합니다.
             if (discountAmount.compareTo(discountLimit) > 0) {
                 discountAmount = discountLimit;
@@ -68,7 +70,8 @@ public class MemberCouponService {
     }
 
     // 가장 할인을 많이 해주는 쿠폰 반환, 메서드에서 필요한 인자는 매개변수로 다 받아오게끔 처리
-    public List<CouponDto> findMostDiscountedCoupon(Long roomId, List<MemberCoupon> availableCoupons) {
+    public List<CouponDto> findMostDiscountedCoupon(Long roomId,
+                                                    List<MemberCoupon> availableCoupons) {
         // 사용 가능한 쿠폰목록
 //        List<MemberCoupon> availableCoupons = this.getAvailableCouponsByRoomId(roomId);
 
@@ -105,7 +108,8 @@ public class MemberCouponService {
                     // 할인비용을 계산해주는 메서드를 호출합니다.
                     // 매개변수로 객실 숙박비용, 쿠폰의 고정할인금액, 쿠폰의 할인율, 쿠폰의 최대할인한도를 넘겨줍니다.
                     getCalculateCouponDiscountAmount(price, c.getDiscountPrice(),
-                            BigDecimal.valueOf(c.getDiscountRate()), c.getDiscountLimit());
+                            BigDecimal.valueOf(c.getDiscountRate()),
+                            c.getDiscountLimit());
 
             // 현재 순회중인 쿠폰의 할인금액 > maxDiscountAmount일 경우 리스트를 초기화합니다.
             // 순회중인 쿠폰을 리스트에 추가하고 maxDiscontAmount를 현재 순회중인 쿠폰의 할인금액으로 갱신합니다.
@@ -130,7 +134,8 @@ public class MemberCouponService {
 
     // 특정 숙소에서 사용 가능한 쿠폰 목록 <<  MemberCouponService로 옮기는게 나을 듯
     public List<MemberCoupon> getAvailableCouponsByRoomId(Long roomId) {
-        List<MemberCoupon> availableCoupons = memberCouponRepository.findByRoomIdAndMemberId(roomId, 1L);
+        List<MemberCoupon> availableCoupons = memberCouponRepository.findByRoomIdAndMemberId(
+                roomId, 1L);
 //        List<MemberCouponDto> memberCouponDtos = new ArrayList<>();
 //        for (MemberCoupon m : list) {
 //            memberCouponDtos.add(MemberCouponDto.from(m));
@@ -165,7 +170,6 @@ public class MemberCouponService {
 
         MemberCoupon memberCoupon = createMemberCoupon(member, coupon, false);
 
-
         // 회원쿠폰 정보 세팅(임시)
 
         memberCouponRepository.save(memberCoupon);
@@ -181,7 +185,8 @@ public class MemberCouponService {
 
         MemberCoupon memberCoupon = memberCouponRepository
                 .findById(memberCouponId)
-                .orElseThrow(() -> new MemberCouponNotFoundException(memberCouponId));
+                .orElseThrow(
+                        () -> new MemberCouponNotFoundException(memberCouponId));
 
         // 쿠폰의 사용여부를 체크한 후 사용했을 경우 예외처리
         if (memberCoupon.getIsUsed()) {
@@ -197,7 +202,8 @@ public class MemberCouponService {
     }
 
     // 회원이 쿠폰을 적용한 할인가격을 구하는 메서드
-    public BigDecimal applyMemberCoupon(MemberCoupon memberCoupon, BigDecimal price) {
+    public BigDecimal applyMemberCoupon(MemberCoupon memberCoupon,
+                                        BigDecimal price) {
         // 매개변수로 받아온 회원쿠폰이 유효한 쿠폰인지 검증
         this.validateMemberCoupon(memberCoupon, 1L);
 
@@ -210,14 +216,16 @@ public class MemberCouponService {
 
         // 쿠폰 적용결과를 계산해주는 메서드를 호출합니다.
         // 매개변수로 각각 숙박비용, 쿠폰의 고정할인금액, 쿠폰의 할인율, 쿠폰의 최대할인한도를 받습니다.
-        return couponService.
-                getCalculateDiscountedPrice(price, coupon.getDiscountPrice(), BigDecimal.valueOf(coupon.getDiscountRate())
+        return CouponService.
+                getCalculateDiscountedPrice(price, coupon.getDiscountPrice(),
+                        BigDecimal.valueOf(coupon.getDiscountRate())
                         , coupon.getDiscountLimit());
     }
 
     // 사용하려는 회원의 쿠폰이 유효한 쿠폰인지 검증
     public void validateMemberCoupon(MemberCoupon memberCoupon, Long memberId) {
-        if (!(memberCoupon.getMember().getId().equals(memberId) && (memberCoupon.getIsUsed() == true))) {
+        if (!(memberCoupon.getMember().getId().equals(memberId) && (
+                memberCoupon.getIsUsed()))) {
             // 회원이 사용하려는 쿠폰과 접속중인 회원의 아이디가 일치하지 않거나, 이미 사용된 쿠폰일 경우 예외 발생
             throw new InvalidAccessException();
         }
@@ -228,7 +236,8 @@ public class MemberCouponService {
 
 //        Member member = this.memberRepository.findById(2L).orElseThrow();
 
-        List<MemberCoupon> histories = memberCouponRepository.findByMemberIdAndIsUsed(2L, true);
+        List<MemberCoupon> histories = memberCouponRepository.findByMemberIdAndIsUsed(
+                2L, true);
 
         // 리스트의 사이즈가 0일 경우 사용내역이 존재하지 않다는 예외 발생
         if (histories.size() == 0) {
@@ -253,7 +262,8 @@ public class MemberCouponService {
     public List<MemberCouponDto> getRoomCoupons(Long roomId) {
         // Dto로 변환 후 반환
 
-        List<MemberCoupon> roomCoupons = memberCouponRepository.findByRoomIdAndMemberId(roomId, 1L);
+        List<MemberCoupon> roomCoupons = memberCouponRepository.findByRoomIdAndMemberId(
+                roomId, 2L);
 
         // 리스트의 사이즈가 0일 경우 사용할 수 있는 쿠폰이 없다는 예외를 발생
         if (roomCoupons.isEmpty()) {
@@ -275,9 +285,11 @@ public class MemberCouponService {
     }
 
     // 회원이 사용 가능한 쿠폰목록 조회
-    public List<MemberCouponResponseDto> findMemberCouponsWithCoupon(Long memberId) {
+    public List<MemberCouponResponseDto> findMemberCouponsWithCoupon(
+            Long memberId) {
 
-        List<MemberCoupon> res = this.memberCouponRepository.findMemberCouponsWithCoupon(memberId);
+        List<MemberCoupon> res = this.memberCouponRepository.findMemberCouponsWithCoupon(
+                memberId);
         return res.stream().map(
                 MemberCouponResponseDto::from
         ).collect(Collectors.toList());

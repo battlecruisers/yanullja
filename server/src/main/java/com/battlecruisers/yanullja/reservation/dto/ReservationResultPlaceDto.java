@@ -2,27 +2,26 @@ package com.battlecruisers.yanullja.reservation.dto;
 
 import com.battlecruisers.yanullja.place.domain.Place;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 
 @Data
-public class PurchasePlaceResponseDto {
+public class ReservationResultPlaceDto {
 
     private Long accommodationId; // placeId
 
     private String name; // placeName
 
     @Schema(example = "서울시 관악구 남현동")
-    private String address; // palce Address
+    private String address;
 
     @Schema(example = "https://s3.us-west-1.amazonaws.com/myBucket/object%20key?query=%5Bbrackets%5D")
-    private String thumbnailImageUrl;
+    private String thumbnailImageUrl; // place thumbnailImageUrl
 
-    private List<PurchaseRoomResponseDto> roomOptions; // rooms
+    private List<ReservationResultRoomDto> roomOptions; // rooms
 
-    public PurchasePlaceResponseDto(Place place) {
+    protected ReservationResultPlaceDto(Place place) {
         this.accommodationId = place.getId();
         this.name = place.getName();
         this.address = place.getAddress();
@@ -30,8 +29,9 @@ public class PurchasePlaceResponseDto {
         this.roomOptions = new ArrayList<>();
     }
 
-    public static PurchasePlaceResponseDto createPurchasePlaceResponseDto(Place place) {
-        return new PurchasePlaceResponseDto(place);
+    public static ReservationResultPlaceDto createReservationResultPlaceDto(
+        Place place) {
+        return new ReservationResultPlaceDto(place);
     }
 
 }

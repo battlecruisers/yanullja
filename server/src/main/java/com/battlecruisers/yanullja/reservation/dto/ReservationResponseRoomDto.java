@@ -3,12 +3,11 @@ package com.battlecruisers.yanullja.reservation.dto;
 import com.battlecruisers.yanullja.purchase.domain.Purchase;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
 import com.battlecruisers.yanullja.room.domain.Room;
+import java.time.LocalDate;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Data
-public class PurchaseRoomResponseDto {
+public class ReservationResponseRoomDto {
 
     private Long cartProductId; // reservationId
 
@@ -30,11 +29,11 @@ public class PurchaseRoomResponseDto {
 
     private Integer stayDuration; // 디비에 없는 값
 
-    public PurchaseRoomResponseDto(Purchase purchase, Room room) {
+    public ReservationResponseRoomDto(Purchase purchase, Room room) {
         Reservation reservation = purchase.getReservation();
 
         this.cartProductId = reservation.getId();
-        this.roomOptionId = room.getId();
+        this.roomOptionId = reservation.getRoom().getId();
         this.name = room.getName();
 //        this.thumbnailImage = room.getThumbnailImage();
         this.capacity = room.getCapacity().longValue();
@@ -42,11 +41,13 @@ public class PurchaseRoomResponseDto {
         this.totalPrice = purchase.getPrice().longValue();
         this.reservationStartDate = reservation.getStartDate();
         this.reservationEndDate = reservation.getEndDate();
-        this.stayDuration = reservationStartDate.until(reservationEndDate).getDays();
+        this.stayDuration = reservationStartDate.until(reservationEndDate)
+            .getDays();
     }
 
-    public static PurchaseRoomResponseDto createPurchaseRoomResponseDto(Purchase purchase, Room room) {
-        return new PurchaseRoomResponseDto(purchase, room);
+    public static ReservationResponseRoomDto createReservationRoomResponseDto(
+        Purchase purchase, Room room) {
+        return new ReservationResponseRoomDto(purchase, room);
     }
 
 }

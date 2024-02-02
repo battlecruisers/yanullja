@@ -15,16 +15,16 @@ public class MemberService {
 
     public Member getMember(Long memberId) {
         var member = memberRepository.findById(memberId)
-                .orElseThrow(
-                        () -> new MemberNotFoundException(memberId)
-                );
+            .orElseThrow(
+                () -> new MemberNotFoundException(memberId)
+            );
         return member;
     }
 
     @Transactional
     public Member updateMember(Long memberId, MemberUpdateDto dto) {
         var member = memberRepository.findById(memberId).orElseThrow(
-                () -> new MemberNotFoundException(memberId)
+            () -> new MemberNotFoundException(memberId)
         );
 
         member.updateMember(dto);

@@ -5,11 +5,21 @@ import com.battlecruisers.yanullja.member.domain.Member;
 import com.battlecruisers.yanullja.reservation.exception.StartDateNotAfterTodayException;
 import com.battlecruisers.yanullja.reservation.exception.StartDateNotBeforeEndDateException;
 import com.battlecruisers.yanullja.room.domain.Room;
-import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @ToString
 @Entity
@@ -29,7 +39,7 @@ public class Reservation extends BaseDate {
     private LocalDate endDate;
 
     // 예약 번호
-    private UUID reserveNumber;
+    private String reserveNumber;
 
     // 예약 상태 [RESERVE, CANCEL]
     @Enumerated(EnumType.STRING)
@@ -53,10 +63,10 @@ public class Reservation extends BaseDate {
     }
 
     protected Reservation(
-            Member member,
-            Room room,
-            LocalDate startDate,
-            LocalDate endDate
+        Member member,
+        Room room,
+        LocalDate startDate,
+        LocalDate endDate
     ) {
         validateStartBeforeEnd(startDate, endDate);
         validateStartAfterToday(startDate);
@@ -66,20 +76,21 @@ public class Reservation extends BaseDate {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reservationStatus = ReservationStatus.RESERVE;
-        this.reserveNumber = UUID.randomUUID();
+        this.reserveNumber = UUID.randomUUID().toString();
     }
 
     public static Reservation createReservation(
-            Member member,
-            Room room,
-            LocalDate startDate,
-            LocalDate endDate
+        Member member,
+        Room room,
+        LocalDate startDate,
+        LocalDate endDate
     ) {
         return new Reservation(member, room, startDate, endDate);
     }
 
-    private void validateStartBeforeEnd(LocalDate startDate, LocalDate endDate) {
-        if (startDate.isAfter(endDate)) {
+    private void validateStartBeforeEnd(LocalDate startDate,
+        LocalDate endDate) {
+        if (startDate.isAfter(endDate) || startDate.isEqual(endDate)) {
             throw new StartDateNotBeforeEndDateException();
         }
     }
@@ -104,7 +115,8 @@ public class Reservation extends BaseDate {
      * @return 예약 기간 내에 있으면 true, 그렇지 않으면 false
      */
     public boolean isDateWithinReservation(LocalDate checkDate) {
-        return (checkDate.isAfter(startDate) && checkDate.isBefore(endDate)) || checkDate.isEqual(startDate);
+        return (checkDate.isAfter(startDate) && checkDate.isBefore(endDate))
+            || checkDate.isEqual(startDate);
     }
 
 }

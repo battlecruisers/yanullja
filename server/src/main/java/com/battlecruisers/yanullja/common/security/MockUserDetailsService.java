@@ -16,12 +16,13 @@ public class MockUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username)
+        throws UsernameNotFoundException {
         Member member = memberRepository.findByProviderId(username)
-                .orElseThrow(() -> new RuntimeException("Provider Id not found!"));
+            .orElseThrow(() -> new RuntimeException("Provider Id not found!"));
         return User.builder()
-                .username(member.getProviderId())
-                .password(member.getProvider())
-                .build();
+            .username(member.getProviderId())
+            .password(member.getProvider())
+            .build();
     }
 }

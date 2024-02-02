@@ -18,6 +18,7 @@ import java.util.List;
 @Service
 @Transactional
 public class CouponService {
+
     private final CouponRepository couponRepository;
     private final RoomRepository roomRepository;
     // 테스트
@@ -26,10 +27,11 @@ public class CouponService {
     // 쿠폰 적용시 할인 받는 금액 반환
 
     // 할인이 적용된 가격 반환
-    public static BigDecimal getCalculateDiscountedPrice(BigDecimal originalPrice,
-                                                         BigDecimal discountPrice,
-                                                         BigDecimal discountRate,
-                                                         BigDecimal discountLimit) {
+    public static BigDecimal getCalculateDiscountedPrice(
+            BigDecimal originalPrice,
+            BigDecimal discountPrice,
+            BigDecimal discountRate,
+            BigDecimal discountLimit) {
         // 할인이 적용된 가격읆 담을 변수
         BigDecimal discountedPrice = BigDecimal.ZERO;
         // 할인 받는 금액
@@ -40,7 +42,8 @@ public class CouponService {
             // 할인율 적용시 할인받는 금액
             discountAmount =
                     originalPrice
-                            .multiply(BigDecimal.ONE.subtract(discountRate.divide(BigDecimal.valueOf(100))));
+                            .multiply(BigDecimal.ONE.subtract(
+                                    discountRate.divide(BigDecimal.valueOf(100))));
 
             // 할인율 적용 시  사용하려는 쿠폰의 최대할인한도를 초과했을 경우, 최대할인한도에 해당하는 금액만큼만 할인을 적용합니다.
             if (discountAmount.compareTo(discountLimit) > 0) {
@@ -56,7 +59,6 @@ public class CouponService {
         }
         return discountedPrice;
     }
-
 
     // 쿠폰 할인금액 적용 결과 계산
 //    public BigDecimal calculateDiscountedPrice(Coupon coupon, BigDecimal originalPrice) {
@@ -103,8 +105,10 @@ public class CouponService {
     // 쿠폰 생성
 
     public Long createCoupon() {
-        Coupon newCoupon = Coupon.createCoupon("할인 쿠폰", BigDecimal.valueOf(40000),
-                BigDecimal.valueOf(5000), 10.0, BigDecimal.valueOf(10.0), "좋은 쿠폰", "서울", RoomType.RENT,
+        Coupon newCoupon = Coupon.createCoupon("할인 쿠폰",
+                BigDecimal.valueOf(40000),
+                BigDecimal.valueOf(5000), 10.0, BigDecimal.valueOf(10.0), "좋은 쿠폰",
+                "서울", RoomType.RENT,
                 roomRepository.findById(2L).orElseThrow(), true, false);
 
         couponRepository.save(newCoupon);
@@ -113,7 +117,8 @@ public class CouponService {
     }
 
     // 예약하려는 방이 쿠폰을 사용할 수 있는지 확인
-    public void validateCoupon(BigDecimal minimalPrice, BigDecimal price, Coupon coupon) {
+    public void validateCoupon(BigDecimal minimalPrice, BigDecimal price,
+                               Coupon coupon) {
 //        BigDecimal minimalPrice = coupon.getMinimumPrice();
 //        couponRepository
 //                .findById(memberCoupon.getCoupon().getId())
@@ -121,7 +126,7 @@ public class CouponService {
 //                .getMinimumPrice();
 
         // 등록되지 않은 쿠폰이거나 유효하지 않은 쿠폰일 경우 예외발생
-        if (coupon.getIsValid() != true && coupon.getIsRegistered() != true) {
+        if (!coupon.getIsValid() && !coupon.getIsRegistered()) {
             throw new InvalidCouponException(coupon.getId());
         }
 

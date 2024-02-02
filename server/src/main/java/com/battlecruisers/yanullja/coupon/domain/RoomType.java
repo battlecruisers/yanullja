@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum RoomType {
     STAY("STAY"), RENT("RENT"), ALL("ALL");
 
-    private String name;
+    private final String name;
 
     RoomType(String name) {
         this.name = name;
