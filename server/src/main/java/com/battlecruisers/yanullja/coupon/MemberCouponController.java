@@ -1,19 +1,13 @@
 package com.battlecruisers.yanullja.coupon;
 
-import com.battlecruisers.yanullja.coupon.domain.Coupon;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
+import com.battlecruisers.yanullja.coupon.dto.MemberCouponRegisterDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,12 +26,12 @@ public class MemberCouponController {
 
     @PostMapping("")
     // 회원이 쿠폰 등록
-    public void register(@RequestBody Coupon dto, HttpServletRequest request) {
+    public void register(@RequestBody MemberCouponRegisterDto dto, HttpServletRequest request) {
         // 세션에서 회원 아이디 추출
-        HttpSession session = request.getSession();
-        Long memberId = (Long) session.getAttribute("id");
+        log.info("couponId = {}", dto.getCouponId());
+        Long memberId = 1L;
 
-        memberCouponService.register(dto.getId(), memberId);
+        memberCouponService.register(dto.getCouponId(), memberId);
     }
 
     // 회원이 보유한 최대할인쿠폰정보를 받아오려면 가격 정보도 필요
@@ -68,7 +62,7 @@ public class MemberCouponController {
     @GetMapping("/{roomId}")
     public List<MemberCouponDto> room(Long roomId) {
 //        Pageable pageable = PageRequest.of(page, size);
-        List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(roomId);
+        List<MemberCouponDto> memberCouponDtos = memberCouponService.getRoomCoupons(roomId, 1L);
         return memberCouponDtos;
     }
 

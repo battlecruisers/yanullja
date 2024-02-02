@@ -7,11 +7,11 @@ import com.battlecruisers.yanullja.purchase.PurchaseRepository;
 import com.battlecruisers.yanullja.purchase.PurchaseService;
 import com.battlecruisers.yanullja.purchase.domain.Purchase;
 import com.battlecruisers.yanullja.reservation.domain.Reservation;
-import com.battlecruisers.yanullja.reservation.dto.ReservationCancelRequestDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationRequestDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationResponseDto;
 import com.battlecruisers.yanullja.reservation.dto.ReservationResultDto;
 import com.battlecruisers.yanullja.reservation.exception.NotEnoughTotalRoomCountException;
+import com.battlecruisers.yanullja.reservation.exception.ReservationNotFoundException;
 import com.battlecruisers.yanullja.room.RoomRepository;
 import com.battlecruisers.yanullja.room.domain.Room;
 import com.battlecruisers.yanullja.room.exception.RoomNotFoundException;
@@ -135,15 +135,13 @@ public class ReservationService {
     /**
      * 예약 취소를 진행합니다.
      *
-     * @param cancelDto 취소 요청 DTO 객체
-     * @throws IllegalArgumentException 주어진 예약 ID에 해당하는 예약이 존재하지 않을 경우 예외가 발생합니다.
+     * @param reservationId 최소 요청할 예약 식별자
+     * @throws ReservationNotFoundException 주어진 예약 ID에 해당하는 예약이 존재하지 않을 경우 예외가 발생합니다.
      */
     @Transactional
-    public void cancel(ReservationCancelRequestDto cancelDto) {
-        Long reservationId = cancelDto.getReservationId();
-
+    public void cancel(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow();
+                .orElseThrow(ReservationNotFoundException::new);
 
         reservation.cancel();
     }
