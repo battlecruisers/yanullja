@@ -46,8 +46,6 @@ public class ReservationController {
         @AuthenticationPrincipal SecurityMember me
     ) {
         log.info("ReservationController 호출 됨");
-        log.info("ReservationController reservationRequestDto = {}",
-            reservationRequestDto);
         //todo 스프링 시큐리티 멤버로직 추가
         Long mockMemberId = me.getId();
         ReservationResponseDto reservationResponseDto = reservationService.reserve(
@@ -60,7 +58,7 @@ public class ReservationController {
     @Operation(summary = "예약 및 결제 취소")
     public ResponseEntity<Void> cancel(
         @RequestBody ReservationCancelRequestDto cancelDto) {
-        reservationService.cancel(cancelDto);
+        reservationService.cancel(cancelDto.getPaymentId());
 
         return ResponseEntity.ok().build();
     }
