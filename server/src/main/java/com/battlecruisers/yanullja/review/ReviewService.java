@@ -35,8 +35,8 @@ public class ReviewService {
     }
 
 
-    public Long saveReview(ReviewSaveDto form) {
-        Review review = Review.from(form);
+    public Long saveReview(ReviewSaveDto form, Long memberId) {
+        Review review = Review.from(form, memberId);
         return reviewRepository.save(review)
             .getId();
     }
