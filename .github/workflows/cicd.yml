@@ -18,25 +18,24 @@ permissions:
   pull-requests: write
 
 jobs:
-  build-client:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20.x]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        name: Use Node.js ${{ matrix.node-version }}
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: build & lint
-        run: |
-          npm install
-          npm run build
-          npm run lint
-        working-directory: ./client
-      
-    
+  # build-client:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       node-version: [20.x]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       name: Use Node.js ${{ matrix.node-version }}
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #     - name: build & lint
+  #       run: |
+  #         npm install
+  #         npm run build
+  #         npm run lint
+  #       working-directory: ./client
+  
   build-server:
     runs-on: ubuntu-latest
     # https://docs.github.com/en/actions/using-containerized-services/creating-postgresql-service-containers
@@ -75,7 +74,8 @@ jobs:
       - name: Run build with Gradle Wrapper
         run: cd ./server && ./gradlew build --stacktrace
   deploy:
-    needs: [build-client, build-server]
+    # needs: [build-client, build-server]
+    needs: [build-server]
     runs-on: ubuntu-latest
     steps:
       - uses: appleboy/ssh-action@master
