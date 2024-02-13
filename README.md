@@ -1,7 +1,8 @@
-# 🏠 숙박 예약 서비스 야널자
-개발기간 : 2024-01-08 ~ 2024-02-02
+# 🏠 숙박 예약 서비스 야널자 Backend
 
-배포 링크 : https://yanullja.com
+야놀자 백엔드 클론 프로젝트
+
+개발기간 : 2024-01-08 ~ 2024-02-02
 
 API 스웨거 링크 : https://api.yanullja.com
 <br>
@@ -9,7 +10,7 @@ API 스웨거 링크 : https://api.yanullja.com
 
 ## 📖 프로젝트 소개
 
-야놀자 숙소 예약 서비스의 클론 프로젝트입니다.
+야놀자 숙소 예약 서비스의 백엔드 클론 프로젝트입니다.
 
 조건에 맞게 필터를 설정하여 자신에게 필요한 숙소를 검색하고 찾아볼 수 있습니다.
 
@@ -58,6 +59,9 @@ API 스웨거 링크 : https://api.yanullja.com
 
 ## 협업 전략
 
+- Squash Merge Pull Request만을 사용한다.
+- GitHub flow 전략을 사용한다.
+- 한 사람 이상의 Accepted Review가 있어야만 PR을 머지할 수 있다.
 
 <br>
 
@@ -66,8 +70,17 @@ API 스웨거 링크 : https://api.yanullja.com
 
 <br>
 
-## DEMO
+## 백엔드 DEMO
 
+> [!IMPORTANT]
+> 현재 프로젝트는 백엔드 api만을 작성한 상태이며, 프론트 코드는 완성되지 않은 상태입니다.
+> 하단에 보이는 데모 스크린샷은
+>
+> https://github.com/Yanolja-MiniProject-10/Yanolja-clone-fe
+>
+> 위 프로젝트의 프론트 코드를 그대로 가져와서 로컬에 돌려서 api endpoint를 맞춘 후 동작을 확인한 내용입니다.
+>
+> 저희 팀원 5명은 **프론트적인 역량이 없다**는 것을 명시합니다!
 ### 로그인
 
 <img src="https://github.com/battlecruisers/yanullja/assets/106314016/ae5e8a7e-4370-4fc2-9da9-26247a64c961" />
@@ -79,19 +92,14 @@ API 스웨거 링크 : https://api.yanullja.com
 <img src="https://github.com/battlecruisers/yanullja/assets/106314016/d871d361-c917-43db-8964-e5caf2b812f1" />
 <br><br>
 
-
 ### 예약
 
 <img src="https://github.com/battlecruisers/yanullja/assets/106314016/b5cba42a-ffc2-463d-97c7-c9903447118a" />
 <br><br>
 
-
 ### 리뷰 조회
 
 <img src="https://github.com/battlecruisers/yanullja/assets/106314016/b7c2b7e6-6f2f-49fa-b9e4-ca4b06e68f4d" />
-
-
-
 
 <br>
 <br>
