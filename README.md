@@ -1,8 +1,49 @@
-# yanullja
+# 🏠 숙박 예약 서비스 야널자
+개발기간 : 2024-01-08 ~ 2024-02-02<br>
+배포 링크 : https://yanullja.com
+<br>
+<br>
 
-야놀자의 클론 프로젝트입니다.
+## 📖 프로젝트 소개
 
-## 팀 Battlecrusiers
+야놀자 숙소 예약 서비스의 클론 프로젝트입니다. <br><br>
+조건에 맞게 필터를 설정하여 자신에게 필요한 숙소를 검색하고 찾아볼 수 있습니다.<br><br>
+숙소를 예약하고 후기를 작성하여 평점을 남길 수 있습니다.<br><br>
+<br>
+
+## Architecture
+
+<br>
+
+## ERD
+<img src="https://github.com/battlecruisers/yanullja/assets/106314016/0b84bbce-fd0e-4a41-8881-4f64086bbbdd" />
+
+<br>
+<br>
+
+## ⚙ 기술 스택
+- Backend: `Java 17` `Spring Boot 3.2.1` `SpringSecurity` `Spring Data JPA` `QueryDsl`
+- Frontend: `React` `TypeScript`
+- DB: `PostgreSQL` `Redis`
+- Server: `AWS EC2`
+- Tools: `Intellij IDEA`
+- Collaborations: `Github Projects`
+<br>
+
+## 협업 전략
+
+
+<br>
+
+## 회의록
+링크 : https://www.notion.so/0956e741633e4862bd355ac2eadbd2ad
+
+<br>
+
+## DEMO
+
+
+## 👊 팀 Battlecrusiers
 
 <table align=center>
     <thead>
@@ -38,3 +79,4 @@
         </tr>
     </tbody>
 </table>
+<br>
