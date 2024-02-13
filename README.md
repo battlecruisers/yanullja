@@ -18,7 +18,7 @@ API 스웨거 링크 : https://api.yanullja.com
 
 <br>
 
-## 기술적 도전
+## 💡 기술적 도전
 
 ### 김대현
 
@@ -48,7 +48,7 @@ API 스웨거 링크 : https://api.yanullja.com
 <br>
 
 ## ⚙ 기술 스택
-- Backend: `Java 17` `Spring Boot 3.2.1` `SpringSecurity` `Spring Data JPA` `QueryDsl`
+- Backend: `Java 17` `Spring Boot 3.2.1` `Spring Security` `Spring Data JPA` `QueryDsl`
 - Frontend: `React` `TypeScript`
 - DB: `PostgreSQL` `Redis`
 - Server: `AWS EC2`
@@ -68,6 +68,34 @@ API 스웨거 링크 : https://api.yanullja.com
 
 ## DEMO
 
+### 로그인
+
+<img src="https://github.com/battlecruisers/yanullja/assets/106314016/ae5e8a7e-4370-4fc2-9da9-26247a64c961" />
+<br><br>
+
+
+### 숙소 조회
+
+<img src="https://github.com/battlecruisers/yanullja/assets/106314016/d871d361-c917-43db-8964-e5caf2b812f1" />
+<br><br>
+
+
+### 예약
+
+<img src="https://github.com/battlecruisers/yanullja/assets/106314016/b5cba42a-ffc2-463d-97c7-c9903447118a" />
+<br><br>
+
+
+### 리뷰 조회
+
+<img src="https://github.com/battlecruisers/yanullja/assets/106314016/b7c2b7e6-6f2f-49fa-b9e4-ca4b06e68f4d" />
+
+
+
+
+<br>
+<br>
+<br>
 
 ## 👊 팀 Battlecrusiers
 
