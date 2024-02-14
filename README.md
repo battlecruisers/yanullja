@@ -37,7 +37,7 @@ API 스웨거 링크 : https://api.yanullja.com
 |해결2|조건에 따라 동적으로 JOIN을 적용하는 메소드를 만들어 적용. <br> 가독성을 증진시키기 위해 들여쓰기를 활용하여 기존의 JOIN 형태와 비슷하게 유지.|
 
 __해결2 코드__
-```
+```.java
 List<Review> r;
 
 JPAQuery<Review> selectQuery = query
