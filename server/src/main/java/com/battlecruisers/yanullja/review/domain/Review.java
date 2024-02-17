@@ -80,7 +80,7 @@ public class Review extends BaseDate {
         this.room = room;
     }
 
-    public static Review from(ReviewSaveDto form) {
+    public static Review from(ReviewSaveDto form, Long memberId) {
         return new Review(
             form.getContent(),
             form.getKindnessRate(),
@@ -88,7 +88,7 @@ public class Review extends BaseDate {
             form.getConvenienceRate(),
             form.getLocationRate(),
             form.getTotalRate(),
-            new Member(form.getMemberId()),
+            new Member(memberId),
             new Place(form.getPlaceId()),
             new Room(form.getRoomId())
         );

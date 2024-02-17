@@ -1,25 +1,22 @@
 package com.battlecruisers.yanullja.review;
 
 
-import com.battlecruisers.yanullja.review.dto.ReviewDetailDto;
+import com.battlecruisers.yanullja.common.exception.CustomValidationException;
+import com.battlecruisers.yanullja.member.domain.SecurityMember;
 import com.battlecruisers.yanullja.review.dto.ReviewSaveDto;
-import com.battlecruisers.yanullja.review.dto.ReviewSearchCond;
-import com.battlecruisers.yanullja.review.dto.ReviewStatisticsDto;
-import com.battlecruisers.yanullja.review.exception.NoReviewsException;
+import com.battlecruisers.yanullja.review.example.WriteReviewOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "후기", description = "후기 관련 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("")
@@ -27,54 +24,21 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-
-    @ExceptionHandler
-    public ResponseEntity<Object> noReviewsExceptionHandler(
-        NoReviewsException e) {
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/reviews")
-    public ResponseEntity<Slice<ReviewDetailDto>> fetchReviews(
-        @RequestParam(value = "placeId") Long placeId,
-        @RequestParam(value = "roomId", required = false) Long roomId,
-        @RequestParam(value = "photo", required = false, defaultValue = "false") boolean photo,
-        @PageableDefault(size = 15, sort = "createdDate") Pageable pageable) {
-
-        ReviewSearchCond cond = new ReviewSearchCond(placeId, roomId, photo,
-            pageable);
-        Slice<ReviewDetailDto> reviews = reviewService.getReviewDetails(cond,
-            pageable);
-
-        return ResponseEntity
-            .ok()
-            .body(reviews);
-    }
-
+    @WriteReviewOperation
     @PostMapping("/reviews")
-    public ResponseEntity<Object> writeReviews(
-        @RequestBody ReviewSaveDto saveForm) {
+    public ResponseEntity<Object> writeReviews(@AuthenticationPrincipal SecurityMember member, @Validated @RequestBody ReviewSaveDto saveForm, BindingResult bindingResult) {
 
-        reviewService.saveReview(saveForm);
+        if (bindingResult.hasErrors()) {
+            throw new CustomValidationException(
+                bindingResult.getAllErrors().stream().findFirst().get()
+                    .getDefaultMessage());
+        }
+
+        reviewService.saveReview(saveForm, member.getId());
 
         return ResponseEntity
             .ok()
             .build();
     }
 
-    /**
-     * 나중에 Place Controller 생기면 옮겨야 함
-     */
-    @GetMapping("/places/{placeId}/review")
-    public ResponseEntity<ReviewStatisticsDto> fetchReviews(
-        @PathVariable(value = "placeId") Long placeId,
-        @RequestParam(value = "roomId", required = false) Long roomId) {
-
-        ReviewStatisticsDto reviewInfo = reviewService.getReviewInfo(placeId,
-            roomId);
-
-        return ResponseEntity
-            .ok()
-            .body(reviewInfo);
-    }
 }

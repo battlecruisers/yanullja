@@ -1,15 +1,16 @@
 package com.battlecruisers.yanullja.room;
 
 
-import com.battlecruisers.yanullja.room.dto.RoomDto;
+import com.battlecruisers.yanullja.room.domain.RoomType;
+import com.battlecruisers.yanullja.room.dto.RoomQueryDto;
 import com.battlecruisers.yanullja.room.dto.RoomReservationInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,9 +21,12 @@ public class RoomController {
 
 
     @GetMapping("/{roomId}")
-    public ResponseEntity<Object> roomDetail(@PathVariable Long roomId) {
+    public ResponseEntity<RoomQueryDto> roomDetail(@PathVariable Long roomId,
+                                                   @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+                                                   @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
+                                                   @RequestParam("roomType") RoomType roomType) {
 
-        RoomDto room = roomService.getRoom(roomId);
+        RoomQueryDto room = roomService.getRoom(roomId, checkInDate, checkOutDate, roomType);
 
         return ResponseEntity
             .ok()

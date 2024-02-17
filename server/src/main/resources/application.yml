@@ -20,6 +20,12 @@ spring:
   mvc:
     log-request-details: true
 
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+
+
 # Logging
 logging:
   level:
@@ -39,3 +45,4 @@ logbook:
     style: http
   write:
     max-body-size: 1024
+

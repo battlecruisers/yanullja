@@ -56,6 +56,12 @@ public class MemberCoupon extends BaseDate {
         this.isUsed = isUsed;
     }
 
+    public MemberCoupon(Member member, Coupon coupon) {
+        this.member = member;
+        this.coupon = coupon;
+        this.isUsed = false;
+    }
+
     // 정적 팩토리 메서드
     public static MemberCoupon createMemberCoupon(Member member, Coupon coupon,
         Boolean isUsed) {
