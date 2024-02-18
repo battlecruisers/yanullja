@@ -42,7 +42,7 @@ dependencies {
   implementation 'org.mapstruct:mapstruct:1.5.5.Final'
   annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
   testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-  implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+  annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
   implementation 'org.springframework.session:spring-session-data-redis'
   implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
