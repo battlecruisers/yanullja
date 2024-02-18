@@ -3,6 +3,7 @@ package com.battlecruisers.yanullja.coupon;
 import com.battlecruisers.yanullja.coupon.domain.Coupon;
 import com.battlecruisers.yanullja.coupon.domain.RoomType;
 import com.battlecruisers.yanullja.coupon.dto.CouponDto;
+import com.battlecruisers.yanullja.coupon.dto.CouponDtoMapper;
 import com.battlecruisers.yanullja.coupon.exception.BelowMinimumCouponAmountException;
 import com.battlecruisers.yanullja.coupon.exception.InvalidCouponException;
 import com.battlecruisers.yanullja.room.RoomRepository;
@@ -22,6 +23,7 @@ public class CouponService {
     private final RoomRepository roomRepository;
     // 테스트
     private final MemberCouponRepository memberCouponRepository;
+    private final CouponDtoMapper couponDtoMapper;
 
     // 쿠폰 적용시 할인 받는 금액 반환
 
@@ -89,7 +91,8 @@ public class CouponService {
         List<CouponDto> responseDtos = new ArrayList<>();
 
         for (Coupon c : couponList) {
-            CouponDto dto = CouponDto.from(c);
+//            CouponDto dto = CouponDto.from(c);
+            CouponDto dto = couponDtoMapper.toCouponDto(c);
             responseDtos.add(dto);
         }
 

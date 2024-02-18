@@ -35,8 +35,8 @@ public class Coupon extends BaseDate {
     @Nullable
     Room room;
 
-    @OneToMany(mappedBy = "coupon")
-    List<MemberCoupon> memberCouponList;
+//    @OneToMany(mappedBy = "coupon")
+//    List<MemberCoupon> memberCouponList;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
