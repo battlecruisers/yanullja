@@ -25,6 +25,39 @@ API 스웨거 링크 : https://api.yanullja.com
 
 ### 김민우
 
+|문제|1대N 관계에 있는 테이블 간에 '1'을 기준으로 페이징 처리를 해야 하고, 'N'을 기준으로 조건 필터링이 필요한 상황.|
+|:---|:------------------------------------------------------------------------------------------------------------|
+|해결|'1'테이블과 'N'테이블을 JOIN하고, 'N'을 기준으로 조건 필터링 후 distinct 처리를 통해 '1'의 데이터만을 조회. <br> JPA의 Lazy Loading으로 '다'에 해당하는 데이터를 가져오도록 애플리케이션단에서 처리. <br> ( N + 1 문제가 발생하지 않도록 Batch size 설정 ) |
+
+<br>
+
+|문제 |QueryDsl에서 동적으로 JOIN을 적용해야 하는 상황|
+|:----|:---------------------------------------------|
+|해결1|여러개의 메소드를 만들어서 상황에 따라 맞는 메소드를 호출하도록 구현.|
+|해결2|조건에 따라 동적으로 JOIN을 적용하는 메소드를 만들어 적용. <br> 가독성을 증진시키기 위해 들여쓰기를 활용하여 기존의 JOIN 형태와 비슷하게 유지.|
+
+__해결2 코드__
+```.java
+List<Review> r;
+
+JPAQuery<Review> selectQuery = query
+    .select(review)
+    .distinct()
+    .from(review)
+    .join(review.member, member).fetchJoin()
+    .join(review.room, room).fetchJoin();
+r = innerJoinIfPhotoOnly(selectQuery, cond.getHasPhoto())
+    .where(
+        review.place.id.eq(cond.getPlaceId()),
+        roomIdEq(cond.getRoomId())
+    )
+    .orderBy(reviewSort(cond))
+    .offset(pageable.getOffset())
+    .limit(pageable.getPageSize() + 1)
+    .fetch();
+```
+
+
 ### 이비안
 
 ### 임현우 
