@@ -18,6 +18,7 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,31 +41,42 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
     @Override
     public Slice<ReviewDetailDto> findReviews(ReviewSearchCond cond,
         Pageable pageable) {
-        List<Review> reviews = query
-                .select(review)
-                .from(review)
-                .join(review.member, member).fetchJoin()
-                .join(review.room, room).fetchJoin()
-                .leftJoin(reviewImage)
-                .on(review.id.eq(reviewImage.review.id))
-                .where(
-                        review.place.id.eq(cond.getPlaceId()),
-                        roomIdEq(cond.getRoomId()),
-                        cond.getHasPhoto() ? reviewImage.review.id.isNotNull() : null
-                )
-                .distinct()
-                .orderBy(reviewSort(cond))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize() + 1)
-                .fetch();
+        List<Review> r;
 
-        List<ReviewDetailDto> content = reviews.stream()
+        JPAQuery<Review> selectQuery = query
+            .select(review)
+            .distinct()
+            .from(review)
+            .join(review.member, member).fetchJoin()
+            .join(review.room, room).fetchJoin();
+        r = innerJoinIfPhotoOnly(selectQuery, cond.getHasPhoto())
+            .where(
+                review.place.id.eq(cond.getPlaceId()),
+                roomIdEq(cond.getRoomId())
+            )
+            .orderBy(reviewSort(cond))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize() + 1)
+            .fetch();
+
+        List<ReviewDetailDto> content = r.stream()
             .map(ReviewDetailDto::from)
             .collect(Collectors.toList());
 
-        return new SliceImpl<>(content, pageable, reviews.size() > pageable.getPageSize());
+        if (!content.isEmpty()) {
+            content.remove(content.size() - 1);
+        }
+
+        return new SliceImpl<>(content, pageable,
+            r.size() > pageable.getPageSize());
     }
 
+    private <T> JPAQuery<T> innerJoinIfPhotoOnly(
+        JPAQuery<T> selectQuery,
+        boolean photoOnly) {
+        return photoOnly ? selectQuery.innerJoin(review.reviewImages,
+            reviewImage) : selectQuery;
+    }
 
     private BooleanExpression roomIdEq(Long roomId) {
         if (roomId == null) {
@@ -72,7 +84,6 @@ public class CustomReviewRepositoryImpl implements CustomReviewRepository {
         }
         return review.room.id.eq(roomId);
     }
-
 
     private OrderSpecifier<?> reviewSort(ReviewSearchCond cond) {
         if (cond.getOrderProperty().equals("totalRate")) {

@@ -1,6 +1,7 @@
 package com.battlecruisers.yanullja.place;
 
 
+import com.battlecruisers.yanullja.common.jsendresponse.JSendResponse;
 import com.battlecruisers.yanullja.place.dto.PlaceInfoQueryDto;
 import com.battlecruisers.yanullja.place.dto.PlaceQueryDto;
 import com.battlecruisers.yanullja.place.dto.SearchConditionDto;
@@ -14,8 +15,11 @@ import com.battlecruisers.yanullja.review.exception.NoReviewsException;
 import com.battlecruisers.yanullja.room.RoomService;
 import com.battlecruisers.yanullja.room.dto.RoomNameDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -28,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-
+@Tag(name = "숙소", description = "숙소 관련 API")
 @RestController
 @RequiredArgsConstructor
 public class PlaceController {
@@ -134,6 +138,11 @@ public class PlaceController {
     }
 
 
+    @Operation(summary = "숙소의 모든 방 이름 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "정상 응답"),
+        @ApiResponse(responseCode = "400", description = "비정상 요청", content = @Content(schema = @Schema(implementation = JSendResponse.class))),
+    })
     @GetMapping("/accommodations/{placeId}/room-names")
     public ResponseEntity<List<RoomNameDto>> fetchAllRooms(@PathVariable Long placeId) {
 
@@ -144,6 +153,11 @@ public class PlaceController {
                 .body(reviews);
     }
 
+    @Operation(summary = "후기 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "정상 응답"),
+        @ApiResponse(responseCode = "400", description = "비정상 요청", content = @Content(schema = @Schema(implementation = JSendResponse.class))),
+    })
     @GetMapping("/accommodations/{placeId}/reviews")
     public ResponseEntity<Slice<ReviewDetailDto>> fetchReviews(@PathVariable Long placeId,
                                                                @RequestParam(value = "roomId", required = false) Long roomId,
@@ -158,6 +172,11 @@ public class PlaceController {
                 .body(reviews);
     }
 
+    @Operation(summary = "대표 후기 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "정상 응답"),
+        @ApiResponse(responseCode = "400", description = "비정상 요청", content = @Content(schema = @Schema(implementation = JSendResponse.class))),
+    })
     @GetMapping("/accommodations/{placeId}/review-samples")
     public ResponseEntity<ReviewSampleDto> fetchReviewSamples(@PathVariable(value = "placeId") Long placeId,
                                                               @RequestParam(value = "roomId", required = false) Long roomId) {
@@ -170,6 +189,11 @@ public class PlaceController {
     }
 
 
+    @Operation(summary = "후기 평점 정보 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "정상 응답"),
+        @ApiResponse(responseCode = "400", description = "비정상 요청", content = @Content(schema = @Schema(implementation = JSendResponse.class))),
+    })
     @GetMapping("/accommodations/{placeId}/review-statistics")
     public ResponseEntity<ReviewStatisticsDto> fetchReviewStatistics(@PathVariable(value = "placeId") Long placeId,
                                                                      @RequestParam(value = "roomId", required = false) Long roomId) {
