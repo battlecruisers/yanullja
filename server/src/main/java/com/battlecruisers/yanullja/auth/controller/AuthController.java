@@ -2,14 +2,17 @@ package com.battlecruisers.yanullja.auth.controller;
 
 import com.battlecruisers.yanullja.auth.dto.LoginDto;
 import com.battlecruisers.yanullja.member.MemberService;
-import jakarta.servlet.http.HttpServletRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,9 +33,39 @@ public class AuthController {
         return ResponseEntity.ok(principal);
     }
 
+    @Operation(summary = "로그인",
+        requestBody = @RequestBody(
+            content = @Content(
+                examples = {
+                    @ExampleObject(
+                        name = "login",
+                        value = """
+                            {
+                                "email": "mockuser@mock.com",
+                                "password": "mockuser"
+                            }
+                            """
+                    ),
+                    @ExampleObject(
+                        name = "login fail",
+                        value = """
+                            {
+                                "email": "you cannot",
+                                "password": "login"
+                            }
+                            """
+                    )
+
+                }
+            )
+        ),
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Successfully authenticated"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized - Invalid credentials")
+        }
+    )
     @PostMapping("/login")
-    public void login(@RequestBody LoginDto loginDto,
-        HttpServletRequest request) {
+    public void login(@RequestBody LoginDto loginDto) {
         throw new RuntimeException("Login is handled by Spring Security");
     }
 
