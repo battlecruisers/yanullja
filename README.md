@@ -165,7 +165,8 @@ private Long couponRoomId(Coupon coupon) {
     }
     return id;
 }
-}```
+}
+```
 
 결과적으로 MapStruct를 사용함으로써 코드 생산성을 크게 향상시키는 결과를 얻게 된다.
 
