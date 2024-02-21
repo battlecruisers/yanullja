@@ -63,7 +63,80 @@ r = innerJoinIfPhotoOnly(selectQuery, cond.getHasPhoto())
 ### 임현우 
 
 ### 염금성
+    couponDto.setDiscountRate(coupon.getDiscountRate());
+        couponDto.setDiscountLimit(coupon.getDiscountLimit());
+        couponDto.setDescription(coupon.getDescription());
+        couponDto.setRegion(coupon.getRegion());
+        couponDto.setRoomType(coupon.getRoomType());
+        couponDto.setIsValid(coupon.getIsValid());
+        couponDto.setIsRegistered(coupon.getIsRegistered());
+        couponDto.setValidityStartDate(coupon.getValidityStartDate());
+        couponDto.setValidityEndDate(coupon.getValidityEndDate());
+        return couponDto;
+    }
+위와 같은 방식은 생산정 저하 및 개발자의 실수를 유발할 수 있는 문제점이 있음.
+이런 상황에서 MapStruct를 사용하면 다음과 같이 간단하게 인터페이스를 정의하는 것으로 매핑 작업을 처리할 수 있다.
 
+@Mapper
+public interface CouponDtoMapper {
+    CouponDtoMapper INSTANCE = Mappers.getMapper(CouponDtoMapper.class);
+    CouponDto toCouponDto(Coupon coupon);
+}
+위 인터페이스를 작성함으로써 매 컴파일 타임에 MapStruct를 구현한 구현체 클래스를 생성해준다.
+
+예시 코드
+
+@Generated(
+value = "org.mapstruct.ap.MappingProcessor",
+date = "2024-02-18T21:59:43+0900",
+comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.5.jar, environment: Java 17.0.10 (Eclipse Adoptium)"
+)
+@Component
+public class CouponDtoMapperImpl implements CouponDtoMapper {
+
+@Override
+public CouponDto toCouponDto(Coupon coupon) {
+    if ( coupon == null ) {
+        return null;
+    }
+
+    CouponDto couponDto = new CouponDto();
+
+    couponDto.setRoomId( couponRoomId( coupon ) );
+    couponDto.setId( coupon.getId() );
+    couponDto.setName( coupon.getName() );
+    couponDto.setMinimumPrice( coupon.getMinimumPrice() );
+    couponDto.setDiscountPrice( coupon.getDiscountPrice() );
+    couponDto.setDiscountRate( coupon.getDiscountRate() );
+    couponDto.setDiscountLimit( coupon.getDiscountLimit() );
+    couponDto.setDescription( coupon.getDescription() );
+    couponDto.setRegion( coupon.getRegion() );
+    couponDto.setRoomType( coupon.getRoomType() );
+    couponDto.setIsValid( coupon.getIsValid() );
+    couponDto.setIsRegistered( coupon.getIsRegistered() );
+    couponDto.setValidityStartDate( coupon.getValidityStartDate() );
+    couponDto.setValidityEndDate( coupon.getValidityEndDate() );
+
+    return couponDto;
+}
+
+private Long couponRoomId(Coupon coupon) {
+    if ( coupon == null ) {
+        return null;
+    }
+    Room room = coupon.getRoom();
+    if ( room == null ) {
+        return null;
+    }
+    Long id = room.getId();
+    if ( id == null ) {
+        return null;
+    }
+    return id;
+}
+}```
+
+결과적으로 MapStruct를 사용함으로써 코드 생산성을 크게 향상시키는 결과를 얻게 된다.
 
 좀 더 자세한 내용은 노션을 참고바랍니다. <br>
 ( 링크 : https://www.notion.so/bc8f4c65b042459bb22736d25da181dc )
