@@ -4,6 +4,7 @@ import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponRegisterDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponResponseDto;
 import com.battlecruisers.yanullja.member.domain.SecurityMember;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +20,7 @@ public class MemberCouponController {
 
     private final MemberCouponService memberCouponService;
 
+    @Operation(summary = "회원이 사용가능한 쿠폰 조회")
     @GetMapping
     public List<MemberCouponResponseDto> getMemberCoupons(
             @AuthenticationPrincipal
@@ -27,6 +29,7 @@ public class MemberCouponController {
         return memberCouponService.findMemberCouponsWithCoupon(memberId);
     }
 
+    @Operation(summary = "회원이 쿠폰 등록")
     @PostMapping("")
     // 회원이 쿠폰 등록
     public void register(@RequestBody MemberCouponRegisterDto dto,
@@ -40,6 +43,7 @@ public class MemberCouponController {
 
 
     // 회원이 사용한 쿠폰 내역 조회
+    @Operation(summary = "회원 쿠폰 사용내역 조회")
     @GetMapping("/usage-history")
     public List<MemberCouponDto> history(
             @AuthenticationPrincipal SecurityMember me) {
@@ -51,6 +55,7 @@ public class MemberCouponController {
         return histories;
     }
 
+    @Operation(summary = "회원이 쿠폰 사용")
     // 회원이 쿠폰 사용하는 과정 테스트
     @PatchMapping("/{memberCouponId}")
     public void use(
@@ -59,6 +64,7 @@ public class MemberCouponController {
         memberCouponService.updateStatus(memberCouponId);
     }
 
+    @Operation(summary = "회원이 특정 숙소에서 사용가능한 쿠폰 조회")
     // 특정 숙소에서 사용 가능한 쿠폰 조회
     @GetMapping("/{roomId}")
     public List<MemberCouponDto> room(
