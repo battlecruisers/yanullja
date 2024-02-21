@@ -39,6 +39,12 @@ API 스웨거 링크 : https://api.yanullja.com
 |:--- | :--- |
 | 해결 | 상황에 따라 여러 방법이 있지만, 최근 회원 탈퇴한 유저들의 목록을 Token Revocation List에 담아 관리하고 추가 검증하는 방식을 구현한다. |
 
+자세한 내용은
+
+https://abalone-coneflower-269.notion.site/Yanullja-Backend-a9a8719eccfe4146a50e4fe10da8fa40?pvs=4
+
+를 참고바랍니다.
+
 ### 김민우
 
 |문제|1대N 관계에 있는 테이블 간에 '1'을 기준으로 페이징 처리를 해야 하고, 'N'을 기준으로 조건 필터링이 필요한 상황.|
