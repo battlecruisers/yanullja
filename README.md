@@ -86,6 +86,14 @@ r = innerJoinIfPhotoOnly(selectQuery, cond.getHasPhoto())
 ### 임현우 
 
 ### 염금성
+| 문제 | 클래스간 변환작업 중 발생하는 반복적인 코드를 어떻게 줄일 것인가? |
+|:---|:---|
+| 해결 | MapStruct를 사용해 컴파일 타임에 클래스간 변환작업을 수행하는 매핑 코드를 자동으로 생성한다. |
+
+```
+클래스간 변환작업이 필요할 때 일반적으로 다음과 같은 코드를 작성하게 된다.
+
+예시코드:    
     couponDto.setDiscountRate(coupon.getDiscountRate());
         couponDto.setDiscountLimit(coupon.getDiscountLimit());
         couponDto.setDescription(coupon.getDescription());
