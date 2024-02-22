@@ -90,10 +90,11 @@ r = innerJoinIfPhotoOnly(selectQuery, cond.getHasPhoto())
 |:---|:---|
 | 해결 | MapStruct를 사용해 컴파일 타임에 클래스간 변환작업을 수행하는 매핑 코드를 자동으로 생성한다. |
 
-```
+
 클래스간 변환작업이 필요할 때 일반적으로 다음과 같은 코드를 작성하게 된다.
 
 예시코드:    
+```
     couponDto.setDiscountRate(coupon.getDiscountRate());
         couponDto.setDiscountLimit(coupon.getDiscountLimit());
         couponDto.setDescription(coupon.getDescription());
@@ -105,18 +106,20 @@ r = innerJoinIfPhotoOnly(selectQuery, cond.getHasPhoto())
         couponDto.setValidityEndDate(coupon.getValidityEndDate());
         return couponDto;
     }
+```
 위와 같은 방식은 생산정 저하 및 개발자의 실수를 유발할 수 있는 문제점이 있음.
 이런 상황에서 MapStruct를 사용하면 다음과 같이 간단하게 인터페이스를 정의하는 것으로 매핑 작업을 처리할 수 있다.
-
+```
 @Mapper
 public interface CouponDtoMapper {
     CouponDtoMapper INSTANCE = Mappers.getMapper(CouponDtoMapper.class);
     CouponDto toCouponDto(Coupon coupon);
 }
+```
 위 인터페이스를 작성함으로써 매 컴파일 타임에 MapStruct를 구현한 구현체 클래스를 생성해준다.
 
-예시 코드
-
+MapStruct 구현체 예시 코드
+```
 @Generated(
 value = "org.mapstruct.ap.MappingProcessor",
 date = "2024-02-18T21:59:43+0900",
