@@ -20,35 +20,40 @@ import static com.battlecruisers.yanullja.place.PlaceService.findMaxDiscountPric
 @AllArgsConstructor
 public class RoomQueryDto {
 
+    @Schema(description = "방 ID", example = "1")
     private Long id;
 
+    @Schema(description = "숙소 ID", example = "1")
     private Long accommodationId;
 
-    @Schema(name = "객실 이름", example = "스탠다드룸")
+    @Schema(description = "객실 이름", example = "스탠다드룸")
     private String name;
 
-    @Schema(name = "객실 대표 사진 리스트", description = "객실 대표 사진의 저장 url을 리턴", example = "https://aws1.s3.ap-northeast-2.amazonaws.com/room/room1.jpg")
+    @Schema(description = "객실 대표 사진의 저장 url을 리턴", example = "https://aws1.s3.ap-northeast-2.amazonaws.com/room/room1.jpg")
     private RoomOptionImageDto roomOptionImage;
 
-    @Schema(name = "객실 최대 인원", example = "4")
+    @Schema(description = "객실 최대 인원", example = "4")
     private Integer capacity;
 
+    @Schema(description = "전체 방 수", example = "10")
     private Integer totalRoomCount;
 
+    @Schema(description = "기간 내 예약되어 있는 방 수", example = "4")
     private Integer reservedRoomCount;
 
-    @Schema(name = "숙박 체크인/대실 시작 시간", example = "1800")
+    @Schema(description = "숙박 체크인/대실 시작 시간", example = "1800")
     private LocalTime startTime;
 
-    @Schema(name = "숙박 체크아웃/대실 마감 시간", example = "2100")
+    @Schema(description = "숙박 체크아웃/대실 마감 시간", example = "2100")
     private LocalTime endTime;
 
-    @Schema(name = "숙박 가격", example = "12000")
+    @Schema(description = "숙박 가격", example = "12000")
     private BigDecimal totalPrice;
 
+    @Schema(description = "숙박 기간", example = "2")
     private Integer stayDuration;
 
-    @Schema(name = "숙박에 적용 가능한 최고 할인가", example = "3000")
+    @Schema(description = "숙박에 적용 가능한 최고 할인가", example = "3000")
     private Integer stayMaxDiscount;
 
 

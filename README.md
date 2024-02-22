@@ -19,9 +19,31 @@ API 스웨거 링크 : https://api.yanullja.com
 
 <br>
 
-## 💡 기술적 도전
+## 💡 기술적 도전 & 고민 사항
 
 ### 김대현
+
+| 문제 | 무중단 배포를 위해 백엔드 서버를 재시작해도 유저에게 피해를 주지 않으려면 무엇을 고려해야 하는가? |
+|:---|:---|
+| 해결 | 서버를 재시작해도 인증 / 인가에 영향을 받지 않도록 유저 세션 데이터를 Redis와 같은 외부 DB에 저장한다. |
+
+| 문제 | Client가 Authorization이 필요한 api에 접근할 경우, DB의 멤버 테이블을 조회하는 빈도 수를 어떻게 줄일 것인가? |
+|:---|:---|
+| 해결 | 세션을 Redis에 연결하여 Member 정보를 바꾸지 않는 api 요청에 대해서는 Redis의 세션 정보를 신뢰한다. |
+
+| 문제 | 프로그래머의 실수에 의해, 멤버 정보가 바뀌는 api를 호출하고 난 후에도 Redis에 저장된 세션 정보를 갱신하지 않아 발생하는 버그를 어떻게 방지할 것인가? |
+|:---|:---|
+| 해결 | 해결책을 모색하는 중입니다. |
+
+| 문제 | JWT를 통해 인증을 구현했다고 가정하자. 회원 탈퇴를 어떻게 구현할 것인가? 클라이언트는 여전히 유효한 JWT 토큰을 가지고 있다. |
+|:--- | :--- |
+| 해결 | 상황에 따라 여러 방법이 있지만, 최근 회원 탈퇴한 유저들의 목록을 Token Revocation List에 담아 관리하고 추가 검증하는 방식을 구현한다. |
+
+자세한 내용은
+
+https://abalone-coneflower-269.notion.site/Yanullja-Backend-a9a8719eccfe4146a50e4fe10da8fa40?pvs=4
+
+를 참고바랍니다.
 
 ### 김민우
 
@@ -37,6 +59,7 @@ API 스웨거 링크 : https://api.yanullja.com
 |해결2|조건에 따라 동적으로 JOIN을 적용하는 메소드를 만들어 적용. <br> 가독성을 증진시키기 위해 들여쓰기를 활용하여 기존의 JOIN 형태와 비슷하게 유지.|
 
 __해결2 코드__
+
 ```.java
 List<Review> r;
 
@@ -63,7 +86,92 @@ r = innerJoinIfPhotoOnly(selectQuery, cond.getHasPhoto())
 ### 임현우 
 
 ### 염금성
+| 문제 | 클래스간 변환작업 중 발생하는 반복적인 코드를 어떻게 줄일 것인가? |
+|:---|:---|
+| 해결 | MapStruct를 사용해 컴파일 타임에 클래스간 변환작업을 수행하는 매핑 코드를 자동으로 생성한다. |
 
+
+클래스간 변환작업이 필요할 때 일반적으로 다음과 같은 코드를 작성하게 된다.
+
+예시코드:    
+```
+    couponDto.setDiscountRate(coupon.getDiscountRate());
+        couponDto.setDiscountLimit(coupon.getDiscountLimit());
+        couponDto.setDescription(coupon.getDescription());
+        couponDto.setRegion(coupon.getRegion());
+        couponDto.setRoomType(coupon.getRoomType());
+        couponDto.setIsValid(coupon.getIsValid());
+        couponDto.setIsRegistered(coupon.getIsRegistered());
+        couponDto.setValidityStartDate(coupon.getValidityStartDate());
+        couponDto.setValidityEndDate(coupon.getValidityEndDate());
+        return couponDto;
+    }
+```
+위와 같은 방식은 생산정 저하 및 개발자의 실수를 유발할 수 있는 문제점이 있음.
+이런 상황에서 MapStruct를 사용하면 다음과 같이 간단하게 인터페이스를 정의하는 것으로 매핑 작업을 처리할 수 있다.
+```
+@Mapper
+public interface CouponDtoMapper {
+    CouponDtoMapper INSTANCE = Mappers.getMapper(CouponDtoMapper.class);
+    CouponDto toCouponDto(Coupon coupon);
+}
+```
+위 인터페이스를 작성함으로써 매 컴파일 타임에 MapStruct를 구현한 구현체 클래스를 생성해준다.
+
+MapStruct 구현체 예시 코드
+```
+@Generated(
+value = "org.mapstruct.ap.MappingProcessor",
+date = "2024-02-18T21:59:43+0900",
+comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.5.jar, environment: Java 17.0.10 (Eclipse Adoptium)"
+)
+@Component
+public class CouponDtoMapperImpl implements CouponDtoMapper {
+
+@Override
+public CouponDto toCouponDto(Coupon coupon) {
+    if ( coupon == null ) {
+        return null;
+    }
+
+    CouponDto couponDto = new CouponDto();
+
+    couponDto.setRoomId( couponRoomId( coupon ) );
+    couponDto.setId( coupon.getId() );
+    couponDto.setName( coupon.getName() );
+    couponDto.setMinimumPrice( coupon.getMinimumPrice() );
+    couponDto.setDiscountPrice( coupon.getDiscountPrice() );
+    couponDto.setDiscountRate( coupon.getDiscountRate() );
+    couponDto.setDiscountLimit( coupon.getDiscountLimit() );
+    couponDto.setDescription( coupon.getDescription() );
+    couponDto.setRegion( coupon.getRegion() );
+    couponDto.setRoomType( coupon.getRoomType() );
+    couponDto.setIsValid( coupon.getIsValid() );
+    couponDto.setIsRegistered( coupon.getIsRegistered() );
+    couponDto.setValidityStartDate( coupon.getValidityStartDate() );
+    couponDto.setValidityEndDate( coupon.getValidityEndDate() );
+
+    return couponDto;
+}
+
+private Long couponRoomId(Coupon coupon) {
+    if ( coupon == null ) {
+        return null;
+    }
+    Room room = coupon.getRoom();
+    if ( room == null ) {
+        return null;
+    }
+    Long id = room.getId();
+    if ( id == null ) {
+        return null;
+    }
+    return id;
+}
+}
+```
+
+결과적으로 MapStruct를 사용함으로써 코드 생산성을 크게 향상시키는 결과를 얻게 된다.
 
 좀 더 자세한 내용은 노션을 참고바랍니다. <br>
 ( 링크 : https://www.notion.so/bc8f4c65b042459bb22736d25da181dc )
