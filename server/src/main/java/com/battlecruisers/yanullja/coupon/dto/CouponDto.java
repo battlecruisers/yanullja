@@ -18,46 +18,46 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CouponDto {
 
-    @Schema(name = "쿠폰번호", example = "1")
+    @Schema(name = "Coupon ID", example = "1")
     public Long id;
 
-    @Schema(name = "객실id", example = "3")
+    @Schema(name = "Room ID", example = "3")
     public Long roomId;
 
-    @Schema(name = "쿠폰명", example = "50%할인쿠폰")
+    @Schema(name = "Coupon Name", example = "50% discounted coupon")
     public String name;
 
-    @Schema(name = "최소주문금액", example = "20000")
+    @Schema(name = "Minimum Order Amount", example = "20000")
     public BigDecimal minimumPrice;
 
-    @Schema(name = "할인금액", example = "10000")
+    @Schema(name = "Discounted Price", example = "10000")
     public BigDecimal discountPrice;
 
-    @Schema(name = "할인률", example = "0.5")
+    @Schema(name = "Discount Rate", example = "0.5")
     public Double discountRate;
 
-    @Schema(name = "할인한도", example = "5000")
+    @Schema(name = "Discount Limit", example = "5000")
     public BigDecimal discountLimit;
 
-    @Schema(name = "설명", example = "최소주문금액 20000원 이상 시 사용 가능한 50% 할인 쿠폰입니다.")
+    @Schema(name = "Description", example = "This is a 50% discount coupon available for orders over 20000 won.")
     public String description;
 
-    @Schema(name = "사용지역", example = "서울")
+    @Schema(name = "Region", example = "Seoul")
     public String region;
 
-    @Schema(name = "숙박형태", example = "HOTEL")
+    @Schema(name = "Accommodation Type", example = "HOTEL")
     public RoomType roomType;
 
-    @Schema(name = "쿠폰 유효 여부", example = "true")
+    @Schema(name = "Coupon Validity", example = "true")
     public Boolean isValid;
 
-    @Schema(name = "쿠폰 등록 여부", example = "true")
+    @Schema(name = "Coupon Registration", example = "true")
     public Boolean isRegistered;
 
-    @Schema(name = "쿠폰 유효기간(시작일)", example = "2024-02-21")
+    @Schema(name = "Coupon Validity Start Date", example = "2024-02-21")
     public LocalDate validityStartDate;
 
-    @Schema(name = "쿠폰 유효기간(종료일)", example = "2024-12-31")
+    @Schema(name = "Coupon Validity End Date", example = "2024-12-31")
     public LocalDate validityEndDate;
 
 

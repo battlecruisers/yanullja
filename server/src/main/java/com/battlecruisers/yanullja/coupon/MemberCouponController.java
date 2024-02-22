@@ -4,6 +4,7 @@ import com.battlecruisers.yanullja.coupon.dto.MemberCouponDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponRegisterDto;
 import com.battlecruisers.yanullja.coupon.dto.MemberCouponResponseDto;
 import com.battlecruisers.yanullja.member.domain.SecurityMember;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "회원 쿠폰", description = "회원 쿠폰 관련 API")
 @RestController
 @RequestMapping("/member-coupons")
 @RequiredArgsConstructor

@@ -15,23 +15,30 @@ import java.time.LocalDate;
 @Setter
 public class MemberCouponDto {
 
-    @Schema(name = "회원 쿠폰 id", example = "1")
+    // 회원 쿠폰 ID
+    @Schema(name = "Member Coupon ID", example = "1")
     public Long id;
 
-    @Schema(name = "회원 쿠폰명", example = "50%할인쿠폰")
+    // 회원 쿠폰명
+    @Schema(name = "Member Coupon Name", example = "50% Discount Coupon")
     public String name;
 
-    @Schema(name = "할인률", example = "0.5")
+    // 할인률
+    @Schema(name = "Discount Rate", example = "0.5")
     public BigDecimal discountRate;
 
-    @Schema(name = "고정할인금액", example = "10000")
+    // 고정 할인 금액
+    @Schema(name = "Fixed Discount Price", example = "10000")
     public BigDecimal discountPrice;
 
-    @Schema(name = "쿠폰 발행일", example = "2024-02-21")
+    // 쿠폰 발행일
+    @Schema(name = "Coupon Issuance Date", example = "2024-02-21")
     public LocalDate startDate;
 
-    @Schema(name = "쿠폰 유효기간", example = "2024-12-31")
+    // 쿠폰 유효기간
+    @Schema(name = "Coupon Validity Period", example = "2024-12-31")
     public LocalDate endDate;
+
 
     public static MemberCouponDto from(MemberCoupon memberCoupon) {
         MemberCouponDto memberCouponDto = new MemberCouponDto();
