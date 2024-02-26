@@ -29,20 +29,29 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
   implementation 'org.springframework.boot:spring-boot-starter-validation'
   implementation 'org.springframework.boot:spring-boot-starter-web'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
   //For Swagger
   implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
-
-  //For Logbook
-
+  // lombok
   compileOnly 'org.projectlombok:lombok'
+  annotationProcessor 'org.projectlombok:lombok'
 
-  // Mapstruct
+  // lombok-test
+  testCompileOnly 'org.projectlombok:lombok'
+  testAnnotationProcessor 'org.projectlombok:lombok'
+
+  // lombok-spring
+  annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+  // MapStruct
   implementation 'org.mapstruct:mapstruct:1.5.5.Final'
   annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
   testAnnotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-  implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+  //lombok-mapstruct-binding
+  annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
   implementation 'org.springframework.session:spring-session-data-redis'
   implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
@@ -58,14 +67,15 @@ dependencies {
 
   runtimeOnly 'org.postgresql:postgresql'
   annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-  annotationProcessor 'org.projectlombok:lombok'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
-  testCompileOnly 'org.projectlombok:lombok'
-  testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
   useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+  options.compilerArgs += ["-Amapstruct.verbose=true"]
 }
 
 // For QueryDsl Build

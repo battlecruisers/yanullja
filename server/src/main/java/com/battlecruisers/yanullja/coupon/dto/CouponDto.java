@@ -2,6 +2,7 @@ package com.battlecruisers.yanullja.coupon.dto;
 
 import com.battlecruisers.yanullja.coupon.domain.Coupon;
 import com.battlecruisers.yanullja.coupon.domain.RoomType;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -17,37 +18,48 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CouponDto {
 
-    // 쿠폰번호
+    @Schema(name = "Coupon ID", example = "1")
     public Long id;
-    // 객실id
+
+    @Schema(name = "Room ID", example = "3")
     public Long roomId;
-    // 쿠폰명
+
+    @Schema(name = "Coupon Name", example = "50% discounted coupon")
     public String name;
-    // 최소주문금액
+
+    @Schema(name = "Minimum Order Amount", example = "20000")
     public BigDecimal minimumPrice;
-    // 할인금액
+
+    @Schema(name = "Discounted Price", example = "10000")
     public BigDecimal discountPrice;
-    // 할인률
+
+    @Schema(name = "Discount Rate", example = "0.5")
     public Double discountRate;
-    // 할인한도
+
+    @Schema(name = "Discount Limit", example = "5000")
     public BigDecimal discountLimit;
-    // 설명
+
+    @Schema(name = "Description", example = "This is a 50% discount coupon available for orders over 20000 won.")
     public String description;
-    // 사용지역
-    @Column
+
+    @Schema(name = "Region", example = "Seoul")
     public String region;
-    // 숙박형태
-    @Column
-    @Enumerated(EnumType.STRING)
+
+    @Schema(name = "Accommodation Type", example = "HOTEL")
     public RoomType roomType;
-    // 쿠폰 유효 여부
+
+    @Schema(name = "Coupon Validity", example = "true")
     public Boolean isValid;
-    // 쿠폰 등록 여부
+
+    @Schema(name = "Coupon Registration", example = "true")
     public Boolean isRegistered;
-    // 쿠폰 유효기간(시작일)
+
+    @Schema(name = "Coupon Validity Start Date", example = "2024-02-21")
     public LocalDate validityStartDate;
-    // 쿠폰 유효기간(종료일)
+
+    @Schema(name = "Coupon Validity End Date", example = "2024-12-31")
     public LocalDate validityEndDate;
+
 
     public static CouponDto from(Coupon coupon) {
         CouponDto couponDto = new CouponDto();
