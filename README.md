@@ -80,6 +80,9 @@ r = innerJoinIfPhotoOnly(selectQuery, cond.getHasPhoto())
 ```
 
 ### 이비안
+| 문제 | 숙소 예약 시, 사용 기간 동안 숙소(Room)가 사용 가능한지 확인하는 기능 구현  |
+| :--- | :----------------------------------------------------------------------------------------------------- |
+| 해결 | [[기술적 도전] 특정 기간 내 숙소 예약 가능여부 판단 (이비안)](https://github.com/battlecruisers/yanullja/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EB%8F%84%EC%A0%84%5D-%ED%8A%B9%EC%A0%95-%EA%B8%B0%EA%B0%84-%EB%82%B4-%EC%88%99%EC%86%8C-%EC%98%88%EC%95%BD-%EA%B0%80%EB%8A%A5%EC%97%AC%EB%B6%80-%ED%8C%90%EB%8B%A8-(%EC%9D%B4%EB%B9%84%EC%95%88)) |
 
 ### 임현우
 
